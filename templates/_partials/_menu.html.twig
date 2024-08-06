@@ -1,0 +1,22 @@
+<nav>
+    {% if app.user%}
+        <a href="{{ path('app_home') }}"><img class="logo" src="{{ asset('assets//images/logo.png') }}" alt="Logo de la communauté de commune osartis marquion"></a>
+    {% endif %}
+    {% if not app.user%}
+        <img class="logo" src="{{ asset('assets//images/logo.png') }}" alt="Logo de la communauté de commune osartis marquion">
+    {% endif %}
+    <ul>
+        {% if app.user%}
+            <li><p>{{ app.user.FirstName }} {{ app.user.LastName }}</p></li>
+            <li>Réservation</li>
+            <li>Tickets</li>
+            <li>Galerie</li>
+            <li>Formation</li>
+            <li>Option</li>
+            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+        {% endif %}
+        {% if not app.user%}
+            <li><a href="{{ path('app_register') }}">register</a></li>
+        {% endif %}
+    </ul>
+</nav>

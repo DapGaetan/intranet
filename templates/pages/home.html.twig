@@ -3,8 +3,10 @@
 {% block title %}Hello HomepageController!{% endblock %}
 
 {% block body %}
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    <p>COUCOU beuh</p>
+    <h1>Hello {{ app.user.userIdentifier }}✅</h1>
+        <h2>Hello {{ app.user.userIdentifier }}✅</h2>
+            <h3>Hello {{ app.user.userIdentifier }}✅</h3>
+                <h4>Hello {{ app.user.userIdentifier }}✅</h4>
+                    <h5>Hello {{ app.user.userIdentifier }}✅</h5>
+                        <h6>Hello {{ app.user.userIdentifier }}✅</h6>
 {% endblock %}

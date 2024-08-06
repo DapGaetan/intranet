@@ -2,26 +2,27 @@
 
 namespace App\Entity;
 
-use App\Repository\MessageRepository;
+use App\Repository\NewsletterRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: MessageRepository::class)]
-class Message
+#[ORM\Entity(repositoryClass: NewsletterRepository::class)]
+class Newsletter
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?int $sender_id = null;
-
-    #[ORM\Column]
-    private ?int $receiver_id = null;
+    #[ORM\Column(length: 150)]
+    private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
+
+    #[ORM\ManyToOne(inversedBy: 'newsletters')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $created_by = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -34,26 +35,14 @@ class Message
         return $this->id;
     }
 
-    public function getSenderId(): ?int
+    public function getTitle(): ?string
     {
-        return $this->sender_id;
+        return $this->title;
     }
 
-    public function setSenderId(int $sender_id): static
+    public function setTitle(string $title): static
     {
-        $this->sender_id = $sender_id;
-
-        return $this;
-    }
-
-    public function getReceiverId(): ?int
-    {
-        return $this->receiver_id;
-    }
-
-    public function setReceiverId(int $receiver_id): static
-    {
-        $this->receiver_id = $receiver_id;
+        $this->title = $title;
 
         return $this;
     }
@@ -66,6 +55,18 @@ class Message
     public function setContent(string $content): static
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->created_by;
+    }
+
+    public function setCreatedBy(?User $created_by): static
+    {
+        $this->created_by = $created_by;
 
         return $this;
     }

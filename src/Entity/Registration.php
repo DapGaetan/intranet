@@ -2,23 +2,27 @@
 
 namespace App\Entity;
 
-use App\Repository\RoleRepository;
-use Doctrine\DBAL\Types\Types;
+use App\Repository\RegistrationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: RoleRepository::class)]
-class Role
+#[ORM\Entity(repositoryClass: RegistrationRepository::class)]
+class Registration
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 60)]
-    private ?string $name = null;
+    #[ORM\ManyToOne(inversedBy: 'registrations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Training $training = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
+    #[ORM\ManyToOne(inversedBy: 'registrations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
+
+    #[ORM\Column(length: 50)]
+    private ?string $status = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -31,26 +35,38 @@ class Role
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getTraining(): ?Training
     {
-        return $this->name;
+        return $this->training;
     }
 
-    public function setName(string $name): static
+    public function setTraining(?Training $training): static
     {
-        $this->name = $name;
+        $this->training = $training;
 
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getUser(): ?User
     {
-        return $this->description;
+        return $this->user;
     }
 
-    public function setDescription(string $description): static
+    public function setUser(?User $user): static
     {
-        $this->description = $description;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

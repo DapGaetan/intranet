@@ -2,20 +2,21 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">      
+        <title>{% block title %}Intranet - Osartis-Marquion{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ asset('styles/scss/app.css') }}">     
         {% block stylesheets %}
         {% endblock %}
-
+        <script src="{{ asset('assets/js/script.js') }}"></script>
     </head>
     <body>
-    {% include 'partials/menu.html.twig' %}
+    {% include '_partials/_menu.html.twig' %}
 
 
         {% block body %}{% endblock %}
 
 
-    {% include 'partials/footer.html.twig' %}
+    {% include '_partials/_footer.html.twig' %}
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
