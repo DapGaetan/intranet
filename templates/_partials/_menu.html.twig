@@ -7,7 +7,7 @@
     {% endif %}
     <ul>
         {% if app.user%}
-            <li><p>{{ app.user.FirstName }} {{ app.user.LastName }}</p></li>
+            <li><a href="{{ path('app_profile') }}">{{ app.user.FirstName }} {{ app.user.LastName }}</a></li>
             <li>Réservation</li>
             <li>Tickets</li>
             <li>Galerie</li>
