@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création de Ticket{% endblock %}
+
+{% block body %}
+    <h1>Crée un ticket :</h1>
+
+{{ form_errors(TicketForm) }}
+
+    {{ form_start(TicketForm) }}
+        {{ form_row(TicketForm.title) }}
+        {{ form_row(TicketForm.description) }}
+        {{ form_row(TicketForm.status) }}
+        {{ form_row(TicketForm.priority) }}
+        {{ form_row(TicketForm.created_at) }}
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <button type="submit">Crée le ticket</button>
+    {{ form_end(TicketForm) }}
+{% endblock %}

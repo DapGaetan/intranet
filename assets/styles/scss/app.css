@@ -9,7 +9,7 @@ body {
 }
 
 h1 {
-  font-size: 4vh;
+  font-size: 3.8vh;
 }
 
 h2 {
@@ -21,15 +21,15 @@ h3 {
 }
 
 h4 {
-  font-size: 2.5vh;
+  font-size: 2.7vh;
 }
 
 h5 {
-  font-size: 2vh;
+  font-size: 2.2vh;
 }
 
 h6 {
-  font-size: 1.5vh;
+  font-size: 1.7vh;
 }
 
 a {
@@ -58,6 +58,10 @@ nav ul li {
 
 nav ul li p {
   color: red;
+}
+
+.content {
+  margin: 30px;
 }
 
 /* Footer */
