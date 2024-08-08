@@ -1,6 +1,10 @@
 <footer>
     <section>
-        <a href="{{ path('app_home') }}"><img class="logo" src="{{ asset('assets//images/logo.png') }}" alt="Logo de la communauté de commune osartis marquion"></a>
+        {% if app.user %}
+            <a href="{{ path('app_home') }}"><img class="logo" src="{{ asset('assets/images/logo.png') }}" alt="Logo de la communauté de commune osartis marquion"></a>
+        {% else %}
+            <a href="{{ path('app_login') }}"><img class="logo" src="{{ asset('assets/images/logo.png') }}" alt="Logo de la communauté de commune osartis marquion"></a>
+        {% endif %}    
     </section>
     <section>
         <p>&copy; 2024</p>

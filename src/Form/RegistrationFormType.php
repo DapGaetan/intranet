@@ -2,9 +2,12 @@
 
 namespace App\Form;
 
+use App\Entity\Department;
 use App\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,6 +17,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\Choice;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class RegistrationFormType extends AbstractType
 {
@@ -32,8 +37,12 @@ class RegistrationFormType extends AbstractType
                     'class' => ''
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(['min' => 2, 'max' => 161])
+                    new NotBlank(),
+                    new Length(['min' => 2, 'max' => 161]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-ZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ\-\'\s]+$/',
+                        'message' => 'Le Nom d\'utilisateur ne peut contenir que des lettres, des espaces, des tirets ou des apostrophes.',
+                    ]),
                 ],
             ])
             ->add('first_name', TextType::class, [
@@ -48,8 +57,12 @@ class RegistrationFormType extends AbstractType
                     'class' => ''
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(['min' => 2, 'max' => 80])
+                    new NotBlank(),
+                    new Length(['min' => 2, 'max' => 80]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-ZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ\-\'\s]+$/',
+                        'message' => 'Le Prénom ne peut contenir que des lettres, des espaces, des tirets ou des apostrophes.',
+                    ]),
                 ],
             ])
             ->add('last_name', TextType::class, [
@@ -64,8 +77,12 @@ class RegistrationFormType extends AbstractType
                     'class' => ''
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(['min' => 2, 'max' => 80])
+                    new NotBlank(),
+                    new Length(['min' => 2, 'max' => 80]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-ZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ\-\'\s]+$/',
+                        'message' => 'Le Nom ne peut contenir que des lettres, des espaces, des tirets ou des apostrophes.',
+                    ]),
                 ],
             ])
             ->add('email', EmailType::class, [
@@ -75,32 +92,109 @@ class RegistrationFormType extends AbstractType
                     'maxlenght' => '180',
                     'placeholder' => 'prenom.nom@cc-osartis.com',
                 ],
-                'label' => 'Email',
+                'label' => 'Email :',
                 'label_attr' => [
                     'class' => ''
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(),
+                    new NotBlank(),
                     new Assert\Email(),
-                    new Assert\Length(['min' => 2, 'max' => 180])
+                    new Length(['min' => 2, 'max' => 180]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                        'message' => 'L\'adresse email doit être valide et peut contenir des lettres, des chiffres, des points, des tirets, des underscores, et un @.',
+                    ]),
                 ],
             ])
-            ->add('department')
-            ->add('position')
-            ->add('job')
+            ->add('department', EntityType::class, [
+                'class' => Department::class,
+                'choice_label' => 'name',
+                'attr' => [
+                    'class' => '',
+                    'minlength' => '2',
+                    'maxlength' => '200',
+                ],
+                'label' => 'Lieux :',
+                'label_attr' => [
+                    'class' => ''
+                ],
+                'placeholder' => 'Sélectionnez un lieu de travail',
+            ])
+            
+            ->add('position', ChoiceType::class, [
+                'choices' => [
+                    'Relais Petite Enfance "À Mini Pas"' => 'Relais Petite Enfance "À Mini Pas',
+                    'Service Jeunesse ' => 'Service Jeunesse ',
+                    'Actions pour les Personnes Âgées et/ou en Situation de Handicap (SPASAD)' => 'Actions pour les Personnes Âgées et/ou en Situation de Handicap (SPASAD)',               
+                    'Transport à la Demande (TAD)' => 'Transport à la Demande (TAD)',
+                    'Gestion des Déchets' => 'Gestion des Déchets',
+                    'Culture' => 'Culture',
+                    'Tourisme' => 'Tourisme',
+                ],
+                'attr' => [
+                    'class' => '',
+                    'minlenght' => '4',
+                    'maxlenght' => '180',
+                    'placeholder' => 'Comptabilité',
+                ],
+                'label' => 'Service :',
+                'label_attr' => [
+                    'class' => ''
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['min' => 2, 'max' => 180]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-ZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ\-\'\s]+$/',
+                        'message' => 'Le Service ne peut contenir que des lettres, des espaces, des tirets ou des apostrophes.',
+                    ]),
+                ],
+            ])
+            ->add('job', TextType::class, [
+                'attr' => [
+                    'class' => '',
+                    'minlenght' => '2',
+                    'maxlenght' => '180',
+                    'placeholder' => 'Chargé de communication',
+                ],
+                'label' => 'Travail Éxercer :',
+                'label_attr' => [
+                    'class' => ''
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['min' => 2, 'max' => 180]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-ZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ\-\'\s]+$/',
+                        'message' => 'Le Métier ne peut contenir que des lettres, des espaces, des tirets ou des apostrophes.',
+                    ]),
+                ],
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
+                'label' => 'J\'accepte que l\'on utilise mes données',
+                'label_attr' => [
+                    'class' => ''
+                ],
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'Accepter lutilisation de mes donner',
+                        'message' => 'Vous devez accepter que l\'ont utilises ces données',
                     ]),
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                    'class' => '',
+                    'minlenght' => '2',
+                    'maxlenght' => '180',
+                    'placeholder' => 'PetitChat123!!',
+                ],
+                'label' => 'Mot de passe :',
+                'label_attr' => [
+                    'class' => ''
+                ],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Vous navez pas entrez de mot de passe',
@@ -108,12 +202,14 @@ class RegistrationFormType extends AbstractType
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} charactères',
-                        // max length allowed by Symfony for security reasons
                         'max' => 255,
                     ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+                        'message' => 'Votre mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.',
+                    ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
