@@ -11,6 +11,7 @@
         <table>
             <thead>
                 <tr>
+                    <th>Consulté</th>
                     <th>Titre</th>
                     <th>Description</th>
                     <th>Statut</th>
@@ -23,17 +24,10 @@
             <tbody>
                 {% for ticket in tickets %}
                     <tr>
-                        <td><a href="{{ path('app_ticket_show', {id: ticket.id}) }}">{{ ticket.title }}</a></td>
+                    <td><a href="{{ path('app_ticket_show', {id: ticket.id}) }}">T</a></td>
+                        <td>{{ ticket.title }}</td>
                         <td>{{ ticket.description }}</td>
-                        <td>
-                            <form method="post" action="{{ path('app_ticket_status', {id: ticket.id}) }}">
-                                <select name="status" onchange="this.form.submit()">
-                                    <option value="Open" {% if ticket.status == 'Open' %}selected{% endif %}>Ouvert</option>
-                                    <option value="Closed" {% if ticket.status == 'Closed' %}selected{% endif %}>Fermé</option>
-                                </select>
-                                <input type="hidden" name="_token" value="{{ csrf_token('status' ~ ticket.id) }}">
-                            </form>
-                        </td>
+                        <td>{{ ticket.status }}</td>
                         <td>{{ ticket.priority }}</td>
                         <td>{{ ticket.createdAt|date('Y-m-d') }}</td>
                         <td><a href="{{ path('app_ticket_modify', {id: ticket.id}) }}">Modifier</a></td>

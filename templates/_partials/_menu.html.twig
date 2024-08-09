@@ -4,7 +4,6 @@
     {% else %}
         <a href="{{ path('app_login') }}"><img class="logo" src="{{ asset('assets/images/logo.png') }}" alt="Logo de la communauté de commune osartis marquion"></a>
     {% endif %}
-    
     <ul>
         {% if app.user %}
             <li><a href="{{ path('app_profile') }}">{{ app.user.FirstName }} {{ app.user.LastName }}</a></li>
@@ -13,6 +12,10 @@
             <li>Galerie</li>
             <li>Formation</li>
             <li>Option</li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li><a href="{{ path('app_admin_tickets') }}">Gestion des Tickets</a></li>
+                {# <li><a href="{{ path('app_admin_dashboard') }}">Tableau de Bord Admin</a></li> #}
+            {% endif %}
             <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
         {% else %}
             {% if app.request.attributes.get('_route') != 'app_register' %}

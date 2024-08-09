@@ -1,10 +1,9 @@
 <?php
 
-// src/Form/TicketFormType.php
-
 namespace App\Form;
 
 use App\Entity\Ticket;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,6 +14,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TicketFormType extends AbstractType
 {
+
+    private Security $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $isEdit = $options['is_edit'];
@@ -22,6 +29,16 @@ class TicketFormType extends AbstractType
         $statusChoices = ['Ouvert' => 'Open'];
 
         if ($isEdit) {
+            $statusChoices['Fermé'] = 'Closed';
+        }
+
+        $isEdit = $options['is_edit'];
+        $user = $this->security->getUser();
+        $isAdmin = $user && in_array('ROLE_ADMIN', $user->getRoles());
+
+        $statusChoices = ['Ouvert' => 'Open'];
+
+        if ($isAdmin) {
             $statusChoices['Fermé'] = 'Closed';
         }
 
@@ -64,6 +81,7 @@ class TicketFormType extends AbstractType
                 'label_attr' => [
                     'class' => ''
                 ],
+                'disabled' => !$isAdmin && $isEdit,
             ])
             ->add('priority', ChoiceType::class, [
                 'choices' => [

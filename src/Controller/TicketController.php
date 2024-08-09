@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Ticket;
 use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TicketController extends AbstractController
@@ -29,18 +30,22 @@ class TicketController extends AbstractController
     public function show(EntityManagerInterface $entityManager): Response
     {
         $user = $this->security->getUser();
-
+    
         if (!$user) {
             throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
-
-        $tickets = $entityManager->getRepository(Ticket::class)->findBy(['user' => $user]);
-
+    
+        $tickets = $entityManager->getRepository(Ticket::class)->findBy([
+            'user' => $user,
+            'isDeleted' => false,
+        ]);
+    
         return $this->render('pages/tickets/showTickets.html.twig', [
             'controller_name' => 'TicketController',
             'tickets' => $tickets,
         ]);
     }
+    
 
     #[Route('/ticket/{id}', name: 'app_ticket_show', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
@@ -100,7 +105,11 @@ class TicketController extends AbstractController
             throw $this->createAccessDeniedException('Vous ne pouvez modifier que vos propres tickets.');
         }
     
-        $form = $this->createForm(TicketFormType::class, $ticket, ['is_edit' => true]); // Passer true
+        if ($ticket->getStatus() === 'Closed') {
+            throw $this->createAccessDeniedException('Ce ticket est fermé et ne peut pas être modifié.');
+        }
+    
+        $form = $this->createForm(TicketFormType::class, $ticket, ['is_edit' => true]);
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
@@ -114,7 +123,7 @@ class TicketController extends AbstractController
             'form' => $form->createView(),
             'ticket' => $ticket,
         ]);
-    }
+    }  
 
     #[Route('/ticket-status/{id}', name: 'app_ticket_status', methods:['POST'])]
     #[IsGranted('ROLE_USER')]
@@ -127,10 +136,11 @@ class TicketController extends AbstractController
         }
     
         $user = $this->getUser();
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
     
-        // Vérifiez que l'utilisateur connecté est bien le propriétaire du ticket
-        if ($ticket->getUser() !== $user) {
-            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à modifier ce ticket');
+        // Les utilisateurs réguliers ne peuvent pas fermer un ticket
+        if (!$isAdmin && $request->request->get('status') === 'Closed') {
+            throw $this->createAccessDeniedException('Vous ne pouvez pas fermer un ticket.');
         }
     
         $status = $request->request->get('status');
@@ -141,8 +151,9 @@ class TicketController extends AbstractController
             $em->flush();
         }
     
-        return $this->redirectToRoute('app_show_tickets');
+        return $this->redirectToRoute($isAdmin ? 'app_admin_tickets' : 'app_show_tickets');
     }
+    
 
     #[Route('/ticket-suppression/{id}', name: 'app_ticket_delete', methods:['POST'])]
     #[IsGranted('ROLE_USER')]
@@ -155,10 +166,93 @@ class TicketController extends AbstractController
         }
     
         if ($this->isCsrfTokenValid('delete' . $ticket->getId(), $request->request->get('_token'))) {
-            $em->remove($ticket);
+            // Ne pas supprimer, mais marquer comme supprimé
+            $ticket->setIsDeleted(true);
+            $ticket->setUpdatedAt(new \DateTimeImmutable());
             $em->flush();
         }
     
         return $this->redirectToRoute('app_show_tickets');
+    }
+    
+    
+    #[Route('/admin/tickets', name: 'app_admin_tickets')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function adminShow(EntityManagerInterface $entityManager): Response
+    {
+        $tickets = $entityManager->getRepository(Ticket::class)->findAll();
+    
+        return $this->render('pages/tickets/adminTickets.html.twig', [
+            'tickets' => $tickets,
+        ]);
+    }
+    
+
+    #[Route('/admin/ticket-status/{id}', name: 'app_ticket_status_admin', methods:['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function updateStatusAdmin(int $id, Request $request, EntityManagerInterface $em): Response
+    {
+        $ticket = $em->getRepository(Ticket::class)->find($id);
+    
+        if (!$ticket) {
+            throw $this->createNotFoundException('Ticket non trouvé');
+        }
+    
+        $status = $request->request->get('status');
+    
+        if (in_array($status, ['Open', 'Closed'])) {
+            $ticket->setStatus($status);
+            $ticket->setUpdatedAt(new \DateTimeImmutable());
+            $em->flush();
+        }
+    
+        return $this->redirectToRoute('app_admin_tickets');
     }    
+
+
+    #[Route('/admin/ticket-suppression/{id}', name: 'app_ticket_delete_admin', methods:['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deleteAdmin(Request $request, Ticket $ticket, EntityManagerInterface $em): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $ticket->getId(), $request->request->get('_token'))) {
+            $em->remove($ticket);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('app_admin_tickets');
+    }
+
+    #[Route('/admin/ticket-modification/{id}', name: 'app_admin_ticket_modify', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function modifyForAdmin(Request $request, Ticket $ticket, EntityManagerInterface $em): Response
+    {
+        $form = $this->createFormBuilder($ticket)
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'Ouvert' => 'Open',
+                    'Fermé' => 'Closed',
+                ],
+                'label' => 'Statut du ticket :',
+                'label_attr' => [
+                    'class' => ''
+                ],
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $ticket->setUpdatedAt(new \DateTimeImmutable());
+            $em->flush();
+
+            return $this->redirectToRoute('app_admin_tickets');
+        }
+
+        return $this->render('pages/tickets/adminEditTicket.html.twig', [
+            'form' => $form->createView(),
+            'ticket' => $ticket,
+        ]);
+    }
+
+
 }

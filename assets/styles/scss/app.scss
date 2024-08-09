@@ -1,6 +1,8 @@
 // VAR-SCSS
 
 $blue: #176eb6e5;
+$link: rgb(0, 217, 255);
+
 
 /* Basics */
 
@@ -10,29 +12,44 @@ $blue: #176eb6e5;
 }
 body{
     background: whitesmoke;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+}
+// h1,h2,h3,h4,h5,h6 {
+// }
+.title{
+    font-size: 1.4rem;
 }
 
+.subtitle{
+    font-size: 1.2rem;
+}
+p{
+    font-size: 1rem;
+}
 h1{
-    font-size: 3.8vh;
+    font-size: 3rem;
 }
 h2{
-    font-size: 3.5vh;
+    font-size: 2.6rem;
 }
 h3{
-    font-size: 3vh;
+    font-size: 2.3rem;
 }
 h4{
-    font-size: 2.7vh;
+    font-size: 1.8rem;
 }
 h5{
-    font-size: 2.2vh;
+    font-size: 1.6rem;
 }
 h6{
-    font-size: 1.7vh;
+    font-size: 1.4rem;
 }
 
 a{
     text-decoration: none;
+    color: $link;
+
 }
 
 .logo{
@@ -48,6 +65,7 @@ nav{
     justify-content: space-between;
     padding: 10px;
     align-items: center;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 nav ul li{
@@ -61,7 +79,7 @@ nav ul li p{
 
 
 .content{
-    margin: 30px;
+    margin: 6vh;
 }
 
 /* Reusable Component */

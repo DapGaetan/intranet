@@ -44,6 +44,9 @@ class Ticket
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isDeleted = false;
+
     public function __construct()
     {
         $this->assigned_to = new ArrayCollection();
@@ -158,6 +161,18 @@ class Ticket
     public function setUpdatedAt(\DateTimeImmutable $updated_at): static
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getIsDeleted(): bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }
