@@ -4,10 +4,10 @@
 
 {% block body %}
     <h2>Mes Tickets</h2>
-    
+
     <button><a href="{{ path('app_create_ticket') }}">Nouveau ticket</a></button>
     <br>
-{% if tickets is not empty %}
+    {% if tickets is not empty %}
         <table>
             <thead>
                 <tr>
@@ -16,6 +16,8 @@
                     <th>Statut</th>
                     <th>Priorité</th>
                     <th>Créé le</th>
+                    <th>Modifier</th>
+                    <th>Supprimer</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,9 +25,24 @@
                     <tr>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.description }}</td>
-                        <td>{{ ticket.status }}</td>
+                        <td>
+                            <form method="post" action="{{ path('app_ticket_status', {id: ticket.id}) }}">
+                                <select name="status" onchange="this.form.submit()">
+                                    <option value="Open" {% if ticket.status == 'Open' %}selected{% endif %}>Ouvert</option>
+                                    <option value="Closed" {% if ticket.status == 'Closed' %}selected{% endif %}>Fermé</option>
+                                </select>
+                                <input type="hidden" name="_token" value="{{ csrf_token('status' ~ ticket.id) }}">
+                            </form>
+                        </td>
                         <td>{{ ticket.priority }}</td>
                         <td>{{ ticket.createdAt|date('Y-m-d H:i:s') }}</td>
+                        <td><a href="{{ path('app_ticket_modify', {id: ticket.id}) }}">Modifier</a></td>
+                        <td>
+                            <form method="post" action="{{ path('app_ticket_delete', {id: ticket.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
+                                <button type="submit">Supprimer</button>
+                            </form>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -34,5 +51,3 @@
         <p>Aucun ticket trouvé.</p>
     {% endif %}
 {% endblock %}
-
-

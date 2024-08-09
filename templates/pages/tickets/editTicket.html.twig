@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le Ticket{% endblock %}
+
+{% block body %}
+    <h2>Modifier le Ticket</h2>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Enregistrer les modifications</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_show_tickets') }}">Retour à la liste des tickets</a>
+{% endblock %}

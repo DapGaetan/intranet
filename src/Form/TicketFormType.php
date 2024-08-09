@@ -1,26 +1,68 @@
 <?php
+
+// src/Form/TicketFormType.php
+
 namespace App\Form;
 
 use App\Entity\Ticket;
-use App\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TicketFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $isEdit = $options['is_edit'];
+
+        $statusChoices = ['Ouvert' => 'Open'];
+
+        if ($isEdit) {
+            $statusChoices['Fermé'] = 'Closed';
+        }
+
         $builder
-            ->add('title')
-            ->add('description')
+            ->add('title', TextType::class, [
+                'attr' => [
+                    'class' => '',
+                    'minlength' => '5',
+                    'maxlength' => '150',
+                    'placeholder' => 'Mon écran est HS',
+                ],
+                'label' => 'Sujet de la demande :',
+                'label_attr' => [
+                    'class' => ''
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['min' => 5, 'max' => 150]),
+                ],
+            ])
+            ->add('description', TextType::class, [
+                'attr' => [
+                    'class' => '',
+                    'minlength' => '5',
+                    'maxlength' => '550',
+                    'placeholder' => 'L\'écran ne s\'allume plus...',
+                ],
+                'label' => 'Description de la demande :',
+                'label_attr' => [
+                    'class' => ''
+                ],
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['min' => 5, 'max' => 550]),
+                ],
+            ])
             ->add('status', ChoiceType::class, [
-                'choices' => [
-                    'Ouvert' => 'Open',
-                    'En cour de traitement' => 'In Progress',
-                    'Fermer' => 'Closed',
+                'choices' => $statusChoices,
+                'label' => 'Statut du ticket :',
+                'label_attr' => [
+                    'class' => ''
                 ],
             ])
             ->add('priority', ChoiceType::class, [
@@ -28,29 +70,20 @@ class TicketFormType extends AbstractType
                     'Bas' => 'low',
                     'Moyen' => 'medium',
                     'Haut' => 'high',
-                    'Urgent' => 'very hight',
+                    'Urgent' => 'very high',
                 ],
-            ])
-            ->add('created_at', null, [
-                'widget' => 'single_text',
-            ])
-            // ->add('user', EntityType::class, [
-            //    'class' => User::class,
-            //    'choice_label' => 'id',
-            // ])
-            // ->add('assigned_to', EntityType::class, [
-            //    'class' => User::class,
-            //    'choice_label' => 'id',
-            //    'multiple' => true,
-            //    'expanded' => false,
-            // ])
-        ;
+                'label' => 'Indicateur d\'impact sur mon travail :',
+                'label_attr' => [
+                    'class' => ''
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Ticket::class,
+            'is_edit' => false,
         ]);
     }
 }
