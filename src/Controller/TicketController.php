@@ -42,6 +42,16 @@ class TicketController extends AbstractController
         ]);
     }
 
+    #[Route('/ticket/{id}', name: 'app_ticket_show', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function showTicket(Ticket $ticket): Response
+    {
+        return $this->render('pages/tickets/showTicket.html.twig', [
+            'ticket' => $ticket,
+        ]);
+    }
+
+
     #[Route('/ticket-creation', name: 'app_create_ticket')]
     #[IsGranted('ROLE_USER')]
     public function new(Request $request, EntityManagerInterface $em, UserRepository $userRepo): Response

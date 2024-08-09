@@ -23,7 +23,7 @@
             <tbody>
                 {% for ticket in tickets %}
                     <tr>
-                        <td>{{ ticket.title }}</td>
+                        <td><a href="{{ path('app_ticket_show', {id: ticket.id}) }}">{{ ticket.title }}</a></td>
                         <td>{{ ticket.description }}</td>
                         <td>
                             <form method="post" action="{{ path('app_ticket_status', {id: ticket.id}) }}">
@@ -35,7 +35,7 @@
                             </form>
                         </td>
                         <td>{{ ticket.priority }}</td>
-                        <td>{{ ticket.createdAt|date('Y-m-d H:i:s') }}</td>
+                        <td>{{ ticket.createdAt|date('Y-m-d') }}</td>
                         <td><a href="{{ path('app_ticket_modify', {id: ticket.id}) }}">Modifier</a></td>
                         <td>
                             <form method="post" action="{{ path('app_ticket_delete', {id: ticket.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
