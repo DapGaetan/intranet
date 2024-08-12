@@ -199,11 +199,11 @@ class TicketController extends AbstractController
         ]);
     }
 
-    #[Route('/ticket/{id}', name: 'app_ticket_show_admin', methods: ['GET'])]
+    #[Route('/admin/ticket/{id}', name: 'app_ticket_show_admin', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function admShowTicket(Ticket $ticket): Response
     {
-        return $this->render('pages/tickets/showTicket.html.twig', [
+        return $this->render('pages/tickets/adminShowTicket.html.twig', [
             'ticket' => $ticket,
         ]);
     }

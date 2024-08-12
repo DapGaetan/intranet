@@ -1,11 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier le statut du ticket{% endblock %}
+{% block title %}Détails du ticket{% endblock %}
 
 {% block body %}
-    <h2>Modifier le statut du ticket</h2>
-
-    <h4>Détails du Ticket</h4>
+    <h2>Détails du Ticket</h2>
 
     <p><strong>Sujet :</strong> {{ ticket.title }}</p>
     <p><strong>Description :</strong> {{ ticket.description | nl2br}}</p>
@@ -13,11 +11,6 @@
     <p><strong>Priorité :</strong> {{ ticket.priority }}</p>
     <p><strong>Créé le :</strong> {{ ticket.createdAt|date('Y-m-d H:i:s') }}</p>
     <p><strong>Dernière mise à jour :</strong> {{ ticket.updatedAt|date('Y-m-d H:i:s') }}</p>
-
-    {{ form_start(form) }}
-        {{ form_row(form.status) }}
-        <button type="submit">Enregistrer</button>
-    {{ form_end(form) }}
 
     <a href="{{ path('app_admin_tickets') }}"><i class="fa-solid fa-arrow-left-long"></i> Retour à la gestion des tickets</a>
 {% endblock %}
