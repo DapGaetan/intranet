@@ -6,10 +6,8 @@
 
 {% block body %}
     <h2>Gestion des Tickets</h2>
-
-    <button><a href="{{ path('app_create_ticket') }}">Créer un nouveau ticket</a></button>
     <br>
-    {% if tickets is not empty %}
+    {% if pagination.getTotalItemCount() > 0 %}
         <table>
             <thead>
                 <tr>
@@ -20,29 +18,34 @@
                     <th>Créé le</th>
                     <th>Vie du ticket</th>
                     <th>Modifier</th>
+                    <th>Supprimer</th>
                 </tr>
             </thead>
             <tbody>
-            {% for ticket in tickets %}
-                <tr>
-                    <td>{{ ticket.title }}</td>
-                    <td>{{ ticket.description }}</td>
-                    <td>{{ ticket.status }}</td>
-                    <td>{{ ticket.priority }}</td>
-                    <td>{{ ticket.createdAt|date('Y-m-d') }}</td>
-                    <td>{% if ticket.isDeleted %}Supprimé par l'utilisateur{% else %}Actif{% endif %}</td>
-                    <td><a href="{{ path('app_admin_ticket_modify', {id: ticket.id}) }}">Modifier</a></td>
-                    <td>
-                        <form method="post" action="{{ path('app_ticket_delete_admin', {id: ticket.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce ticket ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
-                            <button type="submit">Supprimer</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
+                {% for ticket in pagination.getItems() %}
+                    <tr>
+                        <td><a href="{{ path('app_ticket_show_admin', {id: ticket.id}) }}"><i class="fa-solid fa-eye"></i></a></td>
+                        <td>{{ ticket.description }}</td>
+                        <td>{{ ticket.status }}</td>
+                        <td>{{ ticket.priority }}</td>
+                        <td>{{ ticket.createdAt|date('Y-m-d') }}</td>
+                        <td>{% if ticket.isDeleted %}Supprimé par l'utilisateur{% else %}Actif{% endif %}</td>
+                        <td><a href="{{ path('app_admin_ticket_modify', {id: ticket.id}) }}"><i class="fa-solid fa-file-pen"></i></a></td>
+                        <td>
+                            <form method="post" action="{{ path('app_ticket_delete_admin', {id: ticket.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement ce ticket ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
+                                <button type="submit"><i class="fa-solid fa-trash-can"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     {% else %}
         <p>Aucun ticket trouvé.</p>
+    {% endif %}
+
+    {% if pagination.getPageCount() > 1 %}
+        {% include 'bundles/KnpPaginatorBundle/Pagination/custom_pagination.html.twig' with { 'pagination': pagination } %}
     {% endif %}
 {% endblock %}

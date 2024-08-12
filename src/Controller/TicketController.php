@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-namespace App\Controller;
-
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\TicketFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Ticket;
 use App\Repository\UserRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -27,26 +26,31 @@ class TicketController extends AbstractController
 
     #[Route('/tickets', name: 'app_show_tickets')]
     #[IsGranted('ROLE_USER')]
-    public function show(EntityManagerInterface $entityManager): Response
+    public function show(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
-        $user = $this->security->getUser();
+        $user = $this->getUser();
     
         if (!$user) {
             throw $this->createNotFoundException('Utilisateur non trouvé.');
         }
     
-        $tickets = $entityManager->getRepository(Ticket::class)->findBy([
-            'user' => $user,
-            'isDeleted' => false,
-        ]);
+        $queryBuilder = $entityManager->getRepository(Ticket::class)->createQueryBuilder('t')
+            ->where('t.user = :user')
+            ->andWhere('t.isDeleted = :isDeleted')
+            ->setParameter('user', $user)
+            ->setParameter('isDeleted', false);
+    
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            9
+        );
     
         return $this->render('pages/tickets/showTickets.html.twig', [
-            'controller_name' => 'TicketController',
-            'tickets' => $tickets,
+            'pagination' => $pagination,
         ]);
     }
     
-
     #[Route('/ticket/{id}', name: 'app_ticket_show', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
     public function showTicket(Ticket $ticket): Response
@@ -178,12 +182,29 @@ class TicketController extends AbstractController
     
     #[Route('/admin/tickets', name: 'app_admin_tickets')]
     #[IsGranted('ROLE_ADMIN')]
-    public function adminShow(EntityManagerInterface $entityManager): Response
+    public function adminShow(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
-        $tickets = $entityManager->getRepository(Ticket::class)->findAll();
+        // Création du QueryBuilder pour obtenir les tickets
+        $ticketsQueryBuilder = $entityManager->getRepository(Ticket::class)->createQueryBuilder('t');
+    
+        // Pagination des résultats
+        $pagination = $paginator->paginate(
+            $ticketsQueryBuilder, // Query
+            $request->query->getInt('page', 1), // Numéro de la page
+            10 // Limite par page
+        );
     
         return $this->render('pages/tickets/adminTickets.html.twig', [
-            'tickets' => $tickets,
+            'pagination' => $pagination,
+        ]);
+    }
+
+    #[Route('/ticket/{id}', name: 'app_ticket_show_admin', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function admShowTicket(Ticket $ticket): Response
+    {
+        return $this->render('pages/tickets/showTicket.html.twig', [
+            'ticket' => $ticket,
         ]);
     }
     

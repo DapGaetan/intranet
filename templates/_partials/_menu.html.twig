@@ -6,7 +6,7 @@
     {% endif %}
     <ul>
         {% if app.user %}
-            <li><a href="{{ path('app_profile') }}">{{ app.user.FirstName }} {{ app.user.LastName }}</a></li>
+            <li><a href="{{ path('app_profile') }}"><i class="fa-solid fa-user"></i> {{ app.user.FirstName }} {{ app.user.LastName }}</a></li>
             <li>Réservation</li>
             <li><a href="{{ path('app_show_tickets') }}">Tickets</a></li>
             <li>Galerie</li>
@@ -16,7 +16,7 @@
                 <li><a href="{{ path('app_admin_tickets') }}">Gestion des Tickets</a></li>
                 {# <li><a href="{{ path('app_admin_dashboard') }}">Tableau de Bord Admin</a></li> #}
             {% endif %}
-            <li><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+            <li><a href="{{ path('app_logout') }}"><i class="fa-solid fa-door-open"></i> Déconnexion</a></li>
         {% else %}
             {% if app.request.attributes.get('_route') != 'app_register' %}
                 <li><a href="{{ path('app_register') }}">Register</a></li>

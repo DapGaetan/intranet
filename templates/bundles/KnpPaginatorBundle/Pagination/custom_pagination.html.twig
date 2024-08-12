@@ -1,0 +1,76 @@
+{% if pagination.getPageCount() > 1 %}
+    <div class="pagination-container">
+        <ul class="pagination justify-content-center">
+            {# Lien vers la première page #}
+            {% if pagination.getCurrentPageNumber() > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path(pagination.getRoute(), pagination.getParams() | merge({ (app.request.query.get('_page', 'page')): 1 })) }}">
+                        <i class="fa-solid fa-angles-left"></i></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link"><i class="fa-solid fa-angles-left"></i></i></span>
+                </li>
+            {% endif %}
+
+            {# Lien vers la page précédente #}
+            {% set prevPage = pagination.getCurrentPageNumber() > 1 ? pagination.getCurrentPageNumber() - 1 : null %}
+            {% if prevPage %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path(pagination.getRoute(), pagination.getParams() | merge({ (app.request.query.get('_page', 'page')): prevPage })) }}">
+                        <i class="fa-solid fa-angle-left"></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link"><i class="fa-solid fa-angle-left"></i></span>
+                </li>
+            {% endif %}
+
+            {# Pages de pagination #}
+            {% set startPage = max(1, pagination.getCurrentPageNumber() - 2) %}
+            {% set endPage = min(pagination.getPageCount(), pagination.getCurrentPageNumber() + 2) %}
+            {% for page in startPage..endPage %}
+                {% if page != pagination.getCurrentPageNumber() %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ path(pagination.getRoute(), pagination.getParams() | merge({ (app.request.query.get('_page', 'page')): page })) }}">
+                            {{ page }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ page }}</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {# Lien vers la page suivante #}
+            {% set nextPage = pagination.getCurrentPageNumber() < pagination.getPageCount() ? pagination.getCurrentPageNumber() + 1 : null %}
+            {% if nextPage %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path(pagination.getRoute(), pagination.getParams() | merge({ (app.request.query.get('_page', 'page')): nextPage })) }}">
+                        <i class="fa-solid fa-angle-right"></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link"><i class="fa-solid fa-angle-right"></i></span>
+                </li>
+            {% endif %}
+
+            {# Lien vers la dernière page #}
+            {% if pagination.getCurrentPageNumber() < pagination.getPageCount() %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path(pagination.getRoute(), pagination.getParams() | merge({ (app.request.query.get('_page', 'page')): pagination.getPageCount() })) }}">
+                        <i class="fa-solid fa-angles-right"></i></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link"><i class="fa-solid fa-angles-right"></i></i></span>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}

@@ -55,6 +55,73 @@ a {
   height: 3.5vh;
 }
 
+/* Pagination avec KNP PAGINATOR */
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  list-style: none;
+  margin: 0;
+}
+
+.page-item {
+  margin: 0 0.5rem;
+}
+
+.page-link {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  color: #007bff;
+  background-color: #fff;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.page-link:hover {
+  background-color: #f8f9fa;
+  border-color: #ddd;
+}
+
+.page-item.active .page-link {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+  pointer-events: none;
+}
+
+.page-item.disabled .page-link {
+  color: #6c757d;
+  background-color: #fff;
+  border-color: #ddd;
+  pointer-events: none;
+}
+
+.page-item .page-link {
+  font-size: 0.875rem;
+}
+
+.page-item:first-child .page-link {
+  border-radius: 0.25rem 0 0 0.25rem;
+}
+
+.page-item:last-child .page-link {
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.page-item:not(:last-child) {
+  margin-right: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    flex-wrap: wrap;
+  }
+  .page-item {
+    margin-bottom: 0.5rem;
+  }
+}
 /* Menu */
 nav {
   margin-top: 1rem;
@@ -76,7 +143,7 @@ nav ul li p {
 }
 
 .content {
-  margin: 6vh;
+  margin: 4vh;
 }
 
 /* Reusable Component */

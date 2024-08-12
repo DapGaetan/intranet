@@ -7,17 +7,17 @@
 
     <h4>Détails du Ticket</h4>
 
-    <p><strong>Titre :</strong> {{ ticket.title }}</p>
-    <p><strong>Description :</strong> {{ ticket.description }}</p>
+    <p><strong>Sujet :</strong> {{ ticket.title }}</p>
+    <p><strong>Description :</strong> {{ ticket.description | nl2br}}</p>
     <p><strong>Statut :</strong> {{ ticket.status }}</p>
     <p><strong>Priorité :</strong> {{ ticket.priority }}</p>
     <p><strong>Créé le :</strong> {{ ticket.createdAt|date('Y-m-d H:i:s') }}</p>
     <p><strong>Dernière mise à jour :</strong> {{ ticket.updatedAt|date('Y-m-d H:i:s') }}</p>
 
-    <a href="{{ path('app_admin_tickets') }}">Retour à la gestion des tickets</a>
-
     {{ form_start(form) }}
         {{ form_row(form.status) }}
         <button type="submit">Enregistrer</button>
     {{ form_end(form) }}
+
+        <a href="{{ path('app_show_tickets') }}">Retour à la liste des tickets</a>
 {% endblock %}
