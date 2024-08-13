@@ -1,6 +1,5 @@
 <header>
     <div class="logo-container">
-        <h3>{% block title %}{% endblock %}</h3>
         {% if app.user %}
             <a href="{{ path('app_home') }}"><img class="logo" src="{{ asset('assets/images/logo.png') }}" alt="Logo de la communauté de commune osartis marquion"></a>
         {% else %}
