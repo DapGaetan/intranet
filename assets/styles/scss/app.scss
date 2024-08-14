@@ -1,7 +1,7 @@
 // VAR-SCSS
-
-$blue: #0091ff;
-$link: rgb(0, 217, 255);
+$main-color: #0091ff;
+$link-color: #1d7ec9;
+$font-color: #252525;
 
 /* Basics */
 
@@ -9,9 +9,11 @@ $link: rgb(0, 217, 255);
     padding: 0;
     margin: 0;
 }
+
 body{
     background: whitesmoke;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: $font-color;
 }
 // h1,h2,h3,h4,h5,h6 {
 // }
@@ -46,7 +48,7 @@ h6{
 
 a{
     text-decoration: none;
-    color: $link;
+    color: $link-color;
 
 }
 
@@ -131,9 +133,11 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 0;
-    width: calc(100% - 60px);
+    gap: 15px;
+    width: calc(100% - 0px);
     margin: 10px;
-    position: relative;
+    position: relative; 
+    // position: static; 
 }
 
 nav {
@@ -148,7 +152,7 @@ nav {
     position: fixed;
     top: 0;
     right: 0;
-    width: 200px;
+    max-width: 200px;
     z-index: 100;
 }
 
@@ -176,15 +180,14 @@ nav {
     box-shadow: none;
     border: none;
     margin: 0;
-    text-align: left;
-    padding-left: 45px;
+    text-align: center;
 }
 
 #menu-accordeon a {
     display: block;
     text-decoration: none;
     color: #ffffff;
-    padding: 15px 0;
+    padding: 25px;
     font-size: 1.2em;
 }
 
@@ -211,26 +214,41 @@ nav {
 }
 
 .logo-container {
-    background-color: $blue;
+    background-color: $main-color;
     border-radius: 6px;
     width: 100%;
-    height: 57px;
+    height: 77px;
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
     margin-right: 180px;
 }
 
-.logo {
+.logo-container {
+    background-color: $main-color;
+    border-radius: 6px;
+    width: 100%;
+    min-height: 57px;
+    max-height: fit-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.logo-container .logo{
     max-width: 180px;
     height: auto;
 }
 
-.content {
-    z-index: 1;
-    margin: 4vh;
+.logo-container h3 {
+    flex-grow: 1;
+    text-align: center;
+    margin: 0;
+    align-items: center;
+    font-size: 1.8em;
+    color: whitesmoke;
 }
-
 
 /* Reusable Component */
 
@@ -243,18 +261,26 @@ nav {
     /* Images */
 
     /* Content */
-
+    .content {
+        z-index: 1;
+        margin: 4vh;
+    }
 
 
 /* Footer */
 
 footer{
-    margin-top: 1rem;
-    background-color: $blue;
+    margin: 10px 10px 10px 10px;
+    background-color: $main-color;
     display: flex;
     justify-content: space-between;
-    padding: 10px;
     align-items: center;
+    border-radius: 6px;
+    width: auto;
+    height: 100px;
+    padding: 0;
+    margin: 10px;
+    position: relative; 
 }
 
 footer section{

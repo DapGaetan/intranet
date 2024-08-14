@@ -11,7 +11,7 @@
         <script src="{{ asset('assets/js/script.js') }}"></script>
     </head>
     <body>
-    {% include '_partials/_menu.html.twig' %}
+    {% include '_partials/_menu.html.twig' with {'page_title': block('title')} %}
 
     <div class="content">
         {% block body %}

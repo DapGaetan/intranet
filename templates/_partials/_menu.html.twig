@@ -5,28 +5,29 @@
         {% else %}
             <a href="{{ path('app_login') }}"><img class="logo" src="{{ asset('assets/images/logo.png') }}" alt="Logo de la communauté de commune osartis marquion"></a>
         {% endif %}
+        <h3>{{ page_title | raw}}</h3>
     </div>
     <nav>
         <ul id="menu-accordeon">
             <li><a href="#"><i class="fa-solid fa-bars"></i></a>
                 <ul>
                     {% if app.user %}
-                        <li><a href="{{ path('app_profile') }}"><i class="fa-solid fa-user"></i> {{ app.user.FirstName }} {{ app.user.LastName }}</a></li>
+                        <li><a href="{{ path('app_profile') }}"><i class="fa-solid fa-user"></i> Mon Profil</a></li>
                         <li>Réservation</li>
-                        <li><a href="{{ path('app_show_tickets') }}">Tickets</a></li>
+                        <li><a href="{{ path('app_show_tickets') }}"><i class="fa-solid fa-ticket"></i> Tickets</a></li>
                         <li>Galerie</li>
                         <li>Formation</li>
                         <li>Option</li>
                         {% if is_granted('ROLE_ADMIN') %}
-                            <li><a href="{{ path('app_admin_tickets') }}">Gestion des Tickets</a></li>
+                            <li><a href="{{ path('app_admin_tickets') }}"><i class="fa-solid fa-ticket-simple"></i> Gestion des Tickets</a></li>
                         {% endif %}
                         <li><a href="{{ path('app_logout') }}"><i class="fa-solid fa-door-open"></i> Déconnexion</a></li>
                     {% else %}
                         {% if app.request.attributes.get('_route') != 'app_register' %}
-                            <li><a href="{{ path('app_register') }}">Register</a></li>
+                            <li><a href="{{ path('app_register') }}"><i class="fa-regular fa-address-card"></i> Register</a></li>
                         {% endif %}
                         {% if app.request.attributes.get('_route') is same as('app_register') %}
-                            <li><a href="{{ path('app_login') }}">Connexion</a></li>
+                            <li><a href="{{ path('app_login') }}"><i class="fa-solid fa-plug"></i> Connexion</a></li>
                         {% endif %}
                     {% endif %}
                 </ul>
