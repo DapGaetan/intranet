@@ -1,10 +1,18 @@
 /* Basics */
-* {
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   padding: 0;
   margin: 0;
 }
 
-body {
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   background: whitesmoke;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   color: #252525;
@@ -56,7 +64,7 @@ a {
   height: 3.5vh;
 }
 
-/* Pagination avec KNP PAGINATOR */
+/* Pagination with KNP PAGINATOR */
 .pagination {
   display: flex;
   justify-content: center;
@@ -128,11 +136,13 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0;
   gap: 15px;
-  width: calc(100% - 0px);
+  max-width: auto;
   margin: 10px;
   position: relative;
+  width: 100%;
+  padding: 0 15px;
+  margin: 10px;
 }
 
 nav {
@@ -141,7 +151,7 @@ nav {
 }
 
 #menu-accordeon {
-  margin: 10px 10px 10px 80px;
+  margin: 10px 10px 10px 10px;
   list-style: none;
   text-align: center;
   position: fixed;
@@ -162,7 +172,7 @@ nav {
   background-color: #0091ff;
   border-radius: 6px;
   margin-bottom: 2px;
-  box-shadow: 3px 3px 3px #d4d4d4;
+  box-shadow: 5px 5px 5px #d4d4d4;
   border: solid 1px #0091ff;
 }
 
@@ -214,22 +224,13 @@ nav {
   width: 100%;
   height: 77px;
   display: flex;
-  justify-content: left;
   align-items: center;
   margin-right: 180px;
-}
-
-.logo-container {
-  background-color: #0091ff;
-  border-radius: 6px;
-  width: 100%;
-  min-height: 57px;
   max-height: -moz-fit-content;
   max-height: fit-content;
-  display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 0 20px;
+  box-shadow: 5px 5px 5px #d4d4d4;
 }
 
 .logo-container .logo {
@@ -249,8 +250,163 @@ nav {
 /* Reusable Component */
 /* Form */
 /* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1em;
+  font-family: "Arial", sans-serif;
+  box-shadow: 0 2px 15px rgba(64, 64, 64, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+thead {
+  background-color: #0091ff;
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+thead th {
+  padding: 12px 15px;
+  text-align: center;
+}
+
+tbody tr {
+  border-bottom: 1px solid #dddddd;
+  transition: background-color 0.3s ease;
+}
+
+tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+tbody tr:hover {
+  background-color: #f1f9ff;
+}
+
+tbody td {
+  padding: 12px 15px;
+  text-align: center;
+}
+
+tbody td a {
+  color: #0091ff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+tbody td a:hover {
+  color: #0056b3;
+}
+
+tbody td form {
+  display: inline;
+}
+
+tbody td button {
+  background: none;
+  border: none;
+  color: #d9534f;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+tbody td button:hover {
+  color: #c9302c;
+}
+
+.priority {
+  background-color: whitesmoke;
+  padding: 5px;
+  font-size: 1.5rem;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px #d4d4d4;
+}
+
+.priority-low {
+  color: rgb(145, 228, 12);
+  border: solid 1px rgb(145, 228, 12);
+}
+
+.priority-medium {
+  color: rgb(255, 177, 32);
+  border: solid 1px rgb(255, 177, 32);
+}
+
+.priority-high {
+  color: rgb(255, 59, 59);
+  border: solid 1px rgb(255, 59, 59);
+}
+
+.priority-very-high {
+  color: rgb(179, 0, 0);
+  border: solid 1px rgb(179, 0, 0);
+}
+
+.isDeleted {
+  background-color: whitesmoke;
+  padding: 4px;
+  font-size: 1.2rem;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px #d4d4d4;
+}
+
+.notDeleted {
+  color: rgb(145, 228, 12);
+  border: solid 1px rgb(145, 228, 12);
+}
+
+.deleted {
+  color: rgb(255, 59, 59);
+  border: solid 1px rgb(255, 59, 59);
+}
+
 /* Page */
 /* Images */
+/* Buttons */
+/* button-send */
+.button-send {
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.button-send a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.button-send:hover {
+  background-color: #218838;
+}
+
+.button-send a:hover {
+  color: #ffffff;
+}
+
+/* button-delete */
+.button-delete {
+  font-size: 1.3rem;
+  background: none;
+  border: none;
+  color: #d9534f;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.button-delete:hover {
+  color: #c9302c;
+}
+
 /* Content */
 .content {
   z-index: 1;
@@ -265,7 +421,7 @@ footer {
   justify-content: space-between;
   align-items: center;
   border-radius: 6px;
-  width: auto;
+  width: 99%;
   height: 100px;
   padding: 0;
   margin: 10px;
