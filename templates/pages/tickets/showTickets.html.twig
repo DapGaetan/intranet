@@ -24,33 +24,34 @@
             <tbody>
                 {% for ticket in pagination.getItems() %}
                     <tr>
-                        <td><a href="{{ path('app_ticket_show', {id: ticket.id}) }}"><i class="fa-solid fa-eye"></i></a></td>
+                        <td><a href="{{ path('app_ticket_show', {id: ticket.id}) }}"><i class="fa-solid fa-eye" title="Consulté le ticket : {{ ticket.title }}"></i></a></td>
                         <td>{{ ticket.title }}</td>
                         <td>{{ ticket.description }}</td>
                         <td>
                             {% if ticket.status == 'Open' %}
-                                <i class="fa-solid fa-person-digging"></i>
+                                <i class="fa-solid fa-person-digging" title="En cour de traitement..."></i>
                             {% else %}
-                                <i class="fa-solid fa-check"></i>
+                                <i class="fa-solid fa-check" title="{{ ticket.title }} est résolue"></i>
                             {% endif %}
                         </td>
                         <td>
                             {% if ticket.priority == 'low' %}
-                                <i class="fa-solid fa-temperature-quarter priority priority-low"></i>
+                                <i class="fa-solid fa-temperature-quarter priority priority-low" title="Priorité : Basse"></i>
                             {% elseif ticket.priority == 'medium' %}
-                                <i class="fa-solid fa-temperature-half priority priority-medium"></i>
+                                <i class="fa-solid fa-temperature-half priority priority-medium" title="Priorité : Moyene"></i>
                             {% elseif ticket.priority == 'high' %}
-                                <i class="fa-solid fa-temperature-three-quarters priority priority-high"></i>
+                                <i class="fa-solid fa-temperature-three-quarters priority priority-high" title="Priorité : Haute"></i>
                             {% elseif ticket.priority == 'very high' %}
-                                <i class="fa-solid fa-temperature-full priority priority-very-high"></i>
+                                <i class="fa-solid fa-temperature-full priority priority-very-high" title="Priorité : Très Haute" ></i>
                             {% endif %}
                         </td>
                         <td>{{ ticket.createdAt|date('Y-m-d') }}</td>
-                        <td><a href="{{ path('app_ticket_modify', {id: ticket.id}) }}"><i class="fa-solid fa-file-pen"></i></a></td>
+                        <td>
+                            <a href="{{ path('app_ticket_modify', {id: ticket.id}) }}" ><i class="fa-solid fa-file-pen" title="Modifier le ticket : {{ ticket.title }}"></i></a></td>
                         <td>
                             <form method="post" action="{{ path('app_ticket_delete', {id: ticket.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
-                                <button class="button-delete" type="submit"><i class="fa-solid fa-trash-can"></i></button>
+                                <button class="button-delete" type="submit"><i class="fa-solid fa-trash-can" title="Supprimer le ticket : {{ ticket.title }}"></i></button>
                             </form>
                         </td>
                     </tr>
