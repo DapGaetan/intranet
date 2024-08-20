@@ -43,7 +43,7 @@ class TicketController extends AbstractController
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            9
+            15
         );
     
         return $this->render('pages/tickets/showTickets.html.twig', [
@@ -142,7 +142,6 @@ class TicketController extends AbstractController
         $user = $this->getUser();
         $isAdmin = $this->isGranted('ROLE_ADMIN');
     
-        // Les utilisateurs réguliers ne peuvent pas fermer un ticket
         if (!$isAdmin && $request->request->get('status') === 'Closed') {
             throw $this->createAccessDeniedException('Vous ne pouvez pas fermer un ticket.');
         }
@@ -170,7 +169,6 @@ class TicketController extends AbstractController
         }
     
         if ($this->isCsrfTokenValid('delete' . $ticket->getId(), $request->request->get('_token'))) {
-            // Ne pas supprimer, mais marquer comme supprimé
             $ticket->setIsDeleted(true);
             $ticket->setUpdatedAt(new \DateTimeImmutable());
             $em->flush();
@@ -184,20 +182,23 @@ class TicketController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function adminShow(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
-        // Création du QueryBuilder pour obtenir les tickets
-        $ticketsQueryBuilder = $entityManager->getRepository(Ticket::class)->createQueryBuilder('t');
+        $ticketsQueryBuilder = $entityManager->getRepository(Ticket::class)
+            ->createQueryBuilder('t')
+            ->orderBy("CASE WHEN t.status = 'Closed' THEN 1 ELSE 0 END", 'ASC') // Trie pour mettre "Closed" en bas
+            ->addOrderBy('t.created_at', 'DESC'); // Ensuite, trie par date de création
     
-        // Pagination des résultats
         $pagination = $paginator->paginate(
-            $ticketsQueryBuilder, // Query
-            $request->query->getInt('page', 1), // Numéro de la page
-            10 // Limite par page
+            $ticketsQueryBuilder,
+            $request->query->getInt('page', 1),
+            15
         );
     
         return $this->render('pages/tickets/adminTickets.html.twig', [
             'pagination' => $pagination,
         ]);
     }
+    
+    
 
     #[Route('/admin/ticket/{id}', name: 'app_ticket_show_admin', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]

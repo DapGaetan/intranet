@@ -319,26 +319,69 @@ nav {
         display: inline;
     }
 
-    tbody td button {
-        background: none;
-        border: none;
-        color: #d9534f;
-        cursor: pointer;
-        transition: color 0.3s ease;
+    .closed-ticket{
+        background-color: #16879b13 !important;
     }
 
-    tbody td button:hover {
-        color: #c9302c;
+    .closed-ticket:hover{
+        background-color: #1e6db63d !important;
     }
 
     .priority{
-        background-color: whitesmoke;
         padding: 5px;
         font-size: 1.2rem;
         border-radius: 5px;
         box-shadow: 1px 1px 1px #d4d4d4;
     }
 
+    /* Switch status */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 34px;
+        height: 20px;
+    }
+    
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 20px;
+    }
+    
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+        background-color: $main-color;
+    }
+    
+    input:checked + .slider:before {
+        transform: translateX(14px);
+    }
+  
+
+    
     .priority-low{
         color: $low;
         border: solid 1px $low;
@@ -406,7 +449,7 @@ nav {
         }
         /* button-delete */
         .button-delete {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             background: none;
             border: none;
             color: #d9534f;
@@ -427,7 +470,8 @@ nav {
 /* Footer */
 
 footer{
-    margin: 10px 10px 10px 10px;
+    margin-top: 100px;
+    margin: 10px;
     background-color: $main-color;
     display: flex;
     justify-content: space-between;
@@ -436,8 +480,8 @@ footer{
     width: 99%;
     height: 100px;
     padding: 0;
-    margin: 10px;
-    position: relative; 
+    position: sticky;
+    bottom: 0px;
 }
 
 footer section{
