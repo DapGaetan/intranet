@@ -17,16 +17,15 @@
                     <th>Statut</th>
                     <th>Priorité</th>
                     <th>Créé le</th>
-                    <th>Modifier</th>
                     <th>Supprimer</th>
                 </tr>
             </thead>
             <tbody>
                 {% for ticket in pagination.getItems() %}
-                    <tr>
+                    <tr class="{% if ticket.status == 'Closed' %}closed-ticket{% endif %}"> 
                         <td><a href="{{ path('app_ticket_show', {id: ticket.id}) }}"><i class="fa-solid fa-eye" title="Consulté le ticket : ID{{ ticket.id }}"></i></a></td>
                         <td>{{ ticket.title }}</td>
-                        <td>{{ ticket.description }}</td>
+                        <td>{{ ticket.description|length > 25 ? ticket.description|slice(0, 25) ~ '...' : ticket.description }}</td>
                         <td>
                             {% if ticket.status == 'Open' %}
                                 <i class="fa-solid fa-person-digging" title="En cour de traitement..."></i>
@@ -45,11 +44,9 @@
                                 <i class="fa-solid fa-temperature-full priority priority-very-high" title="Priorité : Très Haute" ></i>
                             {% endif %}
                         </td>
-                        <td>{{ ticket.createdAt|date('Y-m-d') }}</td>
+                        <td>{{ ticket.createdAt|date('d/m/Y') }}</td>
                         <td>
-                            <a href="{{ path('app_ticket_modify', {id: ticket.id}) }}" ><i class="fa-solid fa-file-pen" title="Modifier le ticket : ID{{ ticket.id }}"></i></a></td>
-                        <td>
-                            <form method="post" action="{{ path('app_ticket_delete', {id: ticket.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ?');">
+                            <form method="post" action="{{ path('app_ticket_delete', {id: ticket.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ? cela n'entrainera pas une annulation du ticket au pret du service informatique.');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ticket.id) }}">
                                 <button class="button-delete" type="submit"><i class="fa-solid fa-trash-can" title="Supprimer le ticket : ID{{ ticket.id }} de {{ ticket.user.username }}"></i></button>
                             </form>

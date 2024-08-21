@@ -3,14 +3,22 @@
 {% block title %}Détails du ticket{% endblock %}
 
 {% block body %}
-    <h2>Détails du Ticket</h2>
+    <div class="ticket-details">
+        <a href="{{ path('app_show_tickets') }}"><i class="fa-solid fa-arrow-left-long"></i> Retour à la liste des tickets</a>
 
-    <p><strong>Sujet :</strong> {{ ticket.title }}</p>
-    <p><strong>Description :</strong> {{ ticket.description | nl2br}}</p>
-    <p><strong>Statut :</strong> {{ ticket.status }}</p>
-    <p><strong>Priorité :</strong> {{ ticket.priority }}</p>
-    <p><strong>Créé le :</strong> {{ ticket.createdAt|date('Y-m-d H:i:s') }}</p>
-    <p><strong>Dernière mise à jour :</strong> {{ ticket.updatedAt|date('Y-m-d H:i:s') }}</p>
+        <h2>Détails du Ticket</h2>
 
-    <a href="{{ path('app_show_tickets') }}"><i class="fa-solid fa-arrow-left-long"></i> Retour à la liste des tickets</a>
+        <p><strong>Sujet :</strong> {{ ticket.title }}</p>
+        <p><strong>Description :</strong> {{ ticket.description | nl2br }}</p>
+        <p><strong>Statut :</strong> {{ ticket.status }}</p>
+        <p><strong>Priorité :</strong> {{ ticket.priority }}</p>
+        <p><strong>Créé le :</strong> {{ ticket.createdAt|date('Y-m-d H:i:s') }}</p>
+        <p><strong>Dernière mise à jour :</strong> {{ ticket.updatedAt|date('Y-m-d H:i:s') }}</p>
+    
+        {% if ticket.status == "Open" %}
+            <button class="button-edit" onclick="window.location.href='{{ path('app_ticket_modify', {id: ticket.id}) }}'">Modifier mon ticket</button>        
+        {% elseif ticket.status == "Closed" %}
+            <h3 class="ticket-closed-message">Ce ticket est résolu !</h3>
+        {% endif %}
+    </div>
 {% endblock %}

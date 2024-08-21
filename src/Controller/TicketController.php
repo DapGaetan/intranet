@@ -38,7 +38,9 @@ class TicketController extends AbstractController
             ->where('t.user = :user')
             ->andWhere('t.isDeleted = :isDeleted')
             ->setParameter('user', $user)
-            ->setParameter('isDeleted', false);
+            ->setParameter('isDeleted', false)
+            ->orderBy('t.status', 'DESC') // "Open" avant "Closed"
+            ->addOrderBy('t.created_at', 'DESC'); // Trier par date de création, du plus récent au plus ancien
     
         $pagination = $paginator->paginate(
             $queryBuilder,
@@ -50,6 +52,7 @@ class TicketController extends AbstractController
             'pagination' => $pagination,
         ]);
     }
+    
     
     #[Route('/ticket/{id}', name: 'app_ticket_show', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
@@ -120,7 +123,7 @@ class TicketController extends AbstractController
             $ticket->setUpdatedAt(new \DateTimeImmutable());
             $em->flush();
     
-            return $this->redirectToRoute('app_show_tickets');
+            return $this->redirectToRoute('app_ticket_show', ['id' => $ticket->getId()]);
         }
     
         return $this->render('pages/tickets/editTicket.html.twig', [

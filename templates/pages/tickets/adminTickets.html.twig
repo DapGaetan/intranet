@@ -15,7 +15,6 @@
                     <th>Description</th>
                     <th>Priorité</th>
                     <th>Créé le</th>
-                    {# <th>Vie du ticket</th> #}
                     <th>Régler</th>
                     <th>Supprimer</th>
                 </tr>
@@ -38,14 +37,7 @@
                                 <i class="fa-solid fa-temperature-full priority priority-very-high" title="Priorité : Très Haute" ></i>
                             {% endif %}
                         </td>
-                        <td>{{ ticket.createdAt|date('d-m-Y') }}</td>
-                        {# <td>
-                            {% if ticket.isDeleted %}
-                                <i class="fa-solid fa-trash-can-arrow-up" title="Le ticket :ID:{{ticket.id}} est supprimer chez l'utilisateur : {{ ticket.user.username }}"></i>
-                            {% else %}
-                                <i class="fa-regular fa-floppy-disk"  title="Le ticket :ID:{{ticket.id}} n'est pas supprimer chez  l'utilisateur : {{ ticket.user.username }}"></i>
-                            {% endif %}
-                        </td> #}
+                        <td>{{ ticket.createdAt|date('d/m/Y') }}</td>
                         <td>
                             <form method="post" action="{{ path('app_ticket_status_admin', {id: ticket.id}) }}" title="Changer le status du ticket : ID{{ticket.id}} de {{ ticket.user.username }} il sera donc clos" style="display: inline;">
                                 <label class="switch">

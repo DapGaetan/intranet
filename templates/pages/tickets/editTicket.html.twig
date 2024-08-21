@@ -3,12 +3,14 @@
 {% block title %}Modifier le Ticket{% endblock %}
 
 {% block body %}
+
+    <a href="{{ path('app_ticket_show', {id: ticket.id}) }}"><i class="fa-solid fa-arrow-left-long"></i> Quitter sans modifier</a>
     <h2>Modifier le Ticket</h2>
 
     {{ form_start(form) }}
         {{ form_widget(form) }}
-        <button type="submit">Enregistrer les modifications</button>
+        <button class="button-edit" type="submit">Enregistrer les modifications</button>
     {{ form_end(form) }}
 
-    <a href="{{ path('app_show_tickets') }}">Retour à la liste des tickets</a>
+    <a href="{{ path('app_show_tickets') }}"><i class="fa-solid fa-table-cells"></i> Retour à la liste des tickets</a>
 {% endblock %}

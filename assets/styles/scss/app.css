@@ -366,24 +366,25 @@ input:checked + .slider:before {
   transform: translateX(14px);
 }
 
+/* Prioritys style */
 .priority-low {
-  color: rgb(145, 228, 12);
-  border: solid 1px rgb(145, 228, 12);
+  color: #91e40c;
+  border: solid 1px #91e40c;
 }
 
 .priority-medium {
-  color: rgb(255, 177, 32);
-  border: solid 1px rgb(255, 177, 32);
+  color: #ffb120;
+  border: solid 1px #ffb120;
 }
 
 .priority-high {
-  color: rgb(255, 59, 59);
-  border: solid 1px rgb(255, 59, 59);
+  color: #ff3b3b;
+  border: solid 1px #ff3b3b;
 }
 
 .priority-very-high {
-  color: rgb(179, 0, 0);
-  border: solid 1px rgb(179, 0, 0);
+  color: #b30000;
+  border: solid 1px #b30000;
 }
 
 .isDeleted {
@@ -395,15 +396,79 @@ input:checked + .slider:before {
 }
 
 .notDeleted {
-  color: rgb(145, 228, 12);
-  border: solid 1px rgb(145, 228, 12);
+  color: #91e40c;
+  border: solid 1px #91e40c;
 }
 
 .deleted {
-  color: rgb(255, 59, 59);
-  border: solid 1px rgb(255, 59, 59);
+  color: #ff3b3b;
+  border: solid 1px #ff3b3b;
 }
 
+/* Form */
+form {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+form .form-group {
+  margin-bottom: 15px;
+}
+
+form label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+form input[type=text],
+form input[type=email],
+form textarea,
+form select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+}
+
+form button[type=submit] {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+  align-self: center;
+}
+
+form button[type=submit]:hover {
+  background-color: #45a049;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+    margin: 20px;
+  }
+  form input[type=text],
+  form input[type=email],
+  form textarea,
+  form select {
+    font-size: 14px;
+  }
+  form button[type=submit],
+  a.button-link {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+}
 /* Page */
 /* Images */
 /* Buttons */
@@ -436,22 +501,78 @@ input:checked + .slider:before {
 
 /* button-delete */
 .button-delete {
-  font-size: 1.2rem;
-  background: none;
+  font-size: 1rem;
+  background-color: #d9534f !important;
   border: none;
-  color: #d9534f;
+  color: rgba(235, 235, 235, 0.9843137255);
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .button-delete:hover {
-  color: #c9302c;
+  background-color: #aa3733 !important;
+}
+
+.button-edit {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #007ddd;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-edit:hover {
+  background-color: #0056b3;
+  text-decoration: none;
 }
 
 /* Content */
 .content {
   z-index: 1;
   margin: 4vh;
+}
+
+/* PAGES STYLE */
+.ticket-details {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-details a {
+  text-decoration: none;
+  color: #007bff;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.ticket-details h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.ticket-details p {
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.ticket-details p strong {
+  color: #333;
+}
+
+.ticket-closed-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 20px;
 }
 
 /* Footer */
