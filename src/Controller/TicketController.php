@@ -45,7 +45,7 @@ class TicketController extends AbstractController
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            15
+            9
         );
     
         return $this->render('pages/tickets/showTickets.html.twig', [
@@ -193,7 +193,7 @@ class TicketController extends AbstractController
         $pagination = $paginator->paginate(
             $ticketsQueryBuilder,
             $request->query->getInt('page', 1),
-            15
+            9
         );
     
         return $this->render('pages/tickets/adminTickets.html.twig', [

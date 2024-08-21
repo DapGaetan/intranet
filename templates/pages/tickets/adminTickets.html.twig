@@ -24,8 +24,8 @@
                     <tr class="{% if ticket.status == 'Closed' %}closed-ticket{% endif %}"> 
                         <td><a href="{{ path('app_ticket_show_admin', {id: ticket.id}) }}"><i class="fa-solid fa-eye" title="Consulté le ticket : {{ ticket.id }} | {{ ticket.title }}, {{ ticket.user.username }}"></i></a></td>
                         <td>{{ ticket.user.username }}</td>
-                        <td>{{ ticket.title }}</td>                        
-                        <td>{{ ticket.description }}</td>
+                        <td>{{ ticket.title|length > 55 ? ticket.title|slice(0, 30) ~ '...' : ticket.title  }}</td>
+                        <td>{{ ticket.description|length > 25 ? ticket.description|slice(0, 40) ~ '...' : ticket.description }}</td>
                         <td>
                             {% if ticket.priority == 'low' %}
                                 <i class="fa-solid fa-temperature-quarter priority priority-low" title="Priorité : Basse"></i>
