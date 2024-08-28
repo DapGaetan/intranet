@@ -39,10 +39,6 @@ class RegistrationFormType extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                     new Length(['min' => 2, 'max' => 161]),
-                    new Regex([
-                        'pattern' => '/^[a-zA-ZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ\-\'\s]+$/',
-                        'message' => 'Le Nom d\'utilisateur ne peut contenir que des lettres, des espaces, des tirets ou des apostrophes.',
-                    ]),
                 ],
             ])
             ->add('first_name', TextType::class, [
@@ -130,6 +126,7 @@ class RegistrationFormType extends AbstractType
                     'Gestion des Déchets' => 'Gestion des Déchets',
                     'Culture' => 'Culture',
                     'Tourisme' => 'Tourisme',
+                    'Service Informatique' => 'Service Informatique',
                 ],
                 'attr' => [
                     'class' => '',

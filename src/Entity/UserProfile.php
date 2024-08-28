@@ -20,7 +20,7 @@ class UserProfile
     #[ORM\Column(length: 40, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -45,6 +45,14 @@ class UserProfile
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'userProfiles')]
+    private ?Department $department = null;
+
+    public function __construct()
+    {
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
+    }
     public function getId(): ?int
     {
         return $this->id;
@@ -163,9 +171,21 @@ class UserProfile
         return $this->user;
     }
 
-    public function setUser(User $user): static
+    public function setUser(User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getDepartment(): ?Department
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?Department $department): static
+    {
+        $this->department = $department;
 
         return $this;
     }

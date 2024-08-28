@@ -30,9 +30,16 @@ class Department
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'department')]
     private Collection $users;
 
+    /**
+     * @var Collection<int, UserProfile>
+     */
+    #[ORM\OneToMany(targetEntity: UserProfile::class, mappedBy: 'department')]
+    private Collection $userProfiles;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->userProfiles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -105,6 +112,36 @@ class Department
             // set the owning side to null (unless already changed)
             if ($user->getDepartment() === $this) {
                 $user->setDepartment(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, UserProfile>
+     */
+    public function getUserProfiles(): Collection
+    {
+        return $this->userProfiles;
+    }
+
+    public function addUserProfile(UserProfile $userProfile): static
+    {
+        if (!$this->userProfiles->contains($userProfile)) {
+            $this->userProfiles->add($userProfile);
+            $userProfile->setDepartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserProfile(UserProfile $userProfile): static
+    {
+        if ($this->userProfiles->removeElement($userProfile)) {
+            // set the owning side to null (unless already changed)
+            if ($userProfile->getDepartment() === $this) {
+                $userProfile->setDepartment(null);
             }
         }
 

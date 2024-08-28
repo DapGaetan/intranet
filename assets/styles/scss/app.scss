@@ -5,6 +5,7 @@
     $font-color: #252525;
     $font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     $default-color: #ebebebfb;
+    $background: linear-gradient(to bottom, whitesmoke, white);
 
     // VAR-PRIORITY
     $low: #91e40c;
@@ -21,7 +22,7 @@
     $allow: #328a00;
     $disallow: #ad201b;
     
-    // VAR-CRUD_HOVER
+    // VAR-HOVER
     $save_hover: #48c500;
     $submit_hover: #4CAF50;
     $edit_hover: #007ddd;
@@ -29,6 +30,9 @@
     $change_hover: #e7e700;
     $allow_hover: #328a00;
     $disallow_hover: #ad201b;
+
+    $input_hover: #0091ff2d;
+    $input_password_hover: #88888838;
 
 
 /* Basics */
@@ -48,9 +52,12 @@ html, body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background: whitesmoke;
+    background: $background;
     font-family: $font-family;
     color: $font-color;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 // h1,h2,h3,h4,h5,h6 {
 // }
@@ -449,12 +456,19 @@ nav {
 
     form label {
         font-weight: bold;
-        margin-bottom: 5px;
+        margin-top: 16px;
+        margin-bottom: 8px;
         display: block;
+        font-size: 1.2rem;
+    }
+
+    form input[type="checkbox"] {
+        font-size: 2rem;
     }
 
     form input[type="text"],
     form input[type="email"],
+    form input[type="password"],
     form textarea,
     form select {
         width: 100%;
@@ -463,6 +477,29 @@ nav {
         border-radius: 5px;
         border: 1px solid #ddd;
         box-sizing: border-box;
+    }
+
+    form input[type="text"]:hover,
+    form input[type="email"]:hover,
+    form input[type="password"]:hover,
+    form textarea:hover,
+    form select:hover {
+        background-color: $input_hover;
+        transition: 3s;
+        font-size: 1.1rem;
+    }
+
+    form input[type="password"]:hover {
+        background-color: $input_password_hover;
+        transition: 3s;
+    }
+
+    form input[type="text"]::placeholder,
+    form input[type="email"]::placeholder,
+    form input[type="password"]::placeholder,
+    form textarea::placeholder {
+        color: #000000;
+        font-style: italic;
     }
 
     form button[type="submit"] {
@@ -491,6 +528,7 @@ nav {
 
         form input[type="text"],
         form input[type="email"],
+        form input[type="password"]
         form textarea,
         form select {
             font-size: 14px;
@@ -570,6 +608,7 @@ nav {
     .content {
         z-index: 1;
         margin: 4vh;
+        flex: 1;
     }
 
     /* PAGES STYLE */
@@ -610,13 +649,30 @@ nav {
                 margin-top: 20px;
             }
 
+            .tickets_listofmoderation{
+            }
+            .tickets_listofmoderation ul{
+            }
+            .tickets_listofmoderation ul li{
+                list-style: none;
+                font-size: 1.4rem;
+            }
+            .tickets_listofmoderation ul li div{
+                color: whitesmoke;
+                min-width: 5vh;
+                max-width: 30vh;
+                background-color: $main-color;
+                min-height: 5vh;
+                margin: 10px;
+                padding: 5px;
+                border-color: $main-color;
+                border-radius: 50px;
+            }
 
 
 /* Footer */
 
 footer{
-    margin-top: 100px;
-    margin: 10px;
     background-color: $main-color;
     display: flex;
     justify-content: space-between;
@@ -625,8 +681,9 @@ footer{
     width: 99%;
     height: 100px;
     padding: 0;
-    position: sticky;
-    bottom: 0px;
+    bottom: 0;
+    margin: 10px;
+    position: relative;
 }
 
 footer section{

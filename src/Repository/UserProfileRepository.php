@@ -5,10 +5,11 @@ namespace App\Repository;
 use App\Entity\UserProfile;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Events;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs as EventLifecycleEventArgs;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-/**
- * @extends ServiceEntityRepository<UserProfile>
- */
 class UserProfileRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -16,28 +17,14 @@ class UserProfileRepository extends ServiceEntityRepository
         parent::__construct($registry, UserProfile::class);
     }
 
-    //    /**
-    //     * @return UserProfile[] Returns an array of UserProfile objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function preUpdate(EventLifecycleEventArgs $args): void
+    {
+        $entity = $args->getObject();
 
-    //    public function findOneBySomeField($value): ?UserProfile
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (!$entity instanceof UserProfile) {
+            return;
+        }
+
+        $entity->setUpdatedAt(new \DateTimeImmutable());
+    }
 }
