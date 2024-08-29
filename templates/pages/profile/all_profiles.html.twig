@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% block title %}<i class="fa-solid fa-user"></i> Liste des profils utilisateurs{% endblock %}
+
+    <ul>
+        {% for user in users %}
+            <li>
+                <a href="{{ path('app_public_profile', { id: user.id }) }}">
+                    {{ user.username }}
+                </a> - {{ user.profile ? user.profile.bio : 'Pas d\'information complémentaire' }}
+            </li>
+        {% else %}
+            <li>Aucun profil utilisateur trouvé</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

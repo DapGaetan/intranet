@@ -74,4 +74,15 @@ class ProfileController extends AbstractController
         ]);
     }
 
+    #[Route('/profiles', name: 'app_all_profiles')]
+    #[IsGranted('ROLE_USER')]
+    public function allProfiles(EntityManagerInterface $entityManager): Response
+    {
+        $users = $entityManager->getRepository(User::class)->findAll();
+
+        return $this->render('pages/profile/all_profiles.html.twig', [
+            'users' => $users,
+        ]);
+    }
+
 }
