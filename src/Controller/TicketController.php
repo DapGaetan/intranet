@@ -39,8 +39,8 @@ class TicketController extends AbstractController
             ->andWhere('t.isDeleted = :isDeleted')
             ->setParameter('user', $user)
             ->setParameter('isDeleted', false)
-            ->orderBy('t.status', 'DESC') // "Open" avant "Closed"
-            ->addOrderBy('t.created_at', 'DESC'); // Trier par date de création, du plus récent au plus ancien
+            ->orderBy('t.status', 'DESC')
+            ->addOrderBy('t.created_at', 'DESC');
     
         $pagination = $paginator->paginate(
             $queryBuilder,
@@ -187,8 +187,8 @@ class TicketController extends AbstractController
     {
         $ticketsQueryBuilder = $entityManager->getRepository(Ticket::class)
             ->createQueryBuilder('t')
-            ->orderBy("CASE WHEN t.status = 'Closed' THEN 1 ELSE 0 END", 'ASC') // Trie pour mettre "Closed" en bas
-            ->addOrderBy('t.created_at', 'DESC'); // Ensuite, trie par date de création
+            ->orderBy("CASE WHEN t.status = 'Closed' THEN 1 ELSE 0 END", 'ASC')
+            ->addOrderBy('t.created_at', 'DESC');
     
         $pagination = $paginator->paginate(
             $ticketsQueryBuilder,

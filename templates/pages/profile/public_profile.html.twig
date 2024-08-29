@@ -1,0 +1,16 @@
+{# templates/pages/public_profile.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ user.username }}'s Profile</h1>
+
+    {% if profile %}
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Phone:</strong> {{ profile.phone }}</p>
+        <p><strong>Bio:</strong> {{ profile.bio }}</p>
+        <p><strong>LinkedIn:</strong> <a href="{{ profile.linkedin_url }}" target="_blank">{{ profile.linkedin_url }}</a></p>
+        <p><strong>Department:</strong> {{ profile.department.name }}</p>
+    {% else %}
+        <p>This user has no profile information.</p>
+    {% endif %}
+{% endblock %}
