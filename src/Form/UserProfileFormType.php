@@ -11,28 +11,26 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Doctrine\ORM\EntityRepository;
 
 class UserProfileFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
             ->add('avatar', FileType::class, [
                 'required' => false,
                 'mapped' => false,
                 'attr' => ['placeholder' => 'Sélectionnez une image'],
-                'label' => 'Photo de profile',
-            ])
-            ->add('department', EntityType::class, [
-                'class' => Department::class,
-                'choice_label' => 'name',
-                'placeholder' => 'Choose a department',
-                'required' => true,
+                'label' => 'Photo de profil',
             ])
             ->add('phone', TextType::class, [
                 'required' => false,
-                'label' => 'Numéro de téléphone profesionnel (fixe et/ou portable)',
+                'label' => 'Numéro de téléphone professionnel (fixe et/ou portable)',
             ])
             ->add('bio', TextareaType::class, [
                 'required' => false,
@@ -40,7 +38,7 @@ class UserProfileFormType extends AbstractType
             ])
             ->add('linkedin_url', TextType::class, [
                 'required' => false,
-                'label' => 'Lien du profile LinkedIn',
+                'label' => 'Lien du profil LinkedIn',
             ])
             ->add('style', ChoiceType::class, [
                 'choices' => [
@@ -52,6 +50,33 @@ class UserProfileFormType extends AbstractType
                 'placeholder' => 'Choisissez un thème',
                 'required' => false,
             ]);
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+            $userProfile = $event->getData();
+
+            if (!$userProfile instanceof UserProfile) {
+                return;
+            }
+
+            $currentDepartment = $userProfile->getDepartment();
+
+            $form->add('department', EntityType::class, [
+                'class' => Department::class,
+                'choice_label' => 'name',
+                'required' => true,
+                'placeholder' => false,
+                'query_builder' => function (EntityRepository $er) use ($currentDepartment) {
+                    $qb = $er->createQueryBuilder('d');
+                    if ($currentDepartment) {
+                        $qb->where('d.id != :currentDepartmentId')
+                           ->setParameter('currentDepartmentId', $currentDepartment->getId());
+                    }
+                    return $qb;
+                },
+                'data' => $currentDepartment,
+            ]);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

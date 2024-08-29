@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use App\Form\UserProfileFormType;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,12 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfileController extends AbstractController
 {
     #[Route('/profile', name: 'app_profile')]
-    public function index(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepo): Response
+    public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         
         if (!$user instanceof User) {
-            throw $this->createAccessDeniedException('You must be logged in to access this page.');
+            throw $this->createAccessDeniedException('Il faut être connecté pour accéder à son profil');
         }
 
         $profile = $user->getProfile();
@@ -35,6 +34,12 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $selectedDepartment = $profile->getDepartment();
+
+            if ($selectedDepartment) {
+                $profile->setAddress($selectedDepartment->getName());
+            }
+
             $profile->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
 
