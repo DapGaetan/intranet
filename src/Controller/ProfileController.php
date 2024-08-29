@@ -54,4 +54,24 @@ class ProfileController extends AbstractController
             'user' => $user,
         ]);
     }
+
+
+    #[Route('/profile/{id}', name: 'app_public_profile')]
+    #[IsGranted('ROLE_USER')]
+    public function publicProfile(int $id, EntityManagerInterface $entityManager): Response
+    {
+        $user = $entityManager->getRepository(User::class)->find($id);
+    
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+    
+        $profile = $user->getProfile();
+    
+        return $this->render('pages/profile/public_profile.html.twig', [
+            'user' => $user,
+            'profile' => $profile,
+        ]);
+    }
+
 }

@@ -1,16 +1,25 @@
-{# templates/pages/public_profile.html.twig #}
+
 {% extends 'base.html.twig' %}
 
+{% block title %}Recherche de profil{% endblock %}
+
+
 {% block body %}
-    <h1>{{ user.username }}'s Profile</h1>
+    <h1>Profil utilisateur de {{ app.user.firstName }} {{ app.user.lastName }}</h1>
 
     {% if profile %}
-        <p><strong>Email:</strong> {{ user.email }}</p>
-        <p><strong>Phone:</strong> {{ profile.phone }}</p>
+        <p><strong>Adresse email:</strong> {{ user.email }}</p>
+        <p><strong>Numéro(s) de téléphone(s) :</strong> {{ profile.phone }}</p>
         <p><strong>Bio:</strong> {{ profile.bio }}</p>
-        <p><strong>LinkedIn:</strong> <a href="{{ profile.linkedin_url }}" target="_blank">{{ profile.linkedin_url }}</a></p>
-        <p><strong>Department:</strong> {{ profile.department.name }}</p>
+
+        {% if profile.linkedinUrl %}
+            <p><strong>LinkedIn:</strong> <a href="{{ profile.linkedinUrl }}" target="_blank">{{ profile.linkedinUrl }}</a></p>
+        {% else %}
+            <p><strong>LinkedIn:</strong> Non renseignée</p>
+        {% endif %}
+
+        <p><strong>Lieux de travail :</strong> {{ profile.department.name }}</p>
     {% else %}
-        <p>This user has no profile information.</p>
+        <p>Les informations de cette utilisateur ne sont pas encore disponible...</p>
     {% endif %}
 {% endblock %}
