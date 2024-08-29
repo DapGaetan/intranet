@@ -141,10 +141,6 @@ class RegistrationFormType extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                     new Length(['min' => 2, 'max' => 180]),
-                    new Regex([
-                        'pattern' => '/^[a-zA-ZàâäéèêëïîôöùûüÿçÀÂÄÉÈÊËÏÎÔÖÙÛÜŸÇ\-\'\s]+$/',
-                        'message' => 'Le Service ne peut contenir que des lettres, des espaces, des tirets ou des apostrophes.',
-                    ]),
                 ],
             ])
             ->add('job', TextType::class, [

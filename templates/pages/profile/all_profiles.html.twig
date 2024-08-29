@@ -1,18 +1,35 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}<i class="fa-solid fa-users"></i> Liste des profils utilisateurs{% endblock %}
+
 {% block body %}
+    <div class="profiles-container">
+        <h1>Tous les utilisateurs</h1>
 
-    {% block title %}<i class="fa-solid fa-user"></i> Liste des profils utilisateurs{% endblock %}
+        <div class="profiles-grid">
+            {% for user in pagination.getItems() %}
+                <div class="profile-card">
+                    {% if user.profile %}
+                        <img src="{{ user.profile.avatar ? asset('uploads/profile_images/' ~ user.profile.avatar) : asset('images/profile-placeholder.jpg') }}" 
+                             alt="{{ user.username }}'s profile picture" 
+                             class="profile-image">
+                        <h2>{{ user.username }}</h2>
+                        <p>{{ user.profile.bio ? (user.profile.bio | slice(0, 100) ~ (user.profile.bio | length > 100 ? '...' : '')) : 'Pas de biographie disponible' }}</p>
+                        <a href="{{ path('app_public_profile', { id: user.id }) }}" class="view-profile">Voir le profil</a>
+                    {% else %}
+                        <div class="profile-placeholder">
+                            <h2>{{ user.username }}</h2>
+                            <p>Pas d'information complémentaire</p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>Aucun profil utilisateur trouvé</p>
+            {% endfor %}
+        </div>
 
-    <ul>
-        {% for user in users %}
-            <li>
-                <a href="{{ path('app_public_profile', { id: user.id }) }}">
-                    {{ user.username }}
-                </a> - {{ user.profile ? user.profile.bio : 'Pas d\'information complémentaire' }}
-            </li>
-        {% else %}
-            <li>Aucun profil utilisateur trouvé</li>
-        {% endfor %}
-    </ul>
+        {% if pagination.getPageCount() > 1 %}
+            {% include 'bundles/KnpPaginatorBundle/Pagination/custom_pagination.html.twig' with { 'pagination': pagination } %}
+        {% endif %}
+    </div>
 {% endblock %}

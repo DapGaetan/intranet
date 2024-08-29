@@ -6,7 +6,9 @@ use App\Entity\User;
 use App\Entity\UserProfile;
 use App\Form\UserProfileFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,8 +38,17 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $selectedDepartment = $profile->getDepartment();
+            $uploadedFile = $form->get('avatar')->getData();
+            if ($uploadedFile instanceof UploadedFile) {
+                $newFilename = uniqid().'.'.$uploadedFile->guessExtension();
+                $uploadedFile->move(
+                    $this->getParameter('kernel.project_dir').'/public/uploads/profile_images',
+                    $newFilename
+                );
+                $profile->setAvatar($newFilename);
+            }
 
+            $selectedDepartment = $profile->getDepartment();
             if ($selectedDepartment) {
                 $profile->setAddress($selectedDepartment->getName());
             }
@@ -54,7 +65,6 @@ class ProfileController extends AbstractController
             'user' => $user,
         ]);
     }
-
 
     #[Route('/profile/{id}', name: 'app_public_profile')]
     #[IsGranted('ROLE_USER')]
@@ -76,13 +86,20 @@ class ProfileController extends AbstractController
 
     #[Route('/profiles', name: 'app_all_profiles')]
     #[IsGranted('ROLE_USER')]
-    public function allProfiles(EntityManagerInterface $entityManager): Response
+    public function allProfiles(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
-        $users = $entityManager->getRepository(User::class)->findAll();
-
+        $queryBuilder = $entityManager->getRepository(User::class)->createQueryBuilder('u')
+            ->orderBy('u.username', 'ASC');
+    
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $request->query->getInt('page', 1),
+            8
+        );
+    
         return $this->render('pages/profile/all_profiles.html.twig', [
-            'users' => $users,
+            'pagination' => $pagination,
         ]);
     }
-
+    
 }
