@@ -6,9 +6,13 @@
 
 <div class="example-wrapper">
     <h1>Mon Profil</h1>
+    <div class="profile-picture">
+        <img src="{{ asset(avatarPath) }}" alt="Photo de profil de {{ app.user.firstName | capitalize }} {{ app.user.lastName | capitalize }}">
+    </div>
     {{ form_start(form) }}
         {{ form_widget(form) }}
         <button type="submit" ><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>
     {{ form_end(form) }}
 </div>
+
 {% endblock %}

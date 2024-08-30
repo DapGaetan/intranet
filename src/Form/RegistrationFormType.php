@@ -17,6 +17,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -202,7 +205,42 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Votre mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.',
                     ]),
                 ],
+            ])
+            
+            ->add('plainPasswordConfirm', PasswordType::class, [
+                'label' => 'Confirmez le mot de passe',
+                'mapped' => false,
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                    'class' => '',
+                    'minlenght' => '2',
+                    'maxlenght' => '180',
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez confirmer le mot de passe',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Votre mot de passe doit faire au moins {{ limit }} charactères',
+                        'max' => 255,
+                    ]),
+                    new Regex([
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/',
+                        'message' => 'Votre mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.',
+                    ]),
+                ],
             ]);
+
+        $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+            $plainPassword = $form->get('plainPassword')->getData();
+            $plainPasswordConfirm = $form->get('plainPasswordConfirm')->getData();
+
+            if ($plainPassword !== $plainPasswordConfirm) {
+                $form->get('plainPasswordConfirm')->addError(new FormError('Les mots de passe ne correspondent pas.'));
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void

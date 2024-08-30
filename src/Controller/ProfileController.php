@@ -25,7 +25,7 @@ class ProfileController extends AbstractController
         if (!$user instanceof User) {
             throw $this->createAccessDeniedException('Il faut être connecté pour accéder à son profil');
         }
-
+    
         $profile = $user->getProfile();
         if (!$profile) {
             $profile = new UserProfile();
@@ -33,10 +33,10 @@ class ProfileController extends AbstractController
             $entityManager->persist($profile);
             $entityManager->flush();
         }
-
+    
         $form = $this->createForm(UserProfileFormType::class, $profile);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $uploadedFile = $form->get('avatar')->getData();
             if ($uploadedFile instanceof UploadedFile) {
@@ -47,25 +47,36 @@ class ProfileController extends AbstractController
                 );
                 $profile->setAvatar($newFilename);
             }
-
+    
+            // Si aucune image n'a été uploadée, conserver l'image actuelle ou définir une image par défaut
+            if (!$profile->getAvatar()) {
+                $profile->setAvatar('default-avatar.png'); // Nom de l'image par défaut
+            }
+    
             $selectedDepartment = $profile->getDepartment();
             if ($selectedDepartment) {
                 $profile->setAddress($selectedDepartment->getName());
             }
-
+    
             $profile->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
-
+    
             $this->addFlash('success', 'Le profil est mis à jour');
             return $this->redirectToRoute('app_home');
         }
-
+    
+        $avatarPath = $profile->getAvatar() 
+            ? '/uploads/profile_images/'.$profile->getAvatar() 
+            : '/uploads/profile_images/default-avatar.png';
+    
         return $this->render('pages/profile/profile.html.twig', [
             'form' => $form->createView(),
             'user' => $user,
+            'avatarPath' => $avatarPath,
         ]);
     }
-
+    
+    
     #[Route('/profile/{id}', name: 'app_public_profile')]
     #[IsGranted('ROLE_USER')]
     public function publicProfile(int $id, EntityManagerInterface $entityManager): Response

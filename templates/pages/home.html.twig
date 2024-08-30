@@ -3,15 +3,32 @@
 {% block title %}<i class="fa-solid fa-house"></i> Accueil{% endblock %}
 
 {% block body %}
+        <h5><strong>Bonjour,</strong> {{ app.user.firstname | capitalize }} {{ app.user.lastname | capitalize }}</h5>
     <div class="home">
-        <h4><strong>Bonjour,</strong> {{ app.user.firstname | capitalize }} {{ app.user.lastname | capitalize }}</h4>
-    
         <div class="feature-grid">
             <div class="feature-item">Annuaire des services</div>
             <div class="feature-item">Mes projets</div>
-            <div class="feature-item">Réservation</div>
-            <div class="feature-item">Événement</div>
+            <div class="feature-item">Mes réservations</div>
+            <div class="feature-item">Nos événements</div>
         </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <h5>Outils d'administration :</h5>
+        <div class="feature-grid-adm">
+            <div class="feature-item-adm">Gestion des tickets</div>
+            <div class="feature-item-adm">Parc informatique</div>
+            <div class="feature-item-adm">Signature mail</div>
+            <div class="feature-item-adm">Création utilisateur</div>
+            <div class="feature-item-adm">Documentation</div>
+            <div class="feature-item-adm">Notes</div>
+            <div class="feature-item-adm">Document ADM</div>
+            <div class="feature-item-adm">Vision des réservation</div>
+            <div class="feature-item-adm">Logs server</div>
+            <div class="feature-item-adm">Logs intranet</div>
+            <div class="feature-item-adm">White board</div>
+            
+        </div>
+    {% endif %}
 
 
         <h5>Mes liens rapide :</h5>

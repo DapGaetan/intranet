@@ -21,7 +21,6 @@
                         <li><a href="{{ path('app_all_profiles') }}"><i class="fa-solid fa-users"></i> Liste des agents</a></li>
                         {% if is_granted('ROLE_ADMIN') %}
                             <li><a href="{{ path('app_admin_tickets') }}"><i class="fa-solid fa-ticket-simple"></i> Gestion des Tickets</a></li>
-                            <li><i class="fa-solid fa-screwdriver-wrench"></i> Administration</li>
                         {% endif %}
                         <li><a href="{{ path('app_logout') }}"><i class="fa-solid fa-door-open"></i> Déconnexion</a></li>
                     {% else %}

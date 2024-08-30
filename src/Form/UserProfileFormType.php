@@ -20,7 +20,6 @@ class UserProfileFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
         $builder
             ->add('avatar', FileType::class, [
                 'required' => false,
@@ -50,17 +49,17 @@ class UserProfileFormType extends AbstractType
                 'placeholder' => 'Choisissez un thème',
                 'required' => false,
             ]);
-
+    
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
             $userProfile = $event->getData();
-
+    
             if (!$userProfile instanceof UserProfile) {
                 return;
             }
-
+    
             $currentDepartment = $userProfile->getDepartment();
-
+    
             $form->add('department', EntityType::class, [
                 'class' => Department::class,
                 'choice_label' => 'name',
@@ -79,11 +78,11 @@ class UserProfileFormType extends AbstractType
             ]);
         });
     }
-
+    
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => UserProfile::class,
         ]);
     }
-}
+}    

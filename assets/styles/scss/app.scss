@@ -21,6 +21,13 @@
     $change: #e7e700;
     $allow: #328a00;
     $disallow: #ad201b;
+
+    // VAR-THEME
+    $reservation: #ffdd57;
+    $event: #cb6be6;
+    $project: #8b52ff;
+    $directory: #faab00;
+
     
     // VAR-HOVER
     $save_hover: #48c500;
@@ -612,6 +619,74 @@ nav {
 
     /* PAGES STYLE */
         // Home
+        .feature-grid-adm {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+            padding: 20px;
+        
+            .feature-item-adm {
+                border-radius: 12px;
+                padding: 20px;
+                text-align: center;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                font-size: 1rem;
+                color: #333;
+                background-color: #ffffff;
+        
+                &:nth-child(1) {
+                    background-color: #e0f7fa; 
+                }
+                &:nth-child(2) {
+                    background-color: #b3e5fc; 
+                }
+                &:nth-child(3) {
+                    background-color: #c8e6c9; 
+                }
+                &:nth-child(4) {
+                    background-color: #fff9c4; 
+                }
+                &:nth-child(5) {
+                    background-color: #ffccbc; 
+                }
+                &:nth-child(6) {
+                    background-color: #d1c4e9; 
+                }
+                &:nth-child(7) {
+                    background-color: #f0f4c3; 
+                }
+                &:nth-child(8) {
+                    background-color: #f8bbd0;  
+                }
+                &:nth-child(9) {
+                    background-color: #bcaeae;
+                }
+                &:nth-child(10) {
+                    background-color: #cfd8dc;
+                }
+        
+                &:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+                }
+
+                font-size: 1.1rem;
+                color: #333;
+                font-weight: 500;
+            }
+        
+            // Responsive design
+            @media (max-width: 768px) {
+                grid-template-columns: repeat(2, 1fr); // 2 colonnes sur écrans plus petits
+            }
+        
+            @media (max-width: 480px) {
+                grid-template-columns: 1fr; // 1 colonne sur écrans très petits
+            }
+        }
+        
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -619,12 +694,24 @@ nav {
             margin-top: 40px;
         
             .feature-item {
-                background-color: #f5f5f5;
                 border-radius: 12px;
                 padding: 20px;
                 text-align: center;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+                &:nth-child(1) {
+                    background-color: $directory;
+                }
+                &:nth-child(2) {
+                    background-color: $project;
+                }
+                &:nth-child(3) {
+                    background-color: $reservation;
+                }
+                &:nth-child(4) {
+                    background-color: $event;
+                }
         
                 &:hover {
                     transform: translateY(-5px);
@@ -917,6 +1004,29 @@ nav {
                     color: #666;
                 }
             }
+
+            .profile-picture {
+                margin: 20px 0;
+                text-align: center;
+            
+                img {
+                    width: 120px;
+                    height: 120px;
+                    border-radius: 50%; // Image circulaire
+                    object-fit: cover; // Maintient le ratio de l'image
+                    border: 3px solid #ddd; // Bordure légère
+                }
+            }
+            
+            .example-wrapper {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f8f9fa; // Fond léger
+                border-radius: 12px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            
 
             // Profiles in the home
             .btn-view-profiles {
