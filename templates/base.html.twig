@@ -23,7 +23,17 @@
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
+
+            <script>
+                document.querySelectorAll('.feature-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        this.classList.toggle('active');
+                    });
+                });
+            </script>
         {% endblock %}
+
+
 
     </body>
 </html>

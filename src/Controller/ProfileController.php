@@ -48,9 +48,9 @@ class ProfileController extends AbstractController
                 $profile->setAvatar($newFilename);
             }
     
-            // Si aucune image n'a été uploadée, conserver l'image actuelle ou définir une image par défaut
+            
             if (!$profile->getAvatar()) {
-                $profile->setAvatar('default-avatar.png'); // Nom de l'image par défaut
+                $profile->setAvatar('default-avatar.png');
             }
     
             $selectedDepartment = $profile->getDepartment();

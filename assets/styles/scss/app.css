@@ -650,13 +650,12 @@ form button[type=submit]:hover {
 }
 .feature-grid .feature-item {
   border-radius: 12px;
-  padding: 20px;
+  padding: 10px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  font-size: 1.2rem;
-  color: #333;
-  font-weight: 500;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, grid-row 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
 }
 .feature-grid .feature-item:nth-child(1) {
   background-color: #faab00;
@@ -670,9 +669,42 @@ form button[type=submit]:hover {
 .feature-grid .feature-item:nth-child(4) {
   background-color: #cb6be6;
 }
-.feature-grid .feature-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+.feature-grid .feature-item .feature-title {
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 500;
+  position: relative;
+}
+.feature-grid .feature-item .arrow {
+  font-size: 1rem;
+  margin-left: 10px;
+  transition: transform 0.3s ease;
+}
+.feature-grid .feature-item .feature-content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+.feature-grid .feature-item.active {
+  grid-row: span 2;
+}
+.feature-grid .feature-item.active .feature-content {
+  max-height: 500px;
+  opacity: 1;
+}
+.feature-grid .feature-item.active .arrow {
+  transform: rotate(180deg);
+}
+.feature-grid .feature-item.active .content-box {
+  background-color: whitesmoke;
+  height: 300px;
+  margin-top: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
 }
 @media (max-width: 768px) {
   .feature-grid {
