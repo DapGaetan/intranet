@@ -66,6 +66,7 @@ class UserProfileFormType extends AbstractType
                 'choice_label' => 'name',
                 'required' => true,
                 'placeholder' => false,
+                'label' => 'Lieux de travail',
                 'query_builder' => function (EntityRepository $er) use ($currentDepartment) {
                     $qb = $er->createQueryBuilder('d');
                     if ($currentDepartment) {

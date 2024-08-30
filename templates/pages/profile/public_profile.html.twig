@@ -5,21 +5,26 @@
 
 
 {% block body %}
-    <h1>Profil utilisateur de {{ app.user.firstName }} {{ app.user.lastName }}</h1>
+<div class="user-profile">
+    <h1>Profil utilisateur de {{ user.firstName }} {{ user.lastName }}</h1>
 
     {% if profile %}
-        <p><strong>Adresse email:</strong> {{ user.email }}</p>
-        <p><strong>Numéro(s) de téléphone(s) :</strong> {{ profile.phone }}</p>
-        <p><strong>Bio:</strong> {{ profile.bio }}</p>
+        <div class="user-details">
+            <p><strong>Adresse email:</strong> {{ user.email }}</p>
+            <p><strong>Numéro(s) de téléphone(s) :</strong> {{ profile.phone }}</p>
+            <p><strong>Bio:</strong> {{ profile.bio }}</p>
 
-        {% if profile.linkedinUrl %}
-            <p><strong>LinkedIn:</strong> <a href="{{ profile.linkedinUrl }}" target="_blank">{{ profile.linkedinUrl }}</a></p>
-        {% else %}
-            <p><strong>LinkedIn:</strong> Non renseignée</p>
-        {% endif %}
+            {% if profile.linkedinUrl %}
+                <p><strong>LinkedIn:</strong> <a href="{{ profile.linkedinUrl }}" target="_blank">{{ profile.linkedinUrl }}</a></p>
+            {% else %}
+                <p><strong>LinkedIn:</strong> Non renseignée</p>
+            {% endif %}
 
-        <p><strong>Lieux de travail :</strong> {{ profile.department.name }}</p>
+            <p><strong>Lieux de travail :</strong> {{ profile.department.name }}</p>
+        </div>
     {% else %}
-        <p>Les informations de cette utilisateur ne sont pas encore disponible...</p>
+        <p class="user-no-profile">Les informations de cet utilisateur ne sont pas encore disponibles...</p>
     {% endif %}
+</div>
+
 {% endblock %}

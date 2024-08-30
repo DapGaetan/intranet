@@ -3,14 +3,30 @@
 {% block title %}Détails du ticket{% endblock %}
 
 {% block body %}
+<a href="{{ path('app_admin_tickets') }}"><i class="fa-solid fa-arrow-left-long"></i> Retour à la gestion des tickets</a>
+<div class="ticket-details">
     <h2>Détails du Ticket</h2>
 
+    <p><strong>Auteur :</strong> {{ ticket.user.username }}</p>
     <p><strong>Sujet :</strong> {{ ticket.title }}</p>
-    <p><strong>Description :</strong> {{ ticket.description | nl2br}}</p>
-    <p><strong>Statut :</strong> {{ ticket.status }}</p>
-    <p><strong>Priorité :</strong> {{ ticket.priority }}</p>
+    <p><strong>Description :</strong> {{ ticket.description | nl2br }}</p>
+    <p><strong>Statut :</strong> <span class="status {{ ticket.status | lower }}">{{ ticket.status }}</span></p>
+    <p><strong>Priorité :</strong>                             {% if ticket.priority == 'low' %}
+                                <i class="fa-solid fa-temperature-quarter priority priority-low" title="Priorité : Basse"></i>
+                            {% elseif ticket.priority == 'medium' %}
+                                <i class="fa-solid fa-temperature-half priority priority-medium" title="Priorité : Moyene"></i>
+                            {% elseif ticket.priority == 'high' %}
+                                <i class="fa-solid fa-temperature-three-quarters priority priority-high" title="Priorité : Haute"></i>
+                            {% elseif ticket.priority == 'very high' %}
+                                <i class="fa-solid fa-temperature-full priority priority-very-high" title="Priorité : Très Haute" ></i>
+                            {% endif %}</p>
     <p><strong>Créé le :</strong> {{ ticket.createdAt|date('Y-m-d H:i:s') }}</p>
     <p><strong>Dernière mise à jour :</strong> {{ ticket.updatedAt|date('Y-m-d H:i:s') }}</p>
 
-    <a href="{{ path('app_admin_tickets') }}"><i class="fa-solid fa-arrow-left-long"></i> Retour à la gestion des tickets</a>
+    {% if ticket.isDeleted == 1 %}
+        <p class="deleted-info"><strong>Suppression coté utilisateur :</strong> {{ ticket.user.username }} a supprimé son ticket</p>
+    {% elseif ticket.isDeleted == 0 %}
+        <p><strong>Suppression coté utilisateur :</strong> {{ ticket.user.username }} n'a pas supprimé son ticket</p>
+    {% endif %}
+</div>
 {% endblock %}

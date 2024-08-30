@@ -3,7 +3,7 @@
 {% block title %}Création de Ticket{% endblock %}
 
 {% block body %}
-    <h1>Crée un ticket :</h1>
+    <h3>Crée un ticket :</h3>
 
 {{ form_start(form) }}
         {{ form_widget(form) }}
@@ -11,14 +11,14 @@
         <button type="submit">Crée le ticket</button>
     {{ form_end(form) }}
 
-    <h1>Ce ticket sera envoyé au service informatique :</h1>
+    <h3>Ce ticket sera envoyé au service informatique :</h3>
 
     <section class="tickets_listofmoderation">
         <ul>
             {% for admin in admins %}
                 <li>
                     <div>
-                        {{ admin.firstName }} {{ admin.lastName }}    
+                        <i class="fa-solid fa-user-shield"></i> {{ admin.firstName | capitalize }} {{ admin.lastName  | capitalize }}    
                     </div>
                 </li>
             {% endfor %}

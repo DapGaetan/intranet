@@ -3,17 +3,33 @@
 {% block title %}<i class="fa-solid fa-house"></i> Accueil{% endblock %}
 
 {% block body %}
-    <h1>Hello {{ app.user.userIdentifier }}✅</h1>
-        <h2>Hello {{ app.user.userIdentifier }}✅</h2>
-            <h3>Hello {{ app.user.userIdentifier }}✅</h3>
-                <h4>Hello {{ app.user.userIdentifier }}✅</h4>
-                    <h5>Hello {{ app.user.userIdentifier }}✅</h5>
-                        <h6>Hello {{ app.user.userIdentifier }}✅</h6>
+    <div class="home">
+        <h4><strong>Bonjour,</strong> {{ app.user.firstname | capitalize }} {{ app.user.lastname | capitalize }}</h4>
+    
+        <div class="feature-grid">
+            <div class="feature-item">Annuaire des services</div>
+            <div class="feature-item">Mes projets</div>
+            <div class="feature-item">Réservation</div>
+            <div class="feature-item">Événement</div>
+        </div>
 
-                        <p><span class="title"><strong>Titre :</strong> Hello {{ app.user.userIdentifier }}✅</span></p>
-                        <p><span class="subtitle"><strong>Sous Titre :</strong> Hello {{ app.user.userIdentifier }}✅</span></p>
-                        <p><strong>Texte :</strong> Hello {{ app.user.userIdentifier }}✅</p>
-   
- <a href="{{ path('app_all_profiles') }}" class="btn-view-profiles" role="button" aria-label="Voir tous les profils d'utilisateurs"><i class="fa-solid fa-users"></i> Voir tous les profils</a>
 
+        <h5>Mes liens rapide :</h5>
+        <div class="my_links">
+            <section class="my_link">+</section>
+            <section class="my_link">+</section>
+            <section class="my_link">+</section>
+            <section class="my_link">+</section>
+            <section class="my_link">+</section>
+            <section class="my_link">+</section>
+            <section class="my_link">+</section>
+            <section class="my_link">+</section>
+        </div>
+
+        <a href="{{ path('app_all_profiles') }}" class="btn-view-profiles" role="button" aria-label="Voir tous les profils d'utilisateurs">
+            <i class="fa-solid fa-users"></i> Voir tous les utilisateurs
+        </a>
+
+    </div>
 {% endblock %}
+

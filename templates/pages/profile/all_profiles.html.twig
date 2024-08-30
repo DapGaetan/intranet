@@ -11,7 +11,7 @@
                 <div class="profile-card">
                     {% if user.profile %}
                         <img src="{{ user.profile.avatar ? asset('uploads/profile_images/' ~ user.profile.avatar) : asset('images/profile-placeholder.jpg') }}" 
-                             alt="{{ user.username }}'s profile picture" 
+                             alt="Photo de profil de {{ user.firstname }} {{ user.lastname }}" 
                              class="profile-image">
                         <h2>{{ user.username }}</h2>
                         <p>{{ user.profile.bio ? (user.profile.bio | slice(0, 100) ~ (user.profile.bio | length > 100 ? '...' : '')) : 'Pas de biographie disponible' }}</p>
