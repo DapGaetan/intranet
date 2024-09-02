@@ -1,8 +1,6 @@
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Recherche de profil{% endblock %}
-
 
 {% block body %}
 <div class="user-profile">
@@ -10,6 +8,10 @@
 
     {% if profile %}
         <div class="user-details">
+            {% set avatarPath = profile.avatar ? '/uploads/profile_images/' ~ profile.avatar : '/uploads/profile_images/default-avatar.png' %}
+            
+            <img src="{{ avatarPath }}" alt="Avatar de {{ user.firstName }}" class="user-avatar" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
+            
             <p><strong>Adresse email:</strong> {{ user.email }}</p>
             <p><strong>Numéro(s) de téléphone(s) :</strong> {{ profile.phone }}</p>
             <p><strong>Bio:</strong> {{ profile.bio }}</p>

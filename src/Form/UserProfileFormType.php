@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,6 +49,9 @@ class UserProfileFormType extends AbstractType
                 ],
                 'placeholder' => 'Choisissez un thème',
                 'required' => false,
+            ])
+            ->add('address', HiddenType::class, [
+                'mapped' => false,
             ]);
     
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
@@ -59,23 +63,22 @@ class UserProfileFormType extends AbstractType
             }
     
             $currentDepartment = $userProfile->getDepartment();
-    
+
             $form->add('department', EntityType::class, [
                 'class' => Department::class,
                 'choice_label' => 'name',
                 'required' => true,
-                'placeholder' => false,
                 'label' => 'Lieux de travail',
-                'query_builder' => function (EntityRepository $er) use ($currentDepartment) {
-                    $qb = $er->createQueryBuilder('d');
-                    if ($currentDepartment) {
-                        $qb->where('d.id != :currentDepartmentId')
-                           ->setParameter('currentDepartmentId', $currentDepartment->getId());
-                    }
-                    return $qb;
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('d');
                 },
                 'data' => $currentDepartment,
             ]);
+
+            // Préremplir le champ "address" avec le nom du département actuel
+            if ($currentDepartment) {
+                $form->get('address')->setData($currentDepartment->getName());
+            }
         });
     }
     
@@ -85,4 +88,4 @@ class UserProfileFormType extends AbstractType
             'data_class' => UserProfile::class,
         ]);
     }
-}    
+}
