@@ -4,14 +4,21 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\UserProfile;
+use App\Form\UserAndProfileFormType;
 use App\Form\UserProfileFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class ProfileController extends AbstractController
@@ -89,7 +96,7 @@ class ProfileController extends AbstractController
     
         $profile = $user->getProfile();
     
-        return $this->render('pages/profile/public_profile.html.twig', [
+        return $this->render('pages/profile/publicProfile.html.twig', [
             'user' => $user,
             'profile' => $profile,
         ]);
@@ -108,9 +115,134 @@ class ProfileController extends AbstractController
             8
         );
     
-        return $this->render('pages/profile/all_profiles.html.twig', [
+        return $this->render('pages/profile/allProfiles.html.twig', [
             'pagination' => $pagination,
         ]);
     }
+
+    // #[Route('/profile/edit/{id}', name: 'app_edit_profile')]
+    // #[IsGranted('ROLE_ADMIN')]
+    // public function editProfile(int $id, Request $request, EntityManagerInterface $entityManager): Response
+    // {
+    //     $user = $entityManager->getRepository(User::class)->find($id);
+        
+    //     if (!$user) {
+    //         throw $this->createNotFoundException('Utilisateur non trouvé');
+    //     }
+
+    //     $profile = $user->getProfile();
+        
+    //     if (!$profile) {
+    //         $profile = new UserProfile();
+    //         $profile->setUser($user);
+    //         $entityManager->persist($profile);
+    //     }
+
+    //     $form = $this->createForm(UserProfileFormType::class, $profile);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $uploadedFile = $form->get('avatar')->getData();
+    //         if ($uploadedFile instanceof UploadedFile) {
+    //             $newFilename = uniqid().'.'.$uploadedFile->guessExtension();
+    //             $uploadedFile->move(
+    //                 $this->getParameter('kernel.project_dir').'/public/uploads/profile_images',
+    //                 $newFilename
+    //             );
+    //             $profile->setAvatar($newFilename);
+    //         }
+
+    //         if (!$profile->getAvatar()) {
+    //             $profile->setAvatar('default-avatar.png');
+    //         }
+
+    //         $profile->setUpdatedAt(new \DateTimeImmutable());
+    //         $entityManager->flush();
+
+    //         $this->addFlash('success', 'Le profil a été mis à jour');
+    //         return $this->redirectToRoute('app_public_profile', ['id' => $user->getId()]);
+    //     }
+
+    //     return $this->render('pages/profile/adminEditProfile.html.twig', [
+    //         'form' => $form->createView(),
+    //         'user' => $user,
+    //     ]);
+    // }
+
+    #[Route('/profile/edit/{id}', name: 'app_edit_profile')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function editProfile(
+        int $id,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher,
+        Security $security
+    ): Response {
+        $user = $entityManager->getRepository(User::class)->find($id);
     
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé');
+        }
+    
+        $form = $this->createForm(UserAndProfileFormType::class, $user);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $adminPassword = $form->get('adminPassword')->getData();
+    
+            // Récupérer l'utilisateur actuellement connecté
+            /** @var User $admin */
+            $admin = $security->getUser();
+    
+            // Vérification du mot de passe de l'administrateur
+            if (!$passwordHasher->isPasswordValid($admin, $adminPassword)) {
+                throw new AuthenticationException('Mot de passe incorrect. Vous ne pouvez pas modifier le profil sans entrer votre propre mot de passe.');
+            }
+    
+            // Gérer l'upload de l'avatar
+            $uploadedFile = $form->get('profile')->get('avatar')->getData();
+            if ($uploadedFile instanceof UploadedFile) {
+                $newFilename = uniqid().'.'.$uploadedFile->guessExtension();
+                $uploadedFile->move(
+                    $this->getParameter('kernel.project_dir').'/public/uploads/profile_images',
+                    $newFilename
+                );
+                $user->getProfile()->setAvatar($newFilename);
+            }
+    
+            // Sauvegarder les modifications
+            $entityManager->flush();
+    
+            $this->addFlash('success', 'Le profil et les informations de l\'utilisateur ont été mis à jour');
+            return $this->redirectToRoute('app_public_profile', ['id' => $user->getId()]);
+        }
+    
+        return $this->render('pages/profile/adminEditProfile.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
+        ]);
+    }
+    
+    #[Route('/profile/delete/{id}', name: 'app_delete_user', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deleteUser(int $id, EntityManagerInterface $entityManager, Request $request, CsrfTokenManagerInterface $csrfTokenManager): Response
+    {
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé');
+        }
+
+        $csrfToken = $request->request->get('_token');
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('delete-user-' . $id, $csrfToken))) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide');
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'L\'utilisateur a été supprimé avec succès.');
+
+        return $this->redirectToRoute('app_all_profiles');
+    }
 }

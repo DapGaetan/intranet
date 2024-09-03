@@ -14,14 +14,14 @@
                              alt="Photo de profil de {{ user.firstname }} {{ user.lastname }}" 
                              class="profile-image">
                         <h2>{{ user.firstname }} {{ user.lastname }}</h2>
-                        <p>{{ user.profile.phone }}</p>
+                        <p>{{ user.profile.phoneFixed }}</p>
+                        <p>{{ user.profile.phoneMobile }}</p>
                         <p>{{ user.profile.address }}</p>
-                        {# <p>{{ user.profile.department.name }}</p> #}
                         <a href="{{ path('app_public_profile', { id: user.id }) }}" class="view-profile">Voir le profil</a>
                     {% else %}
-                        <div class="profile-placeholder">
+                        <div>
                             <h2>{{ user.username }}</h2>
-                            <p>Pas d'information complémentaire</p>
+                            <p><em>Pas d'information complémentaire,  cette utilisateur n'a pas remplis son profil dans <a href={{ path('app_public_profile', { id: user.id }) }}>Menu/Mon profil</a></em></p>
                         </div>
                     {% endif %}
                 </div>

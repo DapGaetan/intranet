@@ -28,13 +28,29 @@ class UserProfileFormType extends AbstractType
                 'attr' => ['placeholder' => 'Sélectionnez une image'],
                 'label' => 'Photo de profil',
             ])
-            ->add('phone', TextType::class, [
+            ->add('phone_fixed', TextType::class, [
                 'required' => false,
-                'label' => 'Numéro de téléphone professionnel (fixe et/ou portable)',
+                'label' => 'Numéro de téléphone fixe professionnel',
+                'attr' => [
+                    'placeholder' => 'exemple : 0679058225'
+            
+            ],
+            ])
+            ->add('phone_mobile', TextType::class, [
+                'required' => false,
+                'label' => 'Numéro de téléphone mobile profesionnel',
+                'attr' => [
+                    'placeholder' => 'exemple : 0321600600'
+            
+            ],
             ])
             ->add('bio', TextareaType::class, [
                 'required' => false,
                 'label' => 'Biographie',
+                'attr' => [
+                    'placeholder' => 'exemple : Encore une magnifiue journée pasée a vos cotés'
+
+            ],
             ])
             ->add('linkedin_url', TextType::class, [
                 'required' => false,
@@ -75,7 +91,6 @@ class UserProfileFormType extends AbstractType
                 'data' => $currentDepartment,
             ]);
 
-            // Préremplir le champ "address" avec le nom du département actuel
             if ($currentDepartment) {
                 $form->get('address')->setData($currentDepartment->getName());
             }

@@ -17,8 +17,11 @@ class UserProfile
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
 
-    #[ORM\Column(length: 40, nullable: true)]
-    private ?string $phone = null;
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $phoneFixed = null;
+
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $phoneMobile = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
@@ -70,15 +73,25 @@ class UserProfile
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getPhoneFixed(): ?string
     {
-        return $this->phone;
+        return $this->phoneFixed;
     }
 
-    public function setPhone(?string $phone): static
+    public function setPhoneFixed(?string $phoneFixed): self
     {
-        $this->phone = $phone;
+        $this->phoneFixed = $phoneFixed;
+        return $this;
+    }
 
+    public function getPhoneMobile(): ?string
+    {
+        return $this->phoneMobile;
+    }
+
+    public function setPhoneMobile(?string $phoneMobile): self
+    {
+        $this->phoneMobile = $phoneMobile;
         return $this;
     }
 

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}<i class="fa-solid fa-shield-halved"></i> Modification profil utilisateur{% endblock %}
+
+{% block body %}
+<div class="edit-profile">
+<a href="{{ path('app_public_profile', {id: user.profile.id}) }}"><i class="fa-solid fa-arrow-left-long"></i> Quitter sans modifier</a>
+    <h2>Modifier le profil de {{ user.firstName }} {{ user.lastName }}</h2>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit"><i class="fa-solid fa-shield-halved"></i> Enregistrer les modifications</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
