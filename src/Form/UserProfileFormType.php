@@ -55,6 +55,9 @@ class UserProfileFormType extends AbstractType
             ->add('linkedin_url', TextType::class, [
                 'required' => false,
                 'label' => 'Lien du profil LinkedIn',
+                'attr' => [
+                    'placeholder' => 'exemple : https://fr.linkedin.com/in/nom-prenom'
+            ],
             ])
             ->add('style', ChoiceType::class, [
                 'choices' => [

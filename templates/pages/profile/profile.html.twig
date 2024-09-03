@@ -9,10 +9,16 @@
     <div class="profile-picture">
         <img src="{{ asset(avatarPath) }}" alt="Photo de profil de {{ app.user.firstName | capitalize }} {{ app.user.lastName | capitalize }}">
     </div>
+        <form action="{{ path('app_delete_avatar') }}" method="post" style="margin-top: 10px;">
+        <button type="submit" class="button-delete">Supprimer la photo de profil</button>
+    </form>
+
     {{ form_start(form) }}
         {{ form_widget(form) }}
         <button type="submit" ><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button>
     {{ form_end(form) }}
+
+
 </div>
 
 {% endblock %}

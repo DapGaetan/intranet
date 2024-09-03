@@ -14,19 +14,35 @@
             {% set avatarPath = profile.avatar ? '/uploads/profile_images/' ~ profile.avatar : '/uploads/profile_images/default-avatar.png' %}
             
             <img src="{{ avatarPath }}" alt="Avatar de {{ user.firstName }}" class="user-avatar" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover;">
-            
-            <p><strong>Adresse email:</strong> <a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
-            <p><strong>Numéro de téléphone fixe :</strong> {{ user.profile.phoneFixed }}</p>
-            <p><strong>Numéro de téléphone portable :</strong> {{ user.profile.phoneMobile }}</p>
-            <p><strong>Bio:</strong> {{ profile.bio }}</p>
+            <br>
+            <p><strong><i class="fa-solid fa-envelope main-color"></i> Adresse email:</strong> <a href="mailto:{{ user.email }}">{{ user.email }}</a></p>
 
-            {% if profile.linkedinUrl %}
-                <p><strong>LinkedIn:</strong> <a href="{{ profile.linkedinUrl }}" target="_blank">{{ profile.linkedinUrl }}</a></p>
-            {% else %}
-                <p><strong>LinkedIn:</strong> Non renseignée</p>
+            {% if user.profile.phoneFixed %}
+                <p><strong><i class="fa-solid fa-square-phone main-color"></i> Numéro de téléphone fixe :</strong> {{ user.profile.phoneFixed }}</p>
+                {% else %}
+                <p><strong><i class="fa-solid fa-square-phone main-color"></i> Numéro de téléphone fixe :</strong> <em>Non communiquer</em></p>
             {% endif %}
 
-            <p><strong>Lieux de travail :</strong> {{ profile.user.department.name }}</p>
+            {% if user.profile.phoneMobile %}
+                <p><strong><i class="fa-solid fa-mobile-screen main-color"></i> Numéro de téléphone portable :</strong> {{ user.profile.phoneMobile }}</p>
+                {% else %}
+                <p><strong><i class="fa-solid fa-mobile-screen main-color"></i> Numéro de téléphone portable :</strong> <em>Non communiquer</em></p>
+            {% endif %}
+            
+
+            {% if profile.bio %}
+                <p><strong><i class="fa-solid fa-book main-color"></i> Bio:</strong> {{ profile.bio }}</p>
+            {% else %}
+                <p><strong><i class="fa-solid fa-book main-color"></i> Bio:</strong> <em>Non communiquer</em></p>
+            {% endif %}
+
+            {% if profile.linkedinUrl %}
+                <p><strong><i class="fa-brands fa-linkedin main-color"></i> LinkedIn:</strong> <a href="{{ profile.linkedinUrl }}" target="_blank">{{ profile.linkedinUrl }}</a></p>
+            {% else %}
+                <p><strong><i class="fa-brands fa-linkedin main-color"></i> LinkedIn:</strong> <em>Non communiquer</em></p>
+            {% endif %}
+
+            <p><strong><i class="fa-solid fa-map-location-dot main-color"></i> Lieux de travail :</strong> {{ profile.user.department.name }}</p>
         
             {% if is_granted('ROLE_ADMIN') %}
             <br>

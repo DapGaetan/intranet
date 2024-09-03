@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -47,6 +46,14 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $uploadedFile = $form->get('avatar')->getData();
             if ($uploadedFile instanceof UploadedFile) {
+                $currentAvatar = $profile->getAvatar();
+                if ($currentAvatar && $currentAvatar !== 'default-avatar.png') {
+                    $currentAvatarPath = $this->getParameter('kernel.project_dir').'/public/uploads/profile_images/'.$currentAvatar;
+                    if (file_exists($currentAvatarPath)) {
+                        unlink($currentAvatarPath);
+                    }
+                }
+        
                 $newFilename = uniqid().'.'.$uploadedFile->guessExtension();
                 $uploadedFile->move(
                     $this->getParameter('kernel.project_dir').'/public/uploads/profile_images',
@@ -54,20 +61,19 @@ class ProfileController extends AbstractController
                 );
                 $profile->setAvatar($newFilename);
             }
-    
             
             if (!$profile->getAvatar()) {
                 $profile->setAvatar('default-avatar.png');
             }
-    
+        
             $selectedDepartment = $profile->getDepartment();
             if ($selectedDepartment) {
                 $profile->setAddress($selectedDepartment->getName());
             }
-    
+        
             $profile->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
-    
+        
             $this->addFlash('success', 'Le profil est mis à jour');
             return $this->redirectToRoute('app_home');
         }
@@ -82,16 +88,15 @@ class ProfileController extends AbstractController
             'avatarPath' => $avatarPath,
         ]);
     }
-    
-    
-    #[Route('/profile/{id}', name: 'app_public_profile')]
+
+    #[Route('/profile/{id}', name: 'app_public_profile', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
     public function publicProfile(int $id, EntityManagerInterface $entityManager): Response
     {
         $user = $entityManager->getRepository(User::class)->find($id);
     
         if (!$user) {
-            throw $this->createNotFoundException('User not found');
+            throw $this->createNotFoundException('Utilisateur non trouvé');
         }
     
         $profile = $user->getProfile();
@@ -112,62 +117,13 @@ class ProfileController extends AbstractController
         $pagination = $paginator->paginate(
             $queryBuilder,
             $request->query->getInt('page', 1),
-            8
+            10
         );
     
         return $this->render('pages/profile/allProfiles.html.twig', [
             'pagination' => $pagination,
         ]);
     }
-
-    // #[Route('/profile/edit/{id}', name: 'app_edit_profile')]
-    // #[IsGranted('ROLE_ADMIN')]
-    // public function editProfile(int $id, Request $request, EntityManagerInterface $entityManager): Response
-    // {
-    //     $user = $entityManager->getRepository(User::class)->find($id);
-        
-    //     if (!$user) {
-    //         throw $this->createNotFoundException('Utilisateur non trouvé');
-    //     }
-
-    //     $profile = $user->getProfile();
-        
-    //     if (!$profile) {
-    //         $profile = new UserProfile();
-    //         $profile->setUser($user);
-    //         $entityManager->persist($profile);
-    //     }
-
-    //     $form = $this->createForm(UserProfileFormType::class, $profile);
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $uploadedFile = $form->get('avatar')->getData();
-    //         if ($uploadedFile instanceof UploadedFile) {
-    //             $newFilename = uniqid().'.'.$uploadedFile->guessExtension();
-    //             $uploadedFile->move(
-    //                 $this->getParameter('kernel.project_dir').'/public/uploads/profile_images',
-    //                 $newFilename
-    //             );
-    //             $profile->setAvatar($newFilename);
-    //         }
-
-    //         if (!$profile->getAvatar()) {
-    //             $profile->setAvatar('default-avatar.png');
-    //         }
-
-    //         $profile->setUpdatedAt(new \DateTimeImmutable());
-    //         $entityManager->flush();
-
-    //         $this->addFlash('success', 'Le profil a été mis à jour');
-    //         return $this->redirectToRoute('app_public_profile', ['id' => $user->getId()]);
-    //     }
-
-    //     return $this->render('pages/profile/adminEditProfile.html.twig', [
-    //         'form' => $form->createView(),
-    //         'user' => $user,
-    //     ]);
-    // }
 
     #[Route('/profile/edit/{id}', name: 'app_edit_profile')]
     #[IsGranted('ROLE_ADMIN')]
@@ -190,16 +146,13 @@ class ProfileController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $adminPassword = $form->get('adminPassword')->getData();
     
-            // Récupérer l'utilisateur actuellement connecté
             /** @var User $admin */
             $admin = $security->getUser();
     
-            // Vérification du mot de passe de l'administrateur
             if (!$passwordHasher->isPasswordValid($admin, $adminPassword)) {
                 throw new AuthenticationException('Mot de passe incorrect. Vous ne pouvez pas modifier le profil sans entrer votre propre mot de passe.');
             }
     
-            // Gérer l'upload de l'avatar
             $uploadedFile = $form->get('profile')->get('avatar')->getData();
             if ($uploadedFile instanceof UploadedFile) {
                 $newFilename = uniqid().'.'.$uploadedFile->guessExtension();
@@ -210,7 +163,6 @@ class ProfileController extends AbstractController
                 $user->getProfile()->setAvatar($newFilename);
             }
     
-            // Sauvegarder les modifications
             $entityManager->flush();
     
             $this->addFlash('success', 'Le profil et les informations de l\'utilisateur ont été mis à jour');
@@ -245,4 +197,32 @@ class ProfileController extends AbstractController
 
         return $this->redirectToRoute('app_all_profiles');
     }
+
+    #[Route('/profile/delete-avatar', name: 'app_delete_avatar', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function deleteAvatar(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException('Il faut être connecté pour supprimer la photo de profil');
+        }
+
+        $profile = $user->getProfile();
+
+        if ($profile->getAvatar() && $profile->getAvatar() !== 'default-avatar.png') {
+            $currentAvatarPath = $this->getParameter('kernel.project_dir').'/public/uploads/profile_images/'.$profile->getAvatar();
+            if (file_exists($currentAvatarPath)) {
+                unlink($currentAvatarPath);
+            }
+        }
+
+        $profile->setAvatar('default-avatar.png');
+        $entityManager->flush();
+
+        $this->addFlash('success', 'La photo de profil a été supprimée avec succès.');
+
+        return $this->redirectToRoute('app_profile');
+    }
+
 }

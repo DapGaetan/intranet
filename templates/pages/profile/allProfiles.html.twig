@@ -10,17 +10,40 @@
             {% for user in pagination.getItems() %}
                 <div class="profile-card">
                     {% if user.profile %}
-                        <img src="{{ user.profile.avatar ? asset('uploads/profile_images/' ~ user.profile.avatar) : asset('images/profile-placeholder.jpg') }}" 
+
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar ? asset('uploads/profile_images/' ~ user.profile.avatar) : asset('images/profile-placeholder.jpg') }}" 
                              alt="Photo de profil de {{ user.firstname }} {{ user.lastname }}" 
                              class="profile-image">
-                        <h2>{{ user.firstname }} {{ user.lastname }}</h2>
-                        <p>{{ user.profile.phoneFixed }}</p>
-                        <p>{{ user.profile.phoneMobile }}</p>
-                        <p>{{ user.profile.address }}</p>
-                        <a href="{{ path('app_public_profile', { id: user.id }) }}" class="view-profile">Voir le profil</a>
+                            {% else %}
+                            <img  class="profile-image" src="uploads\profile_images\default-avatar.png" alt="Photo de profil par defaut">
+                        {% endif %}
+                        
+                        <h2><i class="fa-solid fa-circle-user main-color"></i> {{ user.firstname | capitalize }} {{ user.lastname | capitalize  }}</h2>
+
+                        {% if user.profile.phoneFixed %}
+                            <p><i class="fa-solid fa-phone main-color"></i> : {{ user.profile.phoneFixed }}</p>
+                            {% else %}
+                            <p><i class="fa-solid fa-phone main-color"></i> : Non communiquer</p>
+                        {% endif %}
+
+                        {% if user.profile.phoneFixed %}
+                            <p><i class="fa-solid fa-mobile main-color"></i> : {{ user.profile.phoneMobile }}</p>
+                            {% else %}
+                            <p><i class="fa-solid fa-mobile main-color"></i> : Non communiquer</p>
+                        {% endif %}
+
+                        {% if user.profile.address %}
+                            <p><i class="fa-solid fa-map-location-dot main-color"></i> : {{ user.profile.address |slice(0, 20) ~ '...' }}</p>
+                            {% else %}
+                            <p><i class="fa-solid fa-map-location-dot main-color"></i> : Non communiquer</p>
+                        {% endif %}
+                    
+                        
+                        <a href="{{ path('app_public_profile', { id: user.id }) }}" class="view-profile"><i class="fa-regular fa-address-card"></i> Voir le profil</a>
                     {% else %}
                         <div>
-                            <h2>{{ user.username }}</h2>
+                            <h2><i class="fa-solid fa-circle-user main-color"></i> {{ user.firstname | capitalize }} {{ user.lastname | capitalize  }}</h2>
                             <p><em>Pas d'information complémentaire,  cette utilisateur n'a pas remplis son profil dans <a href={{ path('app_public_profile', { id: user.id }) }}>Menu/Mon profil</a></em></p>
                         </div>
                     {% endif %}
