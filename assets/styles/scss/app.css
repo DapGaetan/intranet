@@ -1004,7 +1004,6 @@ form button[type=submit]:hover {
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   font-size: 16px;
-  font-family: Arial, sans-serif;
   box-sizing: border-box;
 }
 #searchForm .search-icon {
@@ -1019,6 +1018,7 @@ form button[type=submit]:hover {
   display: flex;
   gap: 15px;
   flex-wrap: wrap;
+  align-items: flex-end;
 }
 #searchForm .filter-container {
   flex: 1;
@@ -1051,6 +1051,29 @@ form button[type=submit]:hover {
 #searchForm .filter-container select:focus {
   border-color: #0091ff;
   outline: none;
+}
+#searchForm .reset-button {
+  flex-shrink: 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 100%;
+}
+#searchForm .reset-button:hover {
+  background-color: #0091ff;
+  color: #fff;
+  border-color: #0091ff;
+}
+#searchForm .reset-button i {
+  font-size: 14px;
 }
 
 .btn-view-profiles {

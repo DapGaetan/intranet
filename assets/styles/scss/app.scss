@@ -1082,7 +1082,7 @@ nav {
                 border-radius: 12px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
-                // SearshBar
+            // SearshBar
             #searchForm {
                 display: flex;
                 flex-direction: column;
@@ -1097,7 +1097,6 @@ nav {
                     border-radius: 4px;
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                     font-size: 16px;
-                    font-family: Arial, sans-serif;
                     box-sizing: border-box;
                 }
 
@@ -1114,6 +1113,7 @@ nav {
                     display: flex;
                     gap: 15px;
                     flex-wrap: wrap;
+                    align-items: flex-end;
                 }
 
                 .filter-container {
@@ -1149,7 +1149,34 @@ nav {
                         }
                     }
                 }
+
+                .reset-button {
+                    flex-shrink: 0;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    background-color: #fff;
+                    font-size: 16px;
+                    color: #333;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                    height: 100%;
+
+                    &:hover {
+                        background-color: $main-color;
+                        color: #fff;
+                        border-color: $main-color;
+                    }
+
+                    i {
+                        font-size: 14px;
+                    }
+                }
             }
+
             
 
             // Profiles in the home

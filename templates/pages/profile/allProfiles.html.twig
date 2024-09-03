@@ -14,7 +14,7 @@
 
             <div class="filters-wrapper">
                 <div class="filter-container">
-                    <label for="positionFilter">Position:</label>
+                    <label for="positionFilter"><i class="fa-solid fa-people-group main-color"></i> Service :</label>
                     <select id="positionFilter" name="position">
                         <option value="">Tous</option>
                         {% for value, label in {
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="filter-container">
-                    <label for="jobFilter">Job:</label>
+                    <label for="jobFilter"><i class="fa-solid fa-wrench main-color"></i> Profession :</label>
                     <select id="jobFilter" name="job">
                         <option value="">Tous</option>
                         {% for job in jobs %}
@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="filter-container">
-                    <label for="departmentFilter">Département:</label>
+                    <label for="departmentFilter"><i class="fa-solid fa-location-dot main-color"></i> Lieux de travail :</label>
                     <select id="departmentFilter" name="department">
                         <option value="">Tous</option>
                         {% for department in departments %}
@@ -51,6 +51,8 @@
                         {% endfor %}
                     </select>
                 </div>
+                
+                <button type="button" id="resetButton" class="reset-button"><i class="fa-solid fa-eraser"></i> Effacer la recherche</button>
             </div>
         </form>
 
@@ -112,9 +114,10 @@
             const form = document.getElementById('searchForm');
             const profilesGrid = document.getElementById('profilesGrid');
             const inputs = form.querySelectorAll('input, select');
+            const resetButton = document.getElementById('resetButton');
+            const searchInput = document.getElementById('searchInput');
 
-            function updateProfiles() {
-                const queryString = new URLSearchParams(new FormData(form)).toString();
+            function updateProfiles(queryString = '') {
                 fetch(`${form.action}?${queryString}`, {
                     method: 'GET',
                     headers: {
@@ -127,8 +130,27 @@
                 });
             }
 
+            function buildQueryString() {
+                return new URLSearchParams(new FormData(form)).toString();
+            }
+
             inputs.forEach(input => {
-                input.addEventListener('change', updateProfiles);
+                input.addEventListener('change', () => {
+                    const queryString = buildQueryString();
+                    updateProfiles(queryString);
+                });
+            });
+
+            searchInput.addEventListener('input', () => {
+                const queryString = buildQueryString();
+                updateProfiles(queryString);
+            });
+
+            resetButton.addEventListener('click', () => {
+                form.reset();
+                searchInput.value = '';
+                const queryString = buildQueryString();
+                updateProfiles(queryString);
             });
         });
     </script>
