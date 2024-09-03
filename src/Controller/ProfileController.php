@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Department;
 use App\Entity\User;
 use App\Entity\UserProfile;
 use App\Form\UserAndProfileFormType;
@@ -109,10 +110,46 @@ class ProfileController extends AbstractController
 
     #[Route('/profiles', name: 'app_all_profiles')]
     #[IsGranted('ROLE_USER')]
-    public function allProfiles(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
+    public function allProfiles(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
+        $searchTerm = $request->query->get('search', '');
+        $position = $request->query->get('position', '');
+        $job = $request->query->get('job', '');
+        $departmentId = $request->query->get('department', '');
+    
         $queryBuilder = $entityManager->getRepository(User::class)->createQueryBuilder('u')
-            ->orderBy('u.username', 'ASC');
+            ->leftJoin('u.profile', 'p')
+            ->where('u.username LIKE :searchTerm')
+            ->orWhere('u.first_name LIKE :searchTerm')
+            ->orWhere('u.last_name LIKE :searchTerm')
+            ->orWhere('u.email LIKE :searchTerm')
+            ->orWhere('u.position LIKE :searchTerm')
+            ->orWhere('u.job LIKE :searchTerm')
+            ->orWhere('p.address LIKE :searchTerm')
+            ->orWhere('p.phoneFixed LIKE :searchTerm')
+            ->orWhere('p.phoneMobile LIKE :searchTerm')
+            ->orWhere('p.bio LIKE :searchTerm')
+            ->orWhere('p.linkedin_url LIKE :searchTerm')
+            ->orWhere('p.twitter_handle LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%');
+    
+        if ($position) {
+            $queryBuilder->andWhere('u.position = :position')
+                         ->setParameter('position', $position);
+        }
+    
+        if ($job) {
+            $queryBuilder->andWhere('u.job = :job')
+                         ->setParameter('job', $job);
+        }
+    
+        if ($departmentId) {
+            $queryBuilder->leftJoin('p.address', 'd')
+                         ->andWhere('d.id = :department')
+                         ->setParameter('department', $departmentId);
+        }
+    
+        $queryBuilder->orderBy('u.username', 'ASC');
     
         $pagination = $paginator->paginate(
             $queryBuilder,
@@ -120,11 +157,32 @@ class ProfileController extends AbstractController
             10
         );
     
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('pages/profile/_profiles.html.twig', [
+                'pagination' => $pagination,
+            ]);
+        }
+    
+        $jobs = array_column(
+            $entityManager->getRepository(User::class)
+                ->createQueryBuilder('u')
+                ->select('DISTINCT u.job')
+                ->getQuery()
+                ->getScalarResult(),
+            'job'
+        );
+        
+    
+        $departments = $entityManager->getRepository(Department::class)->findAll();
+    
         return $this->render('pages/profile/allProfiles.html.twig', [
             'pagination' => $pagination,
+            'searchTerm' => $searchTerm,
+            'jobs' => $jobs,
+            'departments' => $departments,
         ]);
     }
-
+    
     #[Route('/profile/edit/{id}', name: 'app_edit_profile')]
     #[IsGranted('ROLE_ADMIN')]
     public function editProfile(

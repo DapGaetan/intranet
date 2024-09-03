@@ -531,7 +531,6 @@ nav {
         background-color: #45a049;
     }
 
-    /* Media Queries for Responsiveness */
     @media (max-width: 768px) {
         .container {
             padding: 15px;
@@ -693,11 +692,11 @@ nav {
         
             // Responsive design
             @media (max-width: 768px) {
-                grid-template-columns: repeat(2, 1fr); // 2 colonnes sur écrans plus petits
+                grid-template-columns: repeat(2, 1fr);
             }
         
             @media (max-width: 480px) {
-                grid-template-columns: 1fr; // 1 colonne sur écrans très petits
+                grid-template-columns: 1fr;
             }
         }
         
@@ -1069,9 +1068,9 @@ nav {
                 img {
                     width: 120px;
                     height: 120px;
-                    border-radius: 50%; // Image circulaire
-                    object-fit: cover; // Maintient le ratio de l'image
-                    border: 3px solid #ddd; // Bordure légère
+                    border-radius: 50%;
+                    object-fit: cover;
+                    border: 3px solid #ddd;
                 }
             }
             
@@ -1079,9 +1078,77 @@ nav {
                 max-width: 800px;
                 margin: 0 auto;
                 padding: 20px;
-                background-color: #f8f9fa; // Fond léger
+                background-color: #f8f9fa;
                 border-radius: 12px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+                // SearshBar
+            #searchForm {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                position: relative;
+                width: 100%;
+                
+                input[type="text"] {
+                    width: 100%;
+                    padding: 12px 40px 12px 12px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    font-size: 16px;
+                    font-family: Arial, sans-serif;
+                    box-sizing: border-box;
+                }
+
+                .search-icon {
+                    position: absolute;
+                    right: 10px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    font-size: 18px;
+                    color: #aaa;
+                }
+
+                .filters-wrapper {
+                    display: flex;
+                    gap: 15px;
+                    flex-wrap: wrap;
+                }
+
+                .filter-container {
+                    flex: 1;
+                    min-width: 150px;
+                    display: flex;
+                    flex-direction: column;
+
+                    label {
+                        margin-bottom: 5px;
+                        font-size: 14px;
+                        color: #333;
+                        font-weight: 600;
+                    }
+
+                    select {
+                        width: 100%;
+                        padding: 10px;
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        background-color: #fff;
+                        font-size: 16px;
+                        color: #333;
+                        appearance: none;
+                        background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"%3E%3Cpath d="M7 10l5 5 5-5z" fill="%238a8a8a"/%3E%3C/svg%3E');
+                        background-repeat: no-repeat;
+                        background-position: right 10px center;
+                        background-size: 16px 16px;
+
+                        &:focus {
+                            border-color: $main-color;
+                            outline: none;
+                        }
+                    }
+                }
             }
             
 
@@ -1154,7 +1221,7 @@ nav {
             
                 .user-no-profile {
                     font-size: 1.1rem;
-                    color: #ff0000; // Couleur rouge pour indiquer que les infos ne sont pas disponibles
+                    color: #ff0000;
                     text-align: center;
                     margin-top: 20px;
                 }

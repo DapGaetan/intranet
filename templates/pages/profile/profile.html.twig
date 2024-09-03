@@ -10,7 +10,7 @@
         <img src="{{ asset(avatarPath) }}" alt="Photo de profil de {{ app.user.firstName | capitalize }} {{ app.user.lastName | capitalize }}">
     </div>
         <form action="{{ path('app_delete_avatar') }}" method="post" style="margin-top: 10px;">
-        <button type="submit" class="button-delete">Supprimer la photo de profil</button>
+        <button type="submit" class="button-delete" title="Vos photos sont stockées sur l'intranet. Vous pouvez les supprimer définitivement à tout moment. Lorsque vous changez de photo, l'ancienne est automatiquement supprimée. Vous restez maître de tous vos contenus.">Supprimer ma photo de profil</button>
     </form>
 
     {{ form_start(form) }}

@@ -6,7 +6,57 @@
     <div class="profiles-container">
         <h1>Tous les utilisateurs</h1>
 
-        <div class="profiles-grid">
+        <form id="searchForm" method="get" action="{{ path('app_all_profiles') }}">
+            <div style="position: relative; width: 100%;">
+                <input type="text" id="searchInput" name="search" value="{{ searchTerm }}" placeholder="Rechercher un utilisateur">
+                <i class="fa-solid fa-search search-icon"></i>
+            </div>
+
+            <div class="filters-wrapper">
+                <div class="filter-container">
+                    <label for="positionFilter">Position:</label>
+                    <select id="positionFilter" name="position">
+                        <option value="">Tous</option>
+                        {% for value, label in {
+                            'Relais Petite Enfance "À Mini Pas"': 'Relais Petite Enfance "À Mini Pas"',
+                            'Service Jeunesse': 'Service Jeunesse',
+                            'Actions pour les Personnes Âgées et/ou en Situation de Handicap (SPASAD)': 'Actions pour les Personnes Âgées et/ou en Situation de Handicap (SPASAD)',
+                            'Transport à la Demande (TAD)': 'Transport à la Demande (TAD)',
+                            'Gestion des Déchets': 'Gestion des Déchets',
+                            'Culture': 'Culture',
+                            'Tourisme': 'Tourisme',
+                            'Service Informatique': 'Service Informatique'
+                        } %}
+                            <option value="{{ value }}" {{ app.request.query.get('position') == value ? 'selected' : '' }}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-container">
+                    <label for="jobFilter">Job:</label>
+                    <select id="jobFilter" name="job">
+                        <option value="">Tous</option>
+                        {% for job in jobs %}
+                            <option value="{{ job }}" {{ app.request.query.get('job') == job ? 'selected' : '' }}>{{ job }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-container">
+                    <label for="departmentFilter">Département:</label>
+                    <select id="departmentFilter" name="department">
+                        <option value="">Tous</option>
+                        {% for department in departments %}
+                            <option value="{{ department.id }}" {{ app.request.query.get('department') == department.id ? 'selected' : '' }}>{{ department.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </form>
+
+
+
+        <div id="profilesGrid" class="profiles-grid">
             {% for user in pagination.getItems() %}
                 <div class="profile-card">
                     {% if user.profile %}
@@ -15,31 +65,30 @@
                             <img src="{{ user.profile.avatar ? asset('uploads/profile_images/' ~ user.profile.avatar) : asset('images/profile-placeholder.jpg') }}" 
                              alt="Photo de profil de {{ user.firstname }} {{ user.lastname }}" 
                              class="profile-image">
-                            {% else %}
-                            <img  class="profile-image" src="uploads\profile_images\default-avatar.png" alt="Photo de profil par defaut">
+                        {% else %}
+                            <img class="profile-image" src="uploads\profile_images\default-avatar.png" alt="Photo de profil par defaut">
                         {% endif %}
                         
                         <h2><i class="fa-solid fa-circle-user main-color"></i> {{ user.firstname | capitalize }} {{ user.lastname | capitalize  }}</h2>
 
                         {% if user.profile.phoneFixed %}
                             <p><i class="fa-solid fa-phone main-color"></i> : {{ user.profile.phoneFixed }}</p>
-                            {% else %}
+                        {% else %}
                             <p><i class="fa-solid fa-phone main-color"></i> : Non communiquer</p>
                         {% endif %}
 
-                        {% if user.profile.phoneFixed %}
+                        {% if user.profile.phoneMobile %}
                             <p><i class="fa-solid fa-mobile main-color"></i> : {{ user.profile.phoneMobile }}</p>
-                            {% else %}
+                        {% else %}
                             <p><i class="fa-solid fa-mobile main-color"></i> : Non communiquer</p>
                         {% endif %}
 
                         {% if user.profile.address %}
                             <p><i class="fa-solid fa-map-location-dot main-color"></i> : {{ user.profile.address |slice(0, 20) ~ '...' }}</p>
-                            {% else %}
+                        {% else %}
                             <p><i class="fa-solid fa-map-location-dot main-color"></i> : Non communiquer</p>
                         {% endif %}
                     
-                        
                         <a href="{{ path('app_public_profile', { id: user.id }) }}" class="view-profile"><i class="fa-regular fa-address-card"></i> Voir le profil</a>
                     {% else %}
                         <div>
@@ -57,4 +106,30 @@
             {% include 'bundles/KnpPaginatorBundle/Pagination/custom_pagination.html.twig' with { 'pagination': pagination } %}
         {% endif %}
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('searchForm');
+            const profilesGrid = document.getElementById('profilesGrid');
+            const inputs = form.querySelectorAll('input, select');
+
+            function updateProfiles() {
+                const queryString = new URLSearchParams(new FormData(form)).toString();
+                fetch(`${form.action}?${queryString}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'text/html',
+                    },
+                })
+                .then(response => response.text())
+                .then(html => {
+                    profilesGrid.innerHTML = new DOMParser().parseFromString(html, 'text/html').getElementById('profilesGrid').innerHTML;
+                });
+            }
+
+            inputs.forEach(input => {
+                input.addEventListener('change', updateProfiles);
+            });
+        });
+    </script>
 {% endblock %}
