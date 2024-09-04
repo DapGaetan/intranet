@@ -6,21 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="{{ asset('styles/scss/app.css') }}">     
-        {% block stylesheets %}
-        {% endblock %}
-    </head>
-
-        {% block javascripts %}
+        {% block stylesheets %}{% endblock %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
-
-            <script>
-                document.querySelectorAll('.feature-item').forEach(item => {
-                    item.addEventListener('click', function() {
-                        this.classList.toggle('active');
-                    });
-                });
-            </script>
-        {% endblock %}
+    </head>
     <body>
     {% include '_partials/_menu.html.twig' with {'page_title': block('title')} %}
 
@@ -31,6 +19,8 @@
     </div>
 
     {% include '_partials/_footer.html.twig' %}
+        {% block javascripts %}
 
+        {% endblock %}
     </body>
 </html>

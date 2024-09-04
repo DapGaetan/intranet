@@ -4,7 +4,7 @@
 
 {% block body %}
     <h5><strong>Bonjour,</strong> {{ app.user.firstname | capitalize }} {{ app.user.lastname | capitalize }}</h5>
-    <div class="home">
+    <div class="home" data-controller="home">
         <div class="feature-grid">
             <div class="feature-item">
                 <div class="feature-title">Annuaire des services <i class="fa-solid fa-angle-down arrow"></i></div>
