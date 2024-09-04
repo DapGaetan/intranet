@@ -3,7 +3,7 @@
 {% block title %}<i class="fa-solid fa-users"></i> Liste des profils utilisateurs{% endblock %}
 
 {% block body %}
-    <div class="profiles-container">
+    <div class="profiles-container" data-controller="profile">
         <h1>Tous les utilisateurs</h1>
 
         <form id="searchForm" method="get" action="{{ path('app_all_profiles') }}">
@@ -109,7 +109,7 @@
         {% endif %}
     </div>
 
-    <script>
+    {# <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('searchForm');
             const profilesGrid = document.getElementById('profilesGrid');
@@ -152,6 +152,8 @@
                 const queryString = buildQueryString();
                 updateProfiles(queryString);
             });
+            const initialQueryString = buildQueryString();
+            updateProfiles(initialQueryString);
         });
-    </script>
+    </script> #}
 {% endblock %}

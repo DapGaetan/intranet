@@ -8,8 +8,19 @@
         <link rel="stylesheet" href="{{ asset('styles/scss/app.css') }}">     
         {% block stylesheets %}
         {% endblock %}
-        <script src="{{ asset('assets/js/script.js') }}"></script>
     </head>
+
+        {% block javascripts %}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+
+            <script>
+                document.querySelectorAll('.feature-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        this.classList.toggle('active');
+                    });
+                });
+            </script>
+        {% endblock %}
     <body>
     {% include '_partials/_menu.html.twig' with {'page_title': block('title')} %}
 
@@ -20,20 +31,6 @@
     </div>
 
     {% include '_partials/_footer.html.twig' %}
-
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-
-            <script>
-                document.querySelectorAll('.feature-item').forEach(item => {
-                    item.addEventListener('click', function() {
-                        this.classList.toggle('active');
-                    });
-                });
-            </script>
-        {% endblock %}
-
-
 
     </body>
 </html>

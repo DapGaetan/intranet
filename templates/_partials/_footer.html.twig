@@ -1,4 +1,4 @@
-<footer>
+<footer data-controller="footer">
     <section>
         {% if app.user %}
             <a href="{{ path('app_home') }}"><img class="logo" src="{{ asset('assets/images/logo.png') }}" alt="Logo de la communauté de commune osartis marquion"></a>
@@ -7,7 +7,18 @@
         {% endif %}    
     </section>
     <section>
-        <p>&copy; 2024</p>
-        <a href="{{ path('app_mentions') }}">Mentions Légales</a>
+        <h6>Osartis-Marquion - Service informatique &copy; 2024</h6>
     </section>
-</footer
+    <section>
+        <a href="#" target="_blank" title="Accessibilité"><i class="fa-solid fa-universal-access"></i></a>
+        <a href="https://www.cc-osartis.com/" target="_blank" title="Site Osartis-marquion"><i class="fa-solid fa-globe"></i></a>
+        <a href="{{ path('app_mentions') }}" title="Mentions légales"><i class="fa-solid fa-scale-balanced"></i></a>
+        <a href="https://www.google.com" target="_blank" id="browser-link" title="Ouvrir une nouvelle page web">
+            <i id="browser-icon" class="fa-brands fa-globe"></i>
+        </a>
+        <a href="https://x.com/Osartis?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" title="Compte Twitter Osartis-Marquion" target="_blank">
+            <i id="twitter-icon"></i>
+        </a>
+        <a href="https://www.facebook.com/people/Aquatis/100051496995809/?locale=fr_FR" target="_blank" title="Compte Facebook Aquatis"><i class="fa-brands fa-square-facebook"></i></a>
+    </section>
+</footer>

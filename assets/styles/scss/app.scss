@@ -7,6 +7,10 @@
     $default-color: #ebebebfb;
     $background: linear-gradient(to bottom, whitesmoke, white);
 
+    // VAR-INTERACTION
+    $logout: #ffe8e8;
+    $bkg-logout: #da0000dc;
+
     // VAR-PRIORITY
     $low: #91e40c;
     $medium : #ffb120;
@@ -40,6 +44,9 @@
 
     $input_hover: #0091ff2d;
     $input_password_hover: #88888838;
+
+    $logout-hover: #d36a6a;
+    $bkg-logout-hover: #ff0000dc;
 
 
 /* Basics */
@@ -226,7 +233,7 @@ nav {
     border-radius: 6px;
     margin-bottom: 2px;
     box-shadow: 5px 5px 5px #d4d4d4;
-    border: solid 1px #0091ff;
+    // border: solid 1px #0091ff;
 }
 
 #menu-accordeon li li {
@@ -270,6 +277,26 @@ nav {
 #menu-accordeon li:hover li {
     max-height: 5em;
 }
+
+#menu-accordeon li ul li:active{
+    background-color: #007bff;
+}
+
+.li-logout{
+    background-color: $bkg-logout !important;
+}
+.li-logout:hover{
+    background-color: $bkg-logout-hover !important;
+    transition: 1.5s !important;
+}
+.a-logout{
+    color: $logout !important;
+}
+.a-logout:active{
+    color: $logout-hover !important;
+    transition: 0.5s !important;
+}
+
 
 .logo-container {
     background-color: $main-color;
@@ -1344,3 +1371,29 @@ footer{
 footer section{
     padding: 1rem;
 }
+footer section:last-child {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: auto;
+    gap: 10px;
+  }
+
+footer section h6{
+    color: white;
+}
+
+footer {
+    section {
+      a {
+        i{
+            color: $main-color;
+            background-color: white;
+            padding: 5px;
+            border-radius: 100%;
+            font-size: 1rem;
+        }
+    }
+    }
+}
+  
+  

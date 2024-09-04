@@ -16,6 +16,8 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class UserProfileFormType extends AbstractType
 {
@@ -32,18 +34,46 @@ class UserProfileFormType extends AbstractType
                 'required' => false,
                 'label' => 'Numéro de téléphone fixe professionnel',
                 'attr' => [
-                    'placeholder' => 'exemple : 0679058225'
-            
-            ],
+                    'placeholder' => 'exemple : 0679058225',
+                    'class' => '',
+                    'minlenght' => '10',
+                    'maxlenght' => '10',
+                ],
+                'constraints' => [
+                    new Length([
+                        'min' => 10,
+                        'minMessage' => 'Votre numéro de téléphone doit faire au moins {{ limit }} chiffres',
+                        'max' => 10,
+                    ]),
+                    new Regex([
+                        'pattern' => '/^\d+$/',
+                        'message' => 'Ce champ ne doit contenir que des chiffres.',
+                    ]),
+                    
+                ],
             ])
             ->add('phone_mobile', TextType::class, [
                 'required' => false,
                 'label' => 'Numéro de téléphone mobile profesionnel',
                 'attr' => [
-                    'placeholder' => 'exemple : 0321600600'
-            
+                    'placeholder' => 'exemple : 0321600600',
+                    'class' => '',
+                    'minlenght' => '10',
+                    'maxlenght' => '10',
             ],
-            ])
+            'constraints' => [
+                new Length([
+                    'min' => 10,
+                    'minMessage' => 'Votre numéro de téléphone doit faire au moins {{ limit }} chiffres',
+                    'max' => 10,
+                ]),
+                new Regex([
+                    'pattern' => '/^\d+$/',
+                    'message' => 'Ce champ ne doit contenir que des chiffres.',
+                ]),
+                
+            ],
+        ])
             ->add('bio', TextareaType::class, [
                 'required' => false,
                 'label' => 'Biographie',
