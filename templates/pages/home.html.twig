@@ -32,23 +32,23 @@
             </div>
         </div>
 
-    {% if is_granted('ROLE_ADMIN') %}
-        <h5>Outils d'administration :</h5>
-        <div class="feature-grid-adm">
-            <div class="feature-item-adm">Gestion des tickets</div>
-            <div class="feature-item-adm">Parc informatique</div>
-            <div class="feature-item-adm">Signature mail</div>
-            <div class="feature-item-adm">Gestion des utilisateurs</div>
-            <div class="feature-item-adm">Documentation</div>
-            <div class="feature-item-adm">Notes</div>
-            <div class="feature-item-adm">Document ADM</div>
-            <div class="feature-item-adm">Vision des réservation</div>
-            <div class="feature-item-adm">Logs server</div>
-            <div class="feature-item-adm">Logs intranet</div>
-            <div class="feature-item-adm">White board</div>
-            
-        </div>
-    {% endif %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <h5>Outils d'administration :</h5>
+            <div class="feature-grid-adm">
+                <a href="{{ path('app_admin_tickets') }}" class="feature-item-adm"><i class="fa-solid fa-ticket"></i> Gestion des tickets</a>
+                <a href="{{ path('app_admin_tickets') }}" class="feature-item-adm"><i class="fa-solid fa-robot"></i> Parc informatique</a>
+                <a href="{{ path('app_admin_tickets') }}" class="feature-item-adm"><i class="fa-solid fa-signature"></i> Signature mail</a>
+                <a href="{{ path('app_all_profiles') }}" class="feature-item-adm"><i class="fa-solid fa-people-group"></i> Gestion des utilisateurs</a>
+                <a href="{{ path('app_admin_tickets') }}" class="feature-item-adm"><i class="fa-solid fa-book-skull"></i> Documentation</a>
+                <a href="{{ path('app_admin_tickets') }}" class="feature-item-adm"><i class="fa-regular fa-clipboard"></i> Notes</a>
+                <a href="{{ path('app_admin_tickets') }}" class="feature-item-adm"><i class="fa-solid fa-file-shield"></i> Document ADM</a>
+                <a href="{{ path('app_admin_tickets') }}" class="feature-item-adm"><i class="fa-solid fa-calendar-check"></i> Vision des réservations</a>
+                <a href="{{ path('app_admin_tickets') }}" class="feature-item-adm"><i class="fa-solid fa-server"></i> Server</a>
+                <a href="{{ path('app_admin_tickets') }}" class="feature-item-adm"><i class="fa-solid fa-network-wired"></i> Intranet</a>
+                <a href="{{ path('app_admin_tickets') }}" class="feature-item-adm"><i class="fa-solid fa-chalkboard-user"></i> White board</a>
+            </div>
+        {% endif %}
+
 
 
         <h5>Mes liens rapide :</h5>
