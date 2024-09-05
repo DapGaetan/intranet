@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}<i class="fa-solid fa-building"></i> Adresses{% endblock %}
+
+{% block body %}
+    <h1>Les Adresses</h1>
+    <br>
+    <a href="{{ path('app_department_create') }}" class="button-send" role="button">+ Nouvelle adresse</a>
+    <br>
+    {% if pagination.getTotalItemCount() > 0 %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Consulté</th>
+                    <th>Adresse</th>
+                    <th>Numéro et rue</th>
+                    <th>Ville</th>
+                    <th>Code postale</th>
+                    <th>Mise à jour le</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for department in pagination.items %}
+                    <tr>
+                        <td><a href="{{ path('app_department_show', {'id': department.id}) }}"><i class="fa-solid fa-eye"></i></a></td>
+                        <td>{{ department.name|length > 55 ? department.name|slice(0, 53) ~ '...' : department.name}}</td>
+                        <td>{{ department.address|length > 150 ? department.address|slice(0, 40) ~ '...' : department.address }}</td>
+                        <td>{{ department.city|length > 55 ? department.city|slice(0, 35) ~ '...' : department.city }}</td>
+                        <td>{{ department.postalCode }}</td>
+                        <td>{{ department.updatedAt ? department.updatedAt|date('d-m-Y | H:i') : '' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% include 'bundles/KnpPaginatorBundle/Pagination/custom_pagination.html.twig' with { 'pagination': pagination } %}
+    {% else %}
+        <p>Aucune adresse trouvée.</p>
+    {% endif %}
+{% endblock %}

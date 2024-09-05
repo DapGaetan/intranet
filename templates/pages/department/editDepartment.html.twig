@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}<i class="fa-solid fa-map-location-dot"></i> Modification Adresse{% endblock %}
+
+{% block body %}
+<div class="edit-department">
+    <a href="{{ path('app_departments_show', {id: department.id}) }}"><i class="fa-solid fa-arrow-left-long"></i> Quitter sans modifier</a>
+    <h2>Modifier l'Adresse : {{ department.name }}</h2>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Enregistrer les modifications</button>
+    {{ form_end(form) }}
+
+        <a href="{{ path('app_departments_show') }}"><i class="fa-solid fa-table-cells"></i> Retour à la liste des adresses</a>
+</div>
+{% endblock %}

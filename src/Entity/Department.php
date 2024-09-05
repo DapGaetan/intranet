@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\DepartmentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DepartmentRepository::class)]
@@ -15,7 +16,7 @@ class Department
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $name = null;
 
     #[ORM\Column]
@@ -23,6 +24,15 @@ class Department
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
+
+    #[ORM\Column(type: Types::TEXT, length: 255, nullable: true)]
+    private ?string $address = null;
+
+    #[ORM\Column(type: Types::TEXT, length: 100, nullable: true)]
+    private ?string $city = null;
+
+    #[ORM\Column(type: Types::TEXT, length: 5, nullable: true)]
+    private ?string $postalCode = null;
 
     /**
      * @var Collection<int, User>
@@ -40,28 +50,13 @@ class Department
     {
         $this->users = new ArrayCollection();
         $this->userProfiles = new ArrayCollection();
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function __toString(): string
-    {
-        return $this->getName();
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -87,6 +82,54 @@ class Department
 
         return $this;
     }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(): static
+    {
+        $this->name = implode(' ', array_filter([$this->address, $this->city, $this->postalCode]));
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): static
+    {
+        $this->address = $address;
+        $this->setName(); // Update name whenever address is set
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): static
+    {
+        $this->city = $city;
+        $this->setName(); // Update name whenever city is set
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): static
+    {
+        $this->postalCode = $postalCode;
+        $this->setName(); // Update name whenever postalCode is set
+        return $this;
+    }
+
 
     /**
      * @return Collection<int, User>
@@ -146,5 +189,18 @@ class Department
         }
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->created_at = new \DateTimeImmutable();
+        $this->updated_at = new \DateTimeImmutable();
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updated_at = new \DateTimeImmutable();
     }
 }

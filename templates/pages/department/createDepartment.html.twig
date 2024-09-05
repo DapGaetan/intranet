@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create Department{% endblock %}
+
+{% block body %}
+    <h1>Create New Department</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit">Crée l'adresse</button>
+    {{ form_end(form) }}
+
+     <a href="{{ path('app_departments_show') }}"><i class="fa-solid fa-arrow-left-long"></i>  Retourner a la liste des adresses</a>
+{% endblock %}

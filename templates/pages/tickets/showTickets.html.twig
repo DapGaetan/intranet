@@ -5,7 +5,7 @@
 {% block body %}
     <h2>Mes Tickets</h2>
     <br>
-     <a href="{{ path('app_create_ticket') }}" class="button-send" role="button" aria-label="Voir tous les profils d'utilisateurs"><i class="fa-solid fa-plus"></i> Nouveau ticket</a>
+     <a href="{{ path('app_create_ticket') }}" class="button-send" role="button"><i class="fa-solid fa-plus"></i> Nouveau ticket</a>
     <br>
     {% if pagination.getTotalItemCount() > 0 %}
         <table>

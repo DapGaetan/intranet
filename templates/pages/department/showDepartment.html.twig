@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}<i class="fa-solid fa-map-location-dot"></i> Adresse : {{ department.name }}{% endblock %}
+
+{% block body %}
+    <div class="department-details">
+        <a href="{{ path('app_departments_show') }}"><i class="fa-solid fa-arrow-left-long"></i> Retour à la liste des adresses</a>
+<br>
+        <h2>Détails de l'Adresse</h2>
+    <br>
+        <p><strong>ID :</strong> {{ department.id }}</p>
+        <p><strong>Nom :</strong> {{ department.name }}</p>
+        <p><strong>Adresse :</strong> {{ department.address }}</p>
+        <p><strong>Ville :</strong> {{ department.city }}</p>
+        <p><strong>Code Postal :</strong> {{ department.postalCode }}</p>
+        <p><strong>Créé le :</strong> {{ department.createdAt|date('Y-m-d H:i:s') }}</p>
+        <p><strong>Mis à jour le :</strong> {{ department.updatedAt|date('Y-m-d H:i:s') }}</p>
+        <br>
+        <a href="{{ path('app_department_edit', {id: department.id}) }}" class="button-edit"><i class="fa-solid fa-hammer"></i> Modifier l'adresse</a>
+        
+        
+        <form action="{{ path('app_department_delete', {'id': department.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce ticket ? cela n\'entrainera pas une annulation du ticket au pret du service informatique.');" style="display: inline;">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ department.id) }}">
+            <button type="submit" class="button-delete">Supprimer l'adresse</button>
+        </form>
+
+    </div>
+{% endblock %}
