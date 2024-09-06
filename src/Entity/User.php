@@ -140,6 +140,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: RoomReservation::class, mappedBy: 'assigned_to')]
     private Collection $roomReservations;
 
+    /**
+     * @var Collection<int, Link>
+     */
+    #[ORM\OneToMany(targetEntity: Link::class, mappedBy: 'user')]
+    private Collection $links;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -156,6 +162,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->posts = new ArrayCollection();
         $this->vehicleReservations = new ArrayCollection();
         $this->roomReservations = new ArrayCollection();
+        $this->links = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -726,6 +733,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->roomReservations->removeElement($roomReservation)) {
             $roomReservation->removeAssignedTo($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Link>
+     */
+    public function getLinks(): Collection
+    {
+        return $this->links;
+    }
+
+    public function addLink(Link $link): static
+    {
+        if (!$this->links->contains($link)) {
+            $this->links->add($link);
+            $link->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLink(Link $link): static
+    {
+        if ($this->links->removeElement($link)) {
+            // set the owning side to null (unless already changed)
+            if ($link->getUser() === $this) {
+                $link->setUser(null);
+            }
         }
 
         return $this;

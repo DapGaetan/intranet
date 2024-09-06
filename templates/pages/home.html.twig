@@ -54,15 +54,19 @@
 
         <h5>Mes liens rapide :</h5>
         <div class="my_links">
-            <section class="my_link">+</section>
-            <section class="my_link">+</section>
-            <section class="my_link">+</section>
-            <section class="my_link">+</section>
-            <section class="my_link">+</section>
-            <section class="my_link">+</section>
-            <section class="my_link">+</section>
-            <section class="my_link">+</section>
+            {% for link in links %}
+                <section class="my_link">
+                    <a href="{{ link.url }}">{{ link.name }}</a>
+                    <a href="{{ path('app_link_edit', {id: link.id}) }}">Modifier</a>
+                    <a href="{{ path('app_link_delete', {id: link.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')">Supprimer</a>
+                </section>
+            {% else %}
+                <section class="my_link">
+                    <a href="{{ path('app_link_new') }}">+</a>
+                </section>
+            {% endfor %}
         </div>
+
 
         <a href="{{ path('app_all_profiles') }}" class="btn-view-profiles" role="button" aria-label="Voir tous les profils d'utilisateurs">
             <i class="fa-solid fa-users"></i> Voir tous les utilisateurs

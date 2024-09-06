@@ -34,6 +34,7 @@
 
     
     // VAR-HOVER
+    $main-color-hover: #0083e7;
     $save_hover: #48c500;
     $submit_hover: #4CAF50;
     $edit_hover: #007ddd;
@@ -1405,17 +1406,30 @@ footer section h6{
 }
 
 footer {
-    section {
-      a {
-        i{
+    section:last-child {
+        a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: $main-color;
             background-color: white;
             padding: 5px;
-            border-radius: 100%;
-            font-size: 1rem;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+
+            i {
+                font-size: 1rem;
+                transition: transform 0.3s ease;
+                &:hover{
+                    transform: translateY(-5px);
+                    color: $main-color-hover 2s;
+                }
+            }
         }
     }
-    }
 }
+
   
   

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Lien{% endblock %}
+
+{% block body %}
+    <h5>Modifier le lien :</h5>
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.url) }}
+    {{ form_row(form.logo) }}
+    <button type="submit">Enregistrer</button>
+    {{ form_end(form) }}
+{% endblock %}

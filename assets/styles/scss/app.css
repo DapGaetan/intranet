@@ -1260,10 +1260,23 @@ footer section h6 {
   color: white;
 }
 
-footer section a i {
+footer section:last-child a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: #0091ff;
   background-color: white;
   padding: 5px;
-  border-radius: 100%;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+}
+footer section:last-child a i {
   font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+footer section:last-child a i:hover {
+  transform: translateY(-5px);
+  color: #0083e7 2s;
 }/*# sourceMappingURL=app.css.map */
