@@ -91,6 +91,6 @@ class LinkController extends AbstractController
         $em->remove($link);
         $em->flush();
 
-        return $this->redirectToRoute('app_user_links');
+        return $this->redirectToRoute('app_home');
     }
 }

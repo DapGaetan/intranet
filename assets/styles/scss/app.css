@@ -266,6 +266,7 @@ nav {
 .logo-container .logo {
   max-width: 180px;
   height: auto;
+  padding: 18px;
 }
 
 .logo-container h3 {
@@ -758,8 +759,10 @@ h5 {
   gap: 20px;
 }
 .my_links .my_link {
+  position: relative;
   background-color: #ffffff;
   border-radius: 8px;
+  height: 80px;
   padding: 20px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -770,6 +773,42 @@ h5 {
 .my_links .my_link:hover {
   transform: translateY(-3px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.my_links .my_link a.link-name {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+.my_links .my_link .link-actions {
+  display: block;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%) translateY(30px);
+  opacity: 0;
+  font-size: 1rem;
+  color: #666;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.my_links .my_link .link-actions a {
+  margin: 0 10px;
+}
+.my_links .my_link .edit-link {
+  color: #007ddd;
+}
+.my_links .my_link .edit-link:hover {
+  color: #007ddd;
+}
+.my_links .my_link .delete-link {
+  color: #d9534f;
+}
+.my_links .my_link .delete-link:hover {
+  color: #aa3733;
+}
+.my_links .my_link:hover .link-actions {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
 }
 @media (max-width: 768px) {
   .my_links {

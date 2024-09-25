@@ -50,28 +50,30 @@
             </div>
         {% endif %}
 
-
-
-        <h5>Mes liens rapide :</h5>
+        <h5>Mes liens rapides :</h5>
         <div class="my_links">
             {% for link in links %}
                 <section class="my_link">
-                    <a href="{{ link.url }}">{{ link.name }}</a>
-                    <a href="{{ path('app_link_edit', {id: link.id}) }}">Modifier</a>
-                    <a href="{{ path('app_link_delete', {id: link.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')">Supprimer</a>
-                </section>
-            {% else %}
-                <section class="my_link">
-                    <a href="{{ path('app_link_new') }}">+</a>
+                    <a target href="{{ link.url }}" class="link-name">{{ link.name }}</a>
+                    <div class="link-actions">
+                        <a href="{{ path('app_link_edit', {id: link.id}) }}" class="edit-link"><i class="fa-solid fa-pencil"></i></a>
+                        <a href="{{ path('app_link_delete', {id: link.id}) }}" class="delete-link" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')"><i class="fa-solid fa-eraser"></i></a>
+                    </div>
                 </section>
             {% endfor %}
+
+            {% if links|length < 8 %}
+                <section class="my_link">
+                    <a href="{{ path('app_link_new') }}"><i class="fa-solid fa-plus"></i></a>
+                </section>
+            {% endif %}
         </div>
+
 
 
         <a href="{{ path('app_all_profiles') }}" class="btn-view-profiles" role="button" aria-label="Voir tous les profils d'utilisateurs">
             <i class="fa-solid fa-users"></i> Voir tous les utilisateurs
         </a>
-
     </div>
 {% endblock %}
 

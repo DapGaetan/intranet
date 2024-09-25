@@ -4,6 +4,7 @@
 
 {% block body %}
     <h5>Modifier le lien :</h5>
+    <a href="{{ path('app_home') }}"><i class="fa-solid fa-arrow-left-long"></i> Quitter sans modifier</a>
     {{ form_start(form) }}
     {{ form_row(form.name) }}
     {{ form_row(form.url) }}
