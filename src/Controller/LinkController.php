@@ -113,14 +113,15 @@ class LinkController extends AbstractController
     {
         $logoPath = $this->getParameter('kernel.project_dir') . '/public/uploads/logo_links/' . $link->getLogo();
     
-        if (file_exists($logoPath)) {
+        if ($link->getLogo() && file_exists($logoPath) && !is_dir($logoPath)) {
             unlink($logoPath);
         }
-
+    
         $em->remove($link);
         $em->flush();
     
         return $this->redirectToRoute('app_home');
     }
+    
     
 }

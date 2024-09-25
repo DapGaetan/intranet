@@ -53,21 +53,22 @@
         <h5>Mes liens rapides :</h5>
         <div class="my_links">
             {% for link in links %}
-                <section class="my_link">
-                    <a target href="{{ link.url }}" class="link-name">{{ link.name }}</a>
+                <section class="my_link" style="background-image: url('{{ asset('uploads/logo_links/' ~ link.logo) }}');">
+                    <a target href="{{ link.url }}" title="Se rendre sur le lien : {{ link.name }}" class="link-name">{{ link.name }}</a>
                     <div class="link-actions">
-                        <a href="{{ path('app_link_edit', {id: link.id}) }}" class="edit-link"><i class="fa-solid fa-pencil"></i></a>
-                        <a href="{{ path('app_link_delete', {id: link.id}) }}" class="delete-link" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')"><i class="fa-solid fa-eraser"></i></a>
+                        <a href="{{ path('app_link_edit', {id: link.id}) }}" title="Modifier le lien : {{ link.name }}" class="edit-link"><i class="fa-solid fa-pencil"></i></a>
+                        <a href="{{ path('app_link_delete', {id: link.id}) }}" title="Supprimer le lien : {{ link.name }}" class="delete-link" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')"><i class="fa-solid fa-eraser"></i></a>
                     </div>
                 </section>
             {% endfor %}
 
             {% if links|length < 8 %}
                 <section class="my_link">
-                    <a href="{{ path('app_link_new') }}"><i class="fa-solid fa-plus"></i></a>
+                    <a href="{{ path('app_link_new') }}" title="Ajouter un lien aux accès rapides"><i class="fa-solid fa-plus"></i></a>
                 </section>
             {% endif %}
         </div>
+
 
 
 
