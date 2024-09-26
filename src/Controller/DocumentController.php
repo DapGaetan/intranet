@@ -147,4 +147,90 @@ class DocumentController extends AbstractController
 
         return $this->redirectToRoute('app_user_documents');
     }
+
+    #[Route('/admin/documents', name: 'app_admin_documents')]
+    public function adminDocuments(DocumentRepository $documentRepository, Request $request): Response
+    {
+        $user = $this->getUser();
+        
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à vos documents.');
+        }
+        
+        $searchTerm = $request->query->get('search');
+        $dateFilter = $request->query->get('date');
+    
+        // Trouver uniquement les documents créés par l'utilisateur
+        $documents = $documentRepository->findBy(['created_by' => $user, 'is_admin_only' => false]);
+    
+        if ($searchTerm) {
+            $documents = array_filter($documents, function($document) use ($searchTerm) {
+                return stripos($document->getTitle(), $searchTerm) !== false || stripos($document->getDescription(), $searchTerm) !== false;
+            });
+        }
+    
+        if ($dateFilter) {
+            $documents = array_filter($documents, function($document) use ($dateFilter) {
+                return $document->getCreatedAt()->format('d-m-Y') === $dateFilter;
+            });
+        }
+    
+        return $this->render('pages/document/adminDocuments.html.twig', [
+            'documents' => $documents,
+            'searchTerm' => $searchTerm,
+        ]);
+    }
+    
+
+    #[Route('/admin/document/new', name: 'app_admin_document_new')]
+        public function createAdminDocument(Request $request, DocumentRepository $documentRepository, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    {
+        $user = $this->getUser();
+
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('Accès réservé aux administrateurs.');
+        }
+
+        $document = new Document();
+        $form = $this->createForm(DocumentFormType::class, $document);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Définir l'utilisateur qui a créé le document
+            $document->setCreatedBy($user);
+            $document->setCreatedAt(new \DateTimeImmutable());
+            $document->setUpdatedAt(new \DateTimeImmutable());
+            $document->setIsAdminOnly(true); // Ce document est réservé aux admins
+
+            $pdfFile = $form->get('file')->getData();
+            if ($pdfFile) {
+                $safeFilename = $slugger->slug(pathinfo($pdfFile->getClientOriginalName(), PATHINFO_FILENAME));
+                $newFilename = $safeFilename.'-admin.'.$pdfFile->guessExtension();
+                $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/documents/adm-only';
+
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+                try {
+                    $pdfFile->move($uploadDir, $newFilename);
+                } catch (FileException $e) {
+                    $this->addFlash('error', 'Erreur lors du téléchargement du document.');
+                    return $this->redirectToRoute('app_admin_document_new');
+                }
+
+                $document->setFilePath($uploadDir . '/' . $newFilename);
+            }
+
+            // Persister le document avec le champ createdBy renseigné
+            $em->persist($document);
+            $em->flush();
+
+            return $this->redirectToRoute('app_admin_documents');
+        }
+
+        return $this->render('pages/document/newAdminDocument.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 }

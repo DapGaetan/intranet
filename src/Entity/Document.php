@@ -33,6 +33,9 @@ class Document
     #[ORM\JoinColumn(nullable: false)]
     private ?User $created_by = null;
 
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $is_admin_only = false;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +109,18 @@ class Document
     public function setCreatedBy(?User $created_by): static
     {
         $this->created_by = $created_by;
+
+        return $this;
+    }
+
+    public function getIsAdminOnly(): ?bool
+    {
+        return $this->is_admin_only;
+    }
+
+    public function setIsAdminOnly(bool $is_admin_only): static
+    {
+        $this->is_admin_only = $is_admin_only;
 
         return $this;
     }
