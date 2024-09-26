@@ -53,11 +53,14 @@
         <h5>Mes liens rapides :</h5>
         <div class="my_links">
             {% for link in links %}
-                <section class="my_link" style="background-image: url('{{ asset('uploads/logo_links/' ~ link.logo) }}');">
-                    <a target href="{{ link.url }}" title="Se rendre sur le lien : {{ link.name }}" class="link-name">{{ link.name }}</a>
+                <section class="my_link">
+                    <div class="link-content">
+                        <img src="{{ asset('uploads/logo_links/' ~ link.logo) }}" alt="Logo de : {{ link.name | capitalize }}" class="link-logo">
+                        <a target href="{{ link.url }}" title="Se rendre sur le lien : {{ link.name | capitalize }}" class="link-name">{{ link.name | capitalize }}</a>
+                    </div>
                     <div class="link-actions">
-                        <a href="{{ path('app_link_edit', {id: link.id}) }}" title="Modifier le lien : {{ link.name }}" class="edit-link"><i class="fa-solid fa-pencil"></i></a>
-                        <a href="{{ path('app_link_delete', {id: link.id}) }}" title="Supprimer le lien : {{ link.name }}" class="delete-link" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')"><i class="fa-solid fa-eraser"></i></a>
+                        <a href="{{ path('app_link_edit', {id: link.id}) }}" title="Modifier le lien : {{ link.name | capitalize }}" class="edit-link"><i class="fa-solid fa-pencil"></i></a>
+                        <a href="{{ path('app_link_delete', {id: link.id}) }}" title="Supprimer le lien : {{ link.name | capitalize }}" class="delete-link" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')"><i class="fa-solid fa-eraser"></i></a>
                     </div>
                 </section>
             {% endfor %}
@@ -69,12 +72,6 @@
             {% endif %}
         </div>
 
-
-
-
-        <a href="{{ path('app_all_profiles') }}" class="btn-view-profiles" role="button" aria-label="Voir tous les profils d'utilisateurs">
-            <i class="fa-solid fa-users"></i> Voir tous les utilisateurs
-        </a>
     </div>
 {% endblock %}
 

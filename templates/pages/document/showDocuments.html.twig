@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Documents{% endblock %}
+
+{% block body %}
+    <h1>Mes Documents</h1>
+
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    <a href="{{ path('app_document_new') }}" class="btn btn-primary">Ajouter un Document</a>
+
+    <form id="searchForm" method="get" action="{{ path('app_user_documents') }}">
+        <div style="position: relative; width: 100%;">
+            <input type="text" id="searchInput" name="search" placeholder="Rechercher un document">
+            <i class="fa-solid fa-search search-icon"></i>
+        </div>
+
+        <div class="filters-wrapper">
+            <div class="filter-container">
+                <label for="sortFilter">Trier par :</label>
+                <select id="sortFilter" name="sort">
+                    <option value="name">Nom de fichier</option>
+                    <option value="title">Titre</option>
+                    <option value="type">Type de document</option>
+                    <option value="date">Date</option>
+                </select>
+            </div>
+            <button type="button" id="resetButton" class="reset-button"><i class="fa-solid fa-eraser"></i> Effacer la recherche</button>
+        </div>
+    </form>
+
+    <div id="documentsGrid" class="documents-container" data-controller="document">
+        {% for document in documents %}
+            <div class="document-card">
+                {% set fileExtension = document.filePath|split('.')|last %}
+                
+                {% set fileIcon = {
+                    'pdf': 'fa-file-pdf',
+                    'docx': 'fa-file-word',
+                    'xlsx': 'fa-file-excel',
+                    'png': 'fa-file-image',
+                    'jpg': 'fa-file-image',
+                    'jpeg': 'fa-file-image',
+                    'txt': 'fa-file-alt',
+                    'pptx': 'fa-file-powerpoint',
+                    'zip': 'fa-file-archive',
+                    'mp3': 'fa-file-audio',
+                    'mp4': 'fa-file-video'
+                }[fileExtension] ?? 'fa-file' %}
+
+                <div class="file-icon">
+                    <i class="fa-solid {{ fileIcon }}"></i>
+                </div>
+                <div class="document-info">
+                    <h2>{{ document.title }}</h2>
+                </div>
+            </div>
+        {% else %}
+            <p>Aucun document trouvé.</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}

@@ -19,6 +19,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Validator\Constraints\File;
 
 class UserAndProfileFormType extends AbstractType
 {
@@ -143,11 +144,11 @@ class UserAndProfileFormType extends AbstractType
             ]);
 
         // Sous-formulaire pour UserProfile
-        $builder
+            $builder
             ->add('profile', FormType::class, [
                 'label' => false,
                 'mapped' => true,
-                'data_class' => UserProfile::class, // Spécifie que ce formulaire gère UserProfile
+                'data_class' => UserProfile::class,
                 'required' => false,
             ])
             ->get('profile')
@@ -156,6 +157,18 @@ class UserAndProfileFormType extends AbstractType
                 'mapped' => false,
                 'attr' => ['placeholder' => 'Sélectionnez une image'],
                 'label' => 'Photo de profil',
+                'constraints' => [
+                    new File([
+                        'maxSize' => '4M',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png',
+                            'image/gif',
+                        ],
+                        'mimeTypesMessage' => 'Veuillez télécharger un fichier d\'image valide (JPEG, PNG, GIF uniquement).',
+                        'maxSizeMessage' => 'La taille maximale autorisée pour l\'image est de 2 Mo.',
+                    ])
+                ],
             ])
             ->add('phoneFixed', TextType::class, [
                 'required' => false,

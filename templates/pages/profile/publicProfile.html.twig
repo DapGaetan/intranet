@@ -57,7 +57,19 @@
         </div>
 
     {% else %}
+    <a href="{{ path('app_all_profiles') }}"><i class="fa-solid fa-arrow-left-long"></i> Retour a la liste d'utilisateurs</a>
         <p class="user-no-profile">Les informations de cet utilisateur ne sont pas encore disponibles...</p>
+        <br>
+            {% if is_granted('ROLE_ADMIN') %}
+            
+            <br>
+            <h6><i class="fa-solid fa-shield-halved"></i> Outils Administrateur</h6>
+                <a href="{{ path('app_edit_profile', {id: user.id}) }}" class="button-edit"><i class="fa-solid fa-hammer"></i> Modifier le profil de l'utilisateur</a>
+                <form action="{{ path('app_delete_user', {id: user.id}) }}" method="post" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');" style="display: inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete-user-' ~ user.id) }}">
+                    <button type="submit" class="button-delete strong"><i class="fa-solid fa-trash"></i> Supprimer l'utilisateur</button>
+                </form>
+            {% endif %}
     {% endif %}
 </div>
 

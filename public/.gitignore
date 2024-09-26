@@ -1,11 +1,28 @@
-# Ignorer tout le contenu du dossier uploads
-uploads/*
+# Ne pas ignorer :
 
 # Ne pas ignorer le dossier profile_images
 !uploads/profile_images/
 
-# Ignorer tout le contenu dans profile_images
-uploads/profile_images/*
+# Ne pas ignorer le dossier logo_links
+!uploads/logo_links/
+
+# Ne pas ignorer le dossier documents
+!uploads/documents/
 
 # Ne pas ignorer le fichier default-avatar.png
 !uploads/profile_images/default-avatar.png
+
+#----------------------------------------------------
+
+#Ignorer :
+
+# Ignorer tout le contenu dans profile_images
+uploads/profile_images/*
+
+# Ignorer tout le contenu dans logo_links
+uploads/logo_links/*
+
+# Ignorer tout le contenu dans documents
+uploads/documents/*
+
+

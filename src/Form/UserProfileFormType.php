@@ -78,7 +78,7 @@ class UserProfileFormType extends AbstractType
                 'required' => false,
                 'label' => 'Biographie',
                 'attr' => [
-                    'placeholder' => 'exemple : Encore une magnifiue journée pasée a vos cotés'
+                    'placeholder' => 'exemple : Encore une magnifique journée passée a vos cotés'
 
             ],
             ])
