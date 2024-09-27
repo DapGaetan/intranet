@@ -54,11 +54,13 @@
         <div class="my_links">
             {% for link in links %}
                 <section class="my_link">
-                    <div class="link-content">
-                        <img src="{{ link.logo }}" alt="Favicon de {{ link.name }}" onerror="this.style.display='none'" class="favicon" style="height: 20px; width: 20px; margin-right: 8px;" />
+                    <a href="{{ link.url }}" target="_blank" title="Se rendre sur le lien : {{ link.name | capitalize }}" class="link-content">
+                        <img src="{{ link.logo }}" alt="Favicon de {{ link.name }}" 
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';" 
+                            class="favicon" style="height: 20px; width: 20px; margin-right: 8px;" />
                         <i class="fa-solid fa-earth-europe" style="display:none; margin-right: 8px;"></i>
-                        <a target href="{{ link.url }}" title="Se rendre sur le lien : {{ link.name | capitalize }}" class="link-name">{{ link.name | capitalize }}</a>
-                    </div>
+                        <span class="link-name">{{ link.name | capitalize }}</span>
+                    </a>
                     <div class="link-actions">
                         <a href="{{ path('app_link_edit', {id: link.id}) }}" title="Modifier le lien : {{ link.name | capitalize }}" class="edit-link"><i class="fa-solid fa-pencil"></i></a>
                         <a href="{{ path('app_link_delete', {id: link.id}) }}" title="Supprimer le lien : {{ link.name | capitalize }}" class="delete-link" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce lien ?')"><i class="fa-solid fa-eraser"></i></a>
@@ -72,8 +74,6 @@
                 </section>
             {% endif %}
         </div>
-
-
     </div>
 {% endblock %}
 

@@ -795,6 +795,7 @@ h5 {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   font-size: 1rem;
   color: #666;
 }
@@ -805,6 +806,12 @@ h5 {
 .my_links .my_link .link-content {
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+  height: 100%;
+  text-align: center;
 }
 .my_links .my_link .link-content .link-logo {
   width: 24px;
@@ -820,6 +827,7 @@ h5 {
   text-align: center;
   font-size: 1rem;
   font-weight: 500;
+  margin-left: 8px;
 }
 .my_links .my_link .link-actions {
   display: block;

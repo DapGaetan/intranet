@@ -20,22 +20,6 @@ class LinkFormType extends AbstractType
             ])
             ->add('url', TextType::class, [
                 'label' => 'URL du lien',
-            ])
-            ->add('logo', FileType::class, [
-                'label' => 'Logo (facultatif)',
-                'required' => false,
-                'mapped' => false,
-                'constraints' => [
-                    new File([
-                        'maxSize' => '2M',
-                        'mimeTypes' => [
-                            'image/jpeg',
-                            'image/png',
-                            'image/gif',
-                        ],
-                        'mimeTypesMessage' => 'Veuillez télécharger un fichier d\'image valide (JPEG, PNG, GIF)',
-                    ])
-                ],
             ]);
     }
 

@@ -851,7 +851,7 @@ nav {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-        
+
             .my_link {
                 position: relative;
                 background-color: #ffffff;
@@ -866,6 +866,7 @@ nav {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                flex-direction: column;
         
                 &:hover {
                     transform: translateY(-3px);
@@ -875,6 +876,12 @@ nav {
                 .link-content {
                     display: flex;
                     align-items: center;
+                    justify-content: center;
+                    text-decoration: none;
+                    color: inherit;
+                    width: 100%;
+                    height: 100%;
+                    text-align: center;
                     
                     .link-logo {
                         width: 24px;
@@ -890,6 +897,7 @@ nav {
                         text-align: center;
                         font-size: 1rem;
                         font-weight: 500;
+                        margin-left: 8px;
                     }
                 }
         
@@ -943,13 +951,6 @@ nav {
             }
         }
         
-        
-        
-        
-        
-
-        
-
         // Tickets
             .ticket-details {
                 max-width: 100%;
@@ -1417,13 +1418,6 @@ nav {
                 color: #fff;
                 border-color: #4A90E2;
             }
-            
-            
-            
-            
-            
-
-            
 
             // Profiles in the home
             .btn-view-profiles {
@@ -1516,7 +1510,6 @@ nav {
 
 
             // Mentions légales
-
             .legal-mentions-container {
                 max-width: 800px;
                 margin: 0 auto;
@@ -1582,10 +1575,6 @@ nav {
                 }
             }
             
-            
-
-
-
 
 /* Footer */
 
@@ -1642,6 +1631,3 @@ footer {
         }
     }
 }
-
-  
-  
