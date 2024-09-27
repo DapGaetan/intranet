@@ -49,7 +49,6 @@ class DocumentController extends AbstractController
         ]);
     }
     
-
     #[Route('/document/new', name: 'app_document_new')]
     public function create(Request $request, DocumentRepository $documentRepository, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
@@ -119,7 +118,6 @@ class DocumentController extends AbstractController
         ]);
     }
     
-
     #[Route('/document/{id}/edit', name: 'app_document_edit')]
     public function edit(Request $request, Document $document, EntityManagerInterface $em): Response
     {
@@ -189,9 +187,6 @@ class DocumentController extends AbstractController
         ]);
     }
     
-    
-    
-
     #[Route('/admin/document/new', name: 'app_admin_document_new')]
     #[IsGranted('ROLE_ADMIN')]
     public function createAdminDocument(Request $request, DocumentRepository $documentRepository, EntityManagerInterface $em, SluggerInterface $slugger): Response
@@ -214,7 +209,7 @@ class DocumentController extends AbstractController
     
             $pdfFile = $form->get('file')->getData();
             if ($pdfFile) {
-                
+
                 $originalFilename = pathinfo($pdfFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $pdfFile->guessExtension();
                 
@@ -248,4 +243,5 @@ class DocumentController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
 }

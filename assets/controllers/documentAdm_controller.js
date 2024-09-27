@@ -46,5 +46,6 @@ export default class extends Controller {
 
         const initialQueryString = buildQueryString();
         updateDocuments(initialQueryString);
+        
     }
 }

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Documents Admin{% endblock %}
+{% block title %}<i class="fa-solid fa-folder-open"></i> Documents Admin{% endblock %}
 
 {% block body %}
     <h1>Documents réservés aux administrateurs</h1>
@@ -16,19 +16,6 @@
             <input type="text" id="searchInput" name="search" placeholder="Rechercher un document">
             <i class="fa-solid fa-search search-icon"></i>
         </div>
-
-        <div class="filters-wrapper">
-            <div class="filter-container">
-                <label for="sortFilter">Trier par :</label>
-                <select id="sortFilter" name="sort">
-                    <option value="name">Nom de fichier</option>
-                    <option value="title">Titre</option>
-                    <option value="type">Type de document</option>
-                    <option value="date">Date</option>
-                </select>
-            </div>
-            <button type="button" id="resetButton" class="reset-button"><i class="fa-solid fa-eraser"></i> Effacer la recherche</button>
-        </div>
     </form>
 
     <div id="documentsGrid" class="documents-container" data-controller="documentAdm">
@@ -36,7 +23,7 @@
             {% if documents is not empty %}
                 {% for document in documents %}
                     {% if document.isAdminOnly == true %}
-                        <div class="document-card">
+                        <div class="document-card" data-id="{{ document.id }}>
                             {% set fileExtension = document.filePath|split('.')|last %}
                             
                             {% set fileIcon = {
