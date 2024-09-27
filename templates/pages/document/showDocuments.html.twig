@@ -23,8 +23,8 @@
         {% if is_granted('ROLE_USER') %}
             {% if documents is not empty %}
                 {% for document in documents %}
-                    {% if not document.isAdminOnly %}
-                        <div class="document-card" data-id="{{ document.id }}">
+                    {% if document.isAdminOnly == false %}
+                        <div class="document-card" >
                             {% set fileExtension = document.filePath|split('.')|last %}
                             
                             {% set fileIcon = {
@@ -76,7 +76,6 @@
                             </div>
                             <div class="document-info">
                                 <h2>{{ document.title|capitalize|slice(0, 10) }}</h2>
-                                <p>File: {{ document.filePath }}</p>
                             </div>
                         </div>
                     {% endif %}
@@ -86,4 +85,5 @@
             {% endif %}
         {% endif %}
     </div>
+
 {% endblock %}

@@ -16,6 +16,7 @@
             <input type="text" id="searchInput" name="search" placeholder="Rechercher un document">
             <i class="fa-solid fa-search search-icon"></i>
         </div>
+
     </form>
 
     <div id="documentsGrid" class="documents-container" data-controller="documentAdm">
@@ -23,7 +24,7 @@
             {% if documents is not empty %}
                 {% for document in documents %}
                     {% if document.isAdminOnly == true %}
-                        <div class="document-card" data-id="{{ document.id }}>
+                        <div class="document-card">
                             {% set fileExtension = document.filePath|split('.')|last %}
                             
                             {% set fileIcon = {
