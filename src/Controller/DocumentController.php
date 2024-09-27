@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class DocumentController extends AbstractController
@@ -58,7 +59,6 @@ class DocumentController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez être connecté pour créer un document.');
         }
     
-        // Vérifie le poids du dossier de l'utilisateur
         $userDocuments = $documentRepository->findBy(['created_by' => $user]);
         $totalSize = array_reduce($userDocuments, function ($carry, $doc) {
             return $carry + filesize($doc->getFilePath());
@@ -77,39 +77,43 @@ class DocumentController extends AbstractController
             $document->setCreatedBy($user);
             $document->setCreatedAt(new \DateTimeImmutable());
             $document->setUpdatedAt(new \DateTimeImmutable());
-    
+        
             $pdfFile = $form->get('file')->getData();
             if ($pdfFile) {
-                // Vérifie la taille du fichier
                 if ($pdfFile->getSize() > 5 * 1024 * 1024 * 1024) { // 5 Go
                     $this->addFlash('error', 'Le document ne doit pas dépasser 5 Go.');
                     return $this->redirectToRoute('app_document_new');
                 }
-    
-                $safeFilename = $slugger->slug(pathinfo($pdfFile->getClientOriginalName(), PATHINFO_FILENAME));
-                $newFilename = $safeFilename.'-'.$user->getLastName().'-'.$user->getFirstName().'.'.$pdfFile->guessExtension();
+        
+                $originalFilename = pathinfo($pdfFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = $pdfFile->guessExtension();
+                
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.$user->getLastName().'-'.$user->getFirstName().'.'.$extension;
+                
                 $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/documents/' . $user->getLastName() . '-' . $user->getFirstName();
-    
+        
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
-    
+        
                 try {
                     $pdfFile->move($uploadDir, $newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors du téléchargement du document.');
                     return $this->redirectToRoute('app_document_new');
                 }
-    
+        
                 $document->setFilePath($uploadDir . '/' . $newFilename);
+                $document->setTitle($safeFilename . '.' . $extension);
             }
-    
+        
             $em->persist($document);
             $em->flush();
-    
+        
             return $this->redirectToRoute('app_user_documents');
         }
-    
+        
         return $this->render('pages/document/newDocument.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -149,6 +153,7 @@ class DocumentController extends AbstractController
     }
 
     #[Route('/admin/documents', name: 'app_admin_documents')]
+    #[IsGranted('ROLE_ADMIN')]
     public function adminDocuments(DocumentRepository $documentRepository, Request $request): Response
     {
         $user = $this->getUser();
@@ -156,13 +161,16 @@ class DocumentController extends AbstractController
         if (!$user instanceof User) {
             throw $this->createAccessDeniedException('Vous devez être connecté pour accéder à vos documents.');
         }
-        
+    
         $searchTerm = $request->query->get('search');
         $dateFilter = $request->query->get('date');
-    
-        // Trouver uniquement les documents créés par l'utilisateur
-        $documents = $documentRepository->findBy(['created_by' => $user, 'is_admin_only' => false]);
-    
+        
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $documents = $documentRepository->findAll();
+        } else {
+            $documents = $documentRepository->findBy(['created_by' => $user, 'is_admin_only' => false]);
+        }
+
         if ($searchTerm) {
             $documents = array_filter($documents, function($document) use ($searchTerm) {
                 return stripos($document->getTitle(), $searchTerm) !== false || stripos($document->getDescription(), $searchTerm) !== false;
@@ -181,54 +189,61 @@ class DocumentController extends AbstractController
         ]);
     }
     
+    
+    
 
     #[Route('/admin/document/new', name: 'app_admin_document_new')]
-        public function createAdminDocument(Request $request, DocumentRepository $documentRepository, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    #[IsGranted('ROLE_ADMIN')]
+    public function createAdminDocument(Request $request, DocumentRepository $documentRepository, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
         $user = $this->getUser();
-
+    
         if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('Accès réservé aux administrateurs.');
         }
-
+    
         $document = new Document();
         $form = $this->createForm(DocumentFormType::class, $document);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            // Définir l'utilisateur qui a créé le document
             $document->setCreatedBy($user);
             $document->setCreatedAt(new \DateTimeImmutable());
             $document->setUpdatedAt(new \DateTimeImmutable());
-            $document->setIsAdminOnly(true); // Ce document est réservé aux admins
-
+            $document->setIsAdminOnly(true);
+    
             $pdfFile = $form->get('file')->getData();
             if ($pdfFile) {
-                $safeFilename = $slugger->slug(pathinfo($pdfFile->getClientOriginalName(), PATHINFO_FILENAME));
-                $newFilename = $safeFilename.'-admin.'.$pdfFile->guessExtension();
+                
+                $originalFilename = pathinfo($pdfFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = $pdfFile->guessExtension();
+                
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-admin.' . $extension;
+    
                 $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/documents/adm-only';
-
+    
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
-
+    
                 try {
                     $pdfFile->move($uploadDir, $newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors du téléchargement du document.');
                     return $this->redirectToRoute('app_admin_document_new');
                 }
-
+    
                 $document->setFilePath($uploadDir . '/' . $newFilename);
+                $document->setTitle($safeFilename . '.' . $extension);
             }
-
-            // Persister le document avec le champ createdBy renseigné
+    
             $em->persist($document);
             $em->flush();
-
+    
             return $this->redirectToRoute('app_admin_documents');
         }
-
+    
         return $this->render('pages/document/newAdminDocument.html.twig', [
             'form' => $form->createView(),
         ]);

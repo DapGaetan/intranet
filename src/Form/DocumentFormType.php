@@ -15,21 +15,15 @@ class DocumentFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class, [
-                'label' => 'Titre',
-            ])
-            ->add('description', TextareaType::class, [
-                'label' => 'Description',
-                'required' => false,
-            ])
-            ->add('file', FileType::class, [
-                'label' => 'Télécharger le document (PDF)',
-                'mapped' => false,
-                'required' => true,
-                'constraints' => [
-                    // Vous pouvez ajouter des contraintes de validation ici si nécessaire
-                ],
-            ]);
+        ->add('file', FileType::class, [
+            'label' => 'Télécharger un fichier ici (PDF, jpeg, xml, xsv ect ect...)',
+            'mapped' => false,
+            'required' => true,
+        ])
+        ->add('description', TextareaType::class, [
+            'label' => 'Description',
+            'required' => false,
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
