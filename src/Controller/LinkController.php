@@ -32,7 +32,7 @@ class LinkController extends AbstractController
     }
 
     #[Route('/link/new', name: 'app_link_new')]
-    public function create(Request $request, LinkRepository $linkRepository, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    public function create(Request $request, LinkRepository $linkRepository, EntityManagerInterface $em): Response
     {
         $user = $this->getUser();
     
@@ -55,28 +55,15 @@ class LinkController extends AbstractController
             $link->setUser($user);
             $link->setCreatedAt(new \DateTimeImmutable());
             $link->setUpdatedAt(new \DateTimeImmutable());
-    
             
-            $logoFile = $form->get('logo')->getData();
-            if ($logoFile) {
-                $originalFilename = pathinfo($logoFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$logoFile->guessExtension();
-                $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/logo_links';
+            // Récupérer automatiquement la favicon du site
+            $faviconUrl = $link->getUrl() . '/favicon.ico';
+            $link->setLogo($faviconUrl);
     
-                try {
-                    $logoFile->move(
-                        $uploadDir,
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    
-                }
-                $link->setLogo($newFilename);
-            }
-    
+            // Enregistrer le lien
             $em->persist($link);
             $em->flush();
+
     
             return $this->redirectToRoute('app_home');
         }

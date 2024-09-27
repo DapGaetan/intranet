@@ -1,9 +1,6 @@
 # Ne pas ignorer le dossier profile_images
 !uploads/profile_images/
 
-# Ne pas ignorer le dossier logo_links
-!uploads/logo_links/
-
 # Ne pas ignorer le dossier documents
 !uploads/documents/
 
@@ -15,9 +12,6 @@
 
 # Ignorer tout le contenu dans profile_images
 uploads/profile_images/*
-
-# Ignorer tout le contenu dans logo_links
-uploads/logo_links/*
 
 # Ignorer tout le contenu dans documents (y compris adm-only)
 uploads/documents/*
