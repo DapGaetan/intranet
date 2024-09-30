@@ -10,12 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class LinkController extends AbstractController
 {
-    #[Route('/mes-liens', name: 'app_user_links')]
+    #[Route('/my-links', name: 'app_user_links')]
     public function index(LinkRepository $linkRepository): Response
     {
         $user = $this->getUser();
@@ -86,7 +84,7 @@ class LinkController extends AbstractController
             $link->setUpdatedAt(new \DateTimeImmutable());
             $em->flush();
 
-            return $this->redirectToRoute('app_user_links');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('pages/link/editLink.html.twig', [

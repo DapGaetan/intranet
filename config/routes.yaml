@@ -1,5 +1,14 @@
+# config/routes.yaml
+
 controllers:
     resource:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+ldap_test_login:
+    path: /ldap
+    controller: App\Controller\LdapTestController::login
+
+ldap_test_login_check:
+    path: /ldap/login_check

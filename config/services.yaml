@@ -7,6 +7,19 @@ parameters:
 
 services:
     # default configuration for services in *this* file
+    Symfony\Component\Ldap\Ldap:
+        arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
+        tags:
+            - ldap
+    Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
+        arguments:
+            - host: '%env(LDAP_HOST)%'
+              port: '%env(LDAP_PORT)%'
+              encryption: none
+              options:
+                protocol_version: 3
+                referrals: false
+
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.

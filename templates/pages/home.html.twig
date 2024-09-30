@@ -32,6 +32,12 @@
             </div>
         </div>
 
+        {# {% if ldap_result is defined %}
+            <div>
+                {{ ldap_result }}
+            </div>
+        {% endif %} #}
+
         {% if is_granted('ROLE_ADMIN') %}
             <h5>Outils d'administration :</h5>
             <div class="feature-grid-adm">

@@ -28,6 +28,7 @@ class HomepageController extends AbstractController
         ]);
     }
 
+
     #[Route('/mentions-legales', name: 'app_mentions')]
     public function mentions(): Response
     {

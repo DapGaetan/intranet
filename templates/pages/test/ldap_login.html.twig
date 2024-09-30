@@ -1,0 +1,20 @@
+{# templates/security/ldap_login.html.twig #}
+
+
+
+
+{% extends 'base.html.twig' %}
+
+{% block title %}LDAP connexion{% endblock %}
+
+{% block body %}
+    <form action="{{ path('ldap_test_login_check') }}" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="_username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="_password" required>
+
+        <button type="submit">Login</button>
+    </form>
+{% endblock %}
