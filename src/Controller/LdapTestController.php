@@ -3,23 +3,37 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Ldap\LdapInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class LdapTestController extends AbstractController
 {
-    #[Route('/ldap', name: 'ldap_test_login')]
-    public function login(): Response
+    private $ldap;
+    private $params;
+
+    public function __construct(LdapInterface $ldap, ParameterBagInterface $params)
     {
-        return $this->render('pages/test/ldap_login.html.twig');
+        $this->ldap = $ldap;
+        $this->params = $params;
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
+    #[Route('/test-ldap', name: 'test_ldap')]
+    public function testLdap(): Response
     {
-        // Redirige vers la page d'accueil ou une autre page après une connexion réussie
-        return $this->redirectToRoute('app_home'); // Change 'app_home' par le nom de ta route d'accueil
+        $bindDn = $this->getParameter('ldap_bind_dn');
+        $bindPassword = $this->getParameter('ldap_bind_password');
+    
+        try {
+            $this->ldap->bind($bindDn, $bindPassword);
+    
+            $query = $this->ldap->query('dc=osartis,dc=local', '(objectClass=*)');
+            $result = $query->execute();
+    
+            return new Response('Connexion réussie à l\'annuaire LDAP. Entrées trouvées : ' . count($result));
+        } catch (\Exception $e) {
+            return new Response('Échec de la connexion à l\'annuaire LDAP: ' . $e->getMessage());
+        }
     }
 }
