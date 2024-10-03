@@ -11,8 +11,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class HomepageController extends AbstractController
 {
-
-
     #[Route('/home', name: 'app_home')]
     public function home(LinkRepository $linkRepository, UserInterface $user)
     {

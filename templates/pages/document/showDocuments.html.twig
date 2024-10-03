@@ -24,60 +24,62 @@
             {% if documents is not empty %}
                 {% for document in documents %}
                     {% if document.isAdminOnly == false %}
-                        <div class="document-card" >
-                            {% set fileExtension = document.filePath|split('.')|last %}
-                            
-                            {% set fileIcon = {
-                                'pdf': 'fa-file-pdf',
-                                'docx': 'fa-file-word',
-                                'xlsx': 'fa-file-excel',
-                                'csv': 'fa-file-csv',
-                                'png': 'fa-file-image',
-                                'jpg': 'fa-file-image',
-                                'jpeg': 'fa-file-image',
-                                'gif': 'fa-file-image',
-                                'svg': 'fa-file-image',
-                                'bmp': 'fa-file-image',
-                                'tiff': 'fa-file-image',
-                                'txt': 'fa-file-alt',
-                                'md': 'fa-file-alt',
-                                'rtf': 'fa-file-alt',
-                                'pptx': 'fa-file-powerpoint',
-                                'ppt': 'fa-file-powerpoint',
-                                'zip': 'fa-file-archive',
-                                'rar': 'fa-file-archive',
-                                '7z': 'fa-file-archive',
-                                'tar': 'fa-file-archive',
-                                'gz': 'fa-file-archive',
-                                'mp3': 'fa-file-audio',
-                                'wav': 'fa-file-audio',
-                                'ogg': 'fa-file-audio',
-                                'flac': 'fa-file-audio',
-                                'mp4': 'fa-file-video',
-                                'avi': 'fa-file-video',
-                                'mkv': 'fa-file-video',
-                                'mov': 'fa-file-video',
-                                'wmv': 'fa-file-video',
-                                'html': 'fa-file-code',
-                                'css': 'fa-file-code',
-                                'js': 'fa-file-code',
-                                'json': 'fa-file-code',
-                                'xml': 'fa-file-code',
-                                'php': 'fa-file-code',
-                                'java': 'fa-file-code',
-                                'py': 'fa-file-code',
-                                'cpp': 'fa-file-code',
-                                'c': 'fa-file-code',
-                                'sh': 'fa-file-code'
-                            } [fileExtension] ?? 'fa-file' %}
+                        <a href="{{ path('app_document_show', {id: document.id}) }}">
+                            <div class="document-card" title="{{ document.title }}">
+                                {% set fileExtension = document.filePath|split('.')|last %}
+                                
+                                {% set fileIcon = {
+                                    'pdf': 'fa-file-pdf',
+                                    'docx': 'fa-file-word',
+                                    'xlsx': 'fa-file-excel',
+                                    'csv': 'fa-file-csv',
+                                    'png': 'fa-file-image',
+                                    'jpg': 'fa-file-image',
+                                    'jpeg': 'fa-file-image',
+                                    'gif': 'fa-file-image',
+                                    'svg': 'fa-file-image',
+                                    'bmp': 'fa-file-image',
+                                    'tiff': 'fa-file-image',
+                                    'txt': 'fa-file-alt',
+                                    'md': 'fa-file-alt',
+                                    'rtf': 'fa-file-alt',
+                                    'pptx': 'fa-file-powerpoint',
+                                    'ppt': 'fa-file-powerpoint',
+                                    'zip': 'fa-file-archive',
+                                    'rar': 'fa-file-archive',
+                                    '7z': 'fa-file-archive',
+                                    'tar': 'fa-file-archive',
+                                    'gz': 'fa-file-archive',
+                                    'mp3': 'fa-file-audio',
+                                    'wav': 'fa-file-audio',
+                                    'ogg': 'fa-file-audio',
+                                    'flac': 'fa-file-audio',
+                                    'mp4': 'fa-file-video',
+                                    'avi': 'fa-file-video',
+                                    'mkv': 'fa-file-video',
+                                    'mov': 'fa-file-video',
+                                    'wmv': 'fa-file-video',
+                                    'html': 'fa-file-code',
+                                    'css': 'fa-file-code',
+                                    'js': 'fa-file-code',
+                                    'json': 'fa-file-code',
+                                    'xml': 'fa-file-code',
+                                    'php': 'fa-file-code',
+                                    'java': 'fa-file-code',
+                                    'py': 'fa-file-code',
+                                    'cpp': 'fa-file-code',
+                                    'c': 'fa-file-code',
+                                    'sh': 'fa-file-code'
+                                } [fileExtension] ?? 'fa-file' %}
 
-                            <div class="file-icon">
-                                <i class="fa-solid {{ fileIcon }}"></i>
+                                <div class="file-icon">
+                                    <i class="fa-solid {{ fileIcon }}"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h2>{{ document.title|capitalize|slice(0, 10) }}</h2>
+                                </div>
                             </div>
-                            <div class="document-info">
-                                <h2>{{ document.title|capitalize|slice(0, 10) }}</h2>
-                            </div>
-                        </div>
+                        </a>
                     {% endif %}
                 {% endfor %}
             {% else %}
