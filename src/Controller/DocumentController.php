@@ -58,7 +58,6 @@ class DocumentController extends AbstractController
             throw $this->createAccessDeniedException('Vous devez être connecté pour créer un document.');
         }
     
-        // Vérifiez la taille totale des documents
         $userDocuments = $documentRepository->findBy(['created_by' => $user]);
         $totalSize = array_reduce($userDocuments, function ($carry, $doc) {
             return $carry + filesize($doc->getFilePath());
@@ -80,7 +79,6 @@ class DocumentController extends AbstractController
     
             $pdfFile = $form->get('file')->getData();
             if ($pdfFile) {
-                // Vérifier la taille du fichier
                 if ($pdfFile->getSize() > 5 * 1024 * 1024 * 1024) { // 5 Go
                     $this->addFlash('error', 'Le document ne doit pas dépasser 5 Go.');
                     return $this->redirectToRoute('app_document_new');
@@ -92,7 +90,6 @@ class DocumentController extends AbstractController
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-' . $user->getLastName() . '-' . $user->getFirstName() . '.' . $extension;
     
-                // Construction du répertoire de téléchargement
                 $uploadDir = $this->getParameter('kernel.project_dir') . '/public/uploads/documents/' . $user->getLastName() . '-' . $user->getFirstName();
     
                 if (!is_dir($uploadDir)) {
@@ -105,8 +102,7 @@ class DocumentController extends AbstractController
                     $this->addFlash('error', 'Erreur lors du téléchargement du document.');
                     return $this->redirectToRoute('app_document_new');
                 }
-    
-                // Correctement enregistrer le chemin du fichier sans doublons
+
                 $document->setFilePath('uploads/documents/' . $user->getLastName() . '-' . $user->getFirstName() . '/' . $newFilename);
                 $document->setTitle($safeFilename . '.' . $extension);
             }
@@ -126,32 +122,43 @@ class DocumentController extends AbstractController
     #[Route('/document/{id}', name: 'app_document_show')]
     public function show(Document $document): Response
     {
-        // Récupérer l'utilisateur qui a créé le document
         $user = $document->getCreatedBy();
         
-        // Vérifiez que l'utilisateur existe
         if ($user === null) {
             throw $this->createNotFoundException('User not found');
         }
     
-        $filePath = $document->getFilePath(); // Récupérer le chemin du fichier
+        $filePath = $document->getFilePath();
         $fullFilePath = $this->getParameter('kernel.project_dir') . '/public/' . $filePath;
     
-        // Debug: Afficher le chemin complet
-        dump($fullFilePath); // Ajoutez cette ligne pour voir le chemin complet dans la console
+        
+        dump($fullFilePath);
     
-        // Vérifiez si le fichier existe
         if (!file_exists($fullFilePath)) {
             throw $this->createNotFoundException('Le fichier n\'existe pas. Chemin : ' . $fullFilePath);
         }
     
         return $this->render('pages/document/showDocument.html.twig', [
             'document' => $document,
-            'filePath' => $filePath, // On passe filePath à la vue
+            'filePath' => $filePath,
         ]);
     }
-    
-    
+
+    #[Route('/document/{id}/download', name: 'app_document_download')]
+    public function download(Document $document): Response
+    {
+
+        $filePath = $document->getFilePath();
+        $fullFilePath = $this->getParameter('kernel.project_dir') . '/public/' . $filePath;
+
+
+        if (!file_exists($fullFilePath)) {
+            throw $this->createNotFoundException('Le fichier n\'existe pas.');
+        }
+
+        return $this->file($fullFilePath);
+    }
+
     #[Route('/document/{id}/edit', name: 'app_document_edit')]
     public function edit(Request $request, Document $document, EntityManagerInterface $em): Response
     {
@@ -169,22 +176,6 @@ class DocumentController extends AbstractController
             'form' => $form->createView(),
             'document' => $document,
         ]);
-    }
-
-    #[Route('/document/{id}/download', name: 'app_document_download')]
-    public function download(Document $document): Response
-    {
-        // Récupérer le chemin du fichier
-        $filePath = $document->getFilePath();
-        $fullFilePath = $this->getParameter('kernel.project_dir') . '/public/' . $filePath;
-
-        // Vérifier si le fichier existe
-        if (!file_exists($fullFilePath)) {
-            throw $this->createNotFoundException('Le fichier n\'existe pas.');
-        }
-
-        // Préparer la réponse de téléchargement
-        return $this->file($fullFilePath);
     }
 
     #[Route('/document/{id}/delete', name: 'app_document_delete')]
@@ -231,18 +222,18 @@ class DocumentController extends AbstractController
             });
         }
     
-        return $this->render('pages/document/adminDocuments.html.twig', [
+        return $this->render('pages/document/showAdminDocuments.html.twig', [
             'documents' => $documents,
             'searchTerm' => $searchTerm,
         ]);
     }
-    
+
     #[Route('/admin/document/new', name: 'app_admin_document_new')]
     #[IsGranted('ROLE_ADMIN')]
     public function createAdminDocument(Request $request, DocumentRepository $documentRepository, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
         $user = $this->getUser();
-    
+        
         if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('Accès réservé aux administrateurs.');
         }
@@ -259,7 +250,6 @@ class DocumentController extends AbstractController
     
             $pdfFile = $form->get('file')->getData();
             if ($pdfFile) {
-
                 $originalFilename = pathinfo($pdfFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $pdfFile->guessExtension();
                 
@@ -279,7 +269,7 @@ class DocumentController extends AbstractController
                     return $this->redirectToRoute('app_admin_document_new');
                 }
     
-                $document->setFilePath($uploadDir . '/' . $newFilename);
+                $document->setFilePath('uploads/documents/adm-only/' . $newFilename);
                 $document->setTitle($safeFilename . '.' . $extension);
             }
     
@@ -293,5 +283,89 @@ class DocumentController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    
 
+    #[Route('/admin/document/{id}', name: 'app_admin_document_show')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function showAdminDocument(Document $document): Response
+    {
+        if (!$this->isGranted('ROLE_ADMIN') || !$document->getIsAdminOnly()) {
+            throw $this->createAccessDeniedException('Accès réservé aux administrateurs.');
+        }
+
+        $filePath = $document->getFilePath();
+        $fullFilePath = $this->getParameter('kernel.project_dir') . '/public/' . $filePath;
+
+        if (!file_exists($fullFilePath)) {
+            throw $this->createNotFoundException('Le fichier n\'existe pas. Chemin : ' . $fullFilePath);
+        }
+
+        return $this->render('pages/document/showAdminDocument.html.twig', [
+            'document' => $document,
+            'filePath' => $filePath,
+        ]);
+    }
+
+    #[Route('/admin/document/{id}/download', name: 'app_admin_document_download')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function downloadAdminDocument(Document $document): Response
+    {
+        if (!$this->isGranted('ROLE_ADMIN') || !$document->getIsAdminOnly()) {
+            throw $this->createAccessDeniedException('Accès réservé aux administrateurs.');
+        }
+
+        $filePath = $document->getFilePath();
+        $fullFilePath = $this->getParameter('kernel.project_dir') . '/public/' . $filePath;
+
+        if (!file_exists($fullFilePath)) {
+            throw $this->createNotFoundException('Le fichier n\'existe pas.');
+        }
+
+        return $this->file($fullFilePath);
+    }
+
+    #[Route('/admin/document/{id}/edit', name: 'app_admin_document_edit')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function editAdminDocument(Request $request, Document $document, EntityManagerInterface $em): Response
+    {
+        if (!$document->getIsAdminOnly()) {
+            throw $this->createAccessDeniedException('Accès réservé aux administrateurs.');
+        }
+
+        $form = $this->createForm(DocumentFormType::class, $document);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $document->setUpdatedAt(new \DateTimeImmutable());
+            $em->flush();
+
+            return $this->redirectToRoute('app_admin_documents');
+        }
+
+        return $this->render('pages/document/editAdminDocument.html.twig', [
+            'form' => $form->createView(),
+            'document' => $document,
+        ]);
+    }
+
+    #[Route('/admin/document/{id}/delete', name: 'app_admin_document_delete')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function deleteAdminDocument(Document $document, EntityManagerInterface $em): Response
+    {
+        if (!$document->getIsAdminOnly()) {
+            throw $this->createAccessDeniedException('Accès réservé aux administrateurs.');
+        }
+
+        $filePath = $document->getFilePath();
+        $fullFilePath = $this->getParameter('kernel.project_dir') . '/public/' . $filePath;
+
+        if ($filePath && file_exists($fullFilePath)) {
+            unlink($fullFilePath);
+        }
+
+        $em->remove($document);
+        $em->flush();
+
+        return $this->redirectToRoute('app_admin_documents');
+    }
 }
