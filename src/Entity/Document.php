@@ -124,4 +124,11 @@ class Document
 
         return $this;
     }
+
+    public function getFileExtension(): ?string
+    {
+        $filename = $this->getTitle(); // Supposons que vous avez un getter pour le nom du fichier
+        return pathinfo($filename, PATHINFO_EXTENSION);
+    }
+    
 }

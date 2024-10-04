@@ -1421,6 +1421,48 @@ nav {
                 border-color: #4A90E2;
             }
 
+            // WORD/EXCEL
+            .custom-excel-table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            .custom-excel-table th,
+            .custom-excel-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+
+            .custom-excel-table th {
+                background-color: #f2f2f2;
+                text-align: left;
+            }
+            //
+            .word-content {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                margin: 20px;
+            }
+
+            .word-content h1,
+            .word-content h2,
+            .word-content h3 {
+                color: #333;
+                margin-top: 20px;
+            }
+
+            .word-content p {
+                margin-bottom: 10px;
+            }
+
+            .word-content ul,
+            .word-content ol {
+                margin-left: 20px;
+            }
+
+
+            
+
             // Profiles in the home
             .btn-view-profiles {
                 display: inline-block;
