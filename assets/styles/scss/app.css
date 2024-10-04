@@ -584,6 +584,16 @@ form button[type=submit]:hover {
   }
 }
 /* Page */
+#whiteboard {
+  border: 2px solid black;
+  margin: 10px 0;
+  display: block;
+}
+
+#color, #brushSize {
+  margin: 10px;
+}
+
 /* Images */
 /* Buttons */
 /* button-send */

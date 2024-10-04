@@ -18,7 +18,7 @@
     {% endif %}
 
     {% if app.user %}
-        <div class="mb-3">
+        <div>
             Vous êtes déja connecté avec le nom d'utilisateur : {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Me déconnecter</a>
         </div>
     {% endif %}
@@ -41,13 +41,13 @@
            value="{{ csrf_token('authenticate') }}"
     >
 
-    <div class="checkbox mb-3">
+    <div>
         <label>
             <input type="checkbox" name="_remember_me"> Souhaitez-vous resté connecter ?
         </label>
     </div>
 
-    <button class="btn btn-lg btn-primary" type="submit">
+    <button type="submit">
         Connexion
     </button>
 </form>

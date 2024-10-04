@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="whiteBoard" data-controller="whiteBoard">
+        <canvas id="whiteboard" width="800" height="600" style="border:1px solid #000000;"></canvas>
+        
+        <div>
+            <label for="color">Choose a color:</label>
+            <input type="color" id="color" name="color" value="#000000">
+
+            <label for="brushSize">Brush Size:</label>
+            <input type="range" id="brushSize" min="1" max="10" value="3">
+
+            <button class="button-edit" data-action="click->whiteBoard#clearCanvas"><i class="fa-regular fa-trash-can"></i></button>
+            <button class="button-edit" data-action="click->whiteBoard#setAction('drawRectangle')">Draw Rectangle</button>
+            <button class="button-edit" data-action="click->whiteBoard#setAction('drawCircle')">Draw Circle</button>
+            <button class="button-edit" data-action="click->whiteBoard#setAction('addImage')">Add Image</button>
+            <button class="button-edit" data-action="click->whiteBoard#exportImage"><i class="fa-solid fa-file-export"></i></button>
+        </div>
+    </div>
+{% endblock %}
