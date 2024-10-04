@@ -7,6 +7,14 @@
     <a href="{{ path('app_ticket_show', {id: ticket.id}) }}"><i class="fa-solid fa-arrow-left-long"></i> Quitter sans modifier</a>
     <h2>Modifier le Ticket</h2>
 
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
     {{ form_start(form) }}
         {{ form_widget(form) }}
         <button class="button-edit" type="submit">Enregistrer les modifications</button>

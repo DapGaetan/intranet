@@ -4,6 +4,15 @@
 
 {% block body %}
     <h5><strong>Bonjour,</strong> {{ app.user.firstname | capitalize }} {{ app.user.lastname | capitalize }}</h5>
+    
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    
     <div class="home" data-controller="home">
         <div class="feature-grid">
             <div class="feature-item">

@@ -5,6 +5,14 @@
 {% block body %}
     <h3>Crée un ticket :</h3>
 
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
 {{ form_start(form) }}
         {{ form_widget(form) }}
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
