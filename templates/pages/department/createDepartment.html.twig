@@ -5,6 +5,14 @@
 {% block body %}
     <h1>Crée une adresse</h1>
 
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
     {{ form_start(form) }}
         {{ form_widget(form) }}
         <button type="submit">Crée l'adresse</button>

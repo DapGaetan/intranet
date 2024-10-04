@@ -5,9 +5,14 @@
 {% block body %}
     <h1>Mes Documents</h1>
 
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger">{{ message }}</div>
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
     {% endfor %}
+
     <br>
     <a href="{{ path('app_document_new') }}" class="button-send" role="button"><i class="fa-solid fa-plus"></i> Ajouter un Document</a>
 

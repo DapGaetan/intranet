@@ -3,10 +3,13 @@
 {% block title %}Document Admin - {{ document.title }}{% endblock %}
 
 {% block body %}
-    <br>
-    <a href="{{ path('app_admin_documents') }}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i> Retour aux documents</a>
+    <a href="{{ path('app_admin_documents') }}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i> Retour à mes documents</a>
     <br>
     <h1>{{ document.title }}</h1>
+    <br>
+    <h5><em>**Cette page est un aperçu du fichier. Des erreurs visuelles telles que des manques de contenu, de couleurs, de graphiques, et autres peuvent survenir. Cela n'altère en aucun cas votre fichier.**</em></h5>
+    <a href="{{ path('app_admin_document_download', {id: document.id}) }}" class="button-send">Télécharger</a>
+    <a href="{{ path('app_admin_document_delete', {id: document.id}) }}" class="button-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ document.title }} de votre dossier ?')">Supprimer</a>
     <br>
         {% set extension = document.getFileExtension() %}
         
@@ -84,8 +87,4 @@
         {% else %}
             <p>Le format de fichier n'est pas pris en charge pour l'affichage en ligne. Cliquez <a href="{{ asset(filePath) }}">ici</a> pour télécharger le fichier.</p>
         {% endif %}
-    <br>
-    <a href="{{ path('app_admin_document_download', {id: document.id}) }}" class="button-send">Télécharger</a>
-    <a href="{{ path('app_admin_document_edit', {id: document.id}) }}" class="button-edit">Éditer</a>
-    <a href="{{ path('app_admin_document_delete', {id: document.id}) }}" class="button-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce document ?')">Supprimer</a>
 {% endblock %}

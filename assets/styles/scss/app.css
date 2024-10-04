@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Basics */
 *,
 *::before,
@@ -279,6 +280,30 @@ nav {
 }
 
 /* Reusable Component */
+/* Alert */
+/* Style personnalisé pour les erreurs */
+.alert-error {
+  margin: 10px;
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* Style personnalisé pour d'autres types de messages flash */
+.alert-success {
+  margin: 10px;
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
 /* Form */
 /* Table */
 table {
@@ -1322,6 +1347,10 @@ h5 {
   font-family: Arial, sans-serif;
   line-height: 1.6;
   margin: 20px;
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 7px;
+  border: 1px solid rgb(199, 199, 199);
 }
 
 .word-content h1,

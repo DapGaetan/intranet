@@ -96,13 +96,19 @@ class DocumentController extends AbstractController
                     mkdir($uploadDir, 0777, true);
                 }
     
+                // Vérification si le fichier existe déjà
+                if (file_exists($uploadDir . '/' . $newFilename)) {
+                    $this->addFlash('error', 'Un fichier ayant le même nom existe déjà, modifiez son nom avant de réessayer.');
+                    return $this->redirectToRoute('app_document_new');
+                }
+    
                 try {
                     $pdfFile->move($uploadDir, $newFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors du téléchargement du document.');
                     return $this->redirectToRoute('app_document_new');
                 }
-
+    
                 $document->setFilePath('uploads/documents/' . $user->getLastName() . '-' . $user->getFirstName() . '/' . $newFilename);
                 $document->setTitle($safeFilename . '.' . $extension);
             }
@@ -117,7 +123,6 @@ class DocumentController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    
 
     #[Route('/document/{id}', name: 'app_document_show')]
     public function show(Document $document): Response
@@ -233,7 +238,7 @@ class DocumentController extends AbstractController
     public function createAdminDocument(Request $request, DocumentRepository $documentRepository, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
         $user = $this->getUser();
-        
+    
         if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('Accès réservé aux administrateurs.');
         }
@@ -252,7 +257,7 @@ class DocumentController extends AbstractController
             if ($pdfFile) {
                 $originalFilename = pathinfo($pdfFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $pdfFile->guessExtension();
-                
+    
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename . '-admin.' . $extension;
     
@@ -260,6 +265,12 @@ class DocumentController extends AbstractController
     
                 if (!is_dir($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
+                }
+    
+                // Vérification si le fichier existe déjà
+                if (file_exists($uploadDir . '/' . $newFilename)) {
+                    $this->addFlash('error', 'Un fichier ayant le même nom existe déjà, modifiez son nom avant de réessayer.');
+                    return $this->redirectToRoute('app_admin_document_new');
                 }
     
                 try {
@@ -284,7 +295,6 @@ class DocumentController extends AbstractController
         ]);
     }
     
-
     #[Route('/admin/document/{id}', name: 'app_admin_document_show')]
     #[IsGranted('ROLE_ADMIN')]
     public function showAdminDocument(Document $document): Response

@@ -127,7 +127,7 @@ class Document
 
     public function getFileExtension(): ?string
     {
-        $filename = $this->getTitle(); // Supposons que vous avez un getter pour le nom du fichier
+        $filename = $this->getTitle();
         return pathinfo($filename, PATHINFO_EXTENSION);
     }
     

@@ -14,6 +14,14 @@
         </div>
     {% endif %}
 
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+
     <h3>Se connecter</h3>
     <label for="inputUsername">Nom d'utilisateur (prenom.nom) :</label>
     <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>

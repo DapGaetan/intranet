@@ -8,8 +8,12 @@
     
     <a href="{{ path('app_user_documents') }}"><i class="fa-solid fa-arrow-left-long"></i> Retour au documents administrateur</a>
 
-    {% for message in app.flashes('error') %}
-        <div class="alert alert-danger">{{ message }}</div>
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
     {% endfor %}
 
     <form method="post" action="{{ path('app_admin_document_new') }}" enctype="multipart/form-data" class="document-form">

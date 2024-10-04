@@ -7,8 +7,12 @@
     <br>
     <h1>{{ document.title }}</h1>
     <br>
+    <h5><em>**Cette page est un aperçu du fichier. Des erreurs visuelles telles que des manques de contenu, de couleurs, de graphiques, et autres peuvent survenir. Cela n'altère en aucun cas votre fichier.**</em></h5>
+    <a href="{{ path('app_document_download', {id: document.id}) }}" class="button-send">Télécharger</a>
+    <a href="{{ path('app_document_delete', {id: document.id}) }}" class="button-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ document.title }} de votre dossier ?')">Supprimer</a>
+    <br>
         {% set extension = document.getFileExtension() %}
-        
+
         {% if extension == 'pdf' %}
             <iframe src="{{ asset(filePath) }}" width="100%" height="600" style="border: none;">
                 <p>Votre navigateur ne supporte pas l'affichage des PDF. Cliquez <a href="{{ asset(filePath) }}">ici</a> pour télécharger le fichier.</p>
@@ -83,8 +87,4 @@
         {% else %}
             <p>Le format de fichier n'est pas pris en charge pour l'affichage en ligne. Cliquez <a href="{{ asset(filePath) }}">ici</a> pour télécharger le fichier.</p>
         {% endif %}
-    <br>
-    <a href="{{ path('app_document_download', {id: document.id}) }}" class="button-send">Télécharger</a>
-    <a href="{{ path('app_document_edit', {id: document.id}) }}" class="button-edit">Éditer</a>
-    <a href="{{ path('app_document_delete', {id: document.id}) }}" class="button-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ document.title }} de votre dossier ?')">Supprimer</a>
 {% endblock %}
