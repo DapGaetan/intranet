@@ -7,7 +7,7 @@
     <br>
     <h1>{{ document.title }}</h1>
     <br>
-    <h5><em>**Cette page est un aperçu du fichier. Des erreurs visuelles telles que des manques de contenu, de couleurs, de graphiques, et autres peuvent survenir. Cela n'altère en aucun cas votre fichier.**</em></h5>
+    <h5><em>**Cette page est un aperçu du fichier. Des erreurs visuelles telles que des manques de contenu, de couleurs, de graphiques, et d'autres éléments peuvent survenir. Cela n'altère en aucun cas votre fichier.**</em></h5>
     <a href="{{ path('app_admin_document_download', {id: document.id}) }}" class="button-send">Télécharger</a>
     <a href="{{ path('app_admin_document_delete', {id: document.id}) }}" class="button-delete" onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ document.title }} de votre dossier ?')">Supprimer</a>
     <br>

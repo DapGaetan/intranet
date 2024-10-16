@@ -4,34 +4,59 @@ export default class extends Controller {
     static targets = ['whiteboard', 'color', 'brushSize'];
 
     connect() {
-        this.canvas = document.getElementById('whiteboard');
+        this.canvas = this.whiteboardTarget;
         this.ctx = this.canvas.getContext('2d');
 
-        this.colorInput = document.getElementById('color');
-        this.brushSizeInput = document.getElementById('brushSize');
+        this.colorInput = this.colorTarget;
+        this.brushSizeInput = this.brushSizeTarget;
         
         this.isDrawing = false;
         this.currentColor = this.colorInput.value;
         this.currentBrushSize = this.brushSizeInput.value;
+        this.currentAction = null;
 
         this.setupCanvas();
         this.setupEvents();
+        this.setupSpecialActions();
+
+        window.addEventListener('resize', this.resizeCanvas.bind(this));
+        this.resizeCanvas();
+    }
+
+    disconnect() {
+        window.removeEventListener('resize', this.resizeCanvas.bind(this));
     }
 
     setupCanvas() {
-        // Set canvas background to white
+        // Définir le fond du canvas en blanc
         this.ctx.fillStyle = "white";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
+    resizeCanvas() {
+        // Sauvegarder le contenu actuel du canvas
+        const dataUrl = this.canvas.toDataURL();
+
+        // Ajuster la taille du canvas
+        this.canvas.width = this.canvas.clientWidth;
+        this.canvas.height = this.canvas.clientHeight;
+
+        // Redessiner le contenu sauvegardé
+        const img = new Image();
+        img.src = dataUrl;
+        img.onload = () => {
+            this.ctx.drawImage(img, 0, 0, this.canvas.width, this.canvas.height);
+        };
+    }
+
     setupEvents() {
-        // Mouse events for drawing
+        // Événements de souris pour dessiner
         this.canvas.addEventListener('mousedown', this.startDrawing.bind(this));
         this.canvas.addEventListener('mousemove', this.draw.bind(this));
         this.canvas.addEventListener('mouseup', this.stopDrawing.bind(this));
         this.canvas.addEventListener('mouseout', this.stopDrawing.bind(this));
 
-        // Input changes for color and brush size
+        // Événements pour les inputs de couleur et de taille du pinceau
         this.colorInput.addEventListener('input', (event) => {
             this.currentColor = event.target.value;
         });
@@ -41,14 +66,21 @@ export default class extends Controller {
         });
     }
 
+    setupSpecialActions() {
+        // Gestion des clics pour les actions spéciales
+        this.canvas.addEventListener('click', this.handleCanvasClick.bind(this));
+    }
+
     startDrawing(event) {
+        if (this.currentAction) return; // Ne dessine pas si une action spéciale est sélectionnée
+
         this.isDrawing = true;
         this.ctx.beginPath();
         this.ctx.moveTo(event.offsetX, event.offsetY);
     }
 
     draw(event) {
-        if (!this.isDrawing) return;
+        if (!this.isDrawing || this.currentAction) return;
 
         this.ctx.lineWidth = this.currentBrushSize;
         this.ctx.lineCap = 'round';
@@ -67,39 +99,26 @@ export default class extends Controller {
     }
 
     clearCanvas() {
-        this.setupCanvas(); // Reset the canvas
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.setupCanvas();
     }
 
-    drawRectangle(event) {
-        const width = 100; // Largeur fixe
-        const height = 50; // Hauteur fixe
-        const x = event.offsetX; // Position X de clic
-        const y = event.offsetY; // Position Y de clic
-
-        this.ctx.fillStyle = this.currentColor;
-        this.ctx.fillRect(x, y, width, height);
+    drawRectangle() {
+        this.setAction('drawRectangle');
     }
     
-    drawCircle(event) {
-        const radius = 25; // Rayon fixe
-        const x = event.offsetX; // Position X de clic
-        const y = event.offsetY; // Position Y de clic
-
-        this.ctx.beginPath();
-        this.ctx.arc(x, y, radius, 0, Math.PI * 2);
-        this.ctx.fillStyle = this.currentColor;
-        this.ctx.fill();
-        this.ctx.closePath();
+    drawCircle() {
+        this.setAction('drawCircle');
     }
     
-    addImage(event) {
-        const img = new Image();
-        img.src = prompt("Enter image URL:"); // Demande l'URL de l'image à l'utilisateur
-        img.onload = () => {
-            const x = event.offsetX; // Position X de clic
-            const y = event.offsetY; // Position Y de clic
-            this.ctx.drawImage(img, x, y);
-        };
+    addImage() {
+        this.setAction('addImage');
+    }
+
+    setAction(action) {
+        this.currentAction = action;
+        // Optionnel: Indiquer visuellement l'action sélectionnée
+        console.log(`Action sélectionnée: ${action}`);
     }
 
     exportImage() {
@@ -107,5 +126,56 @@ export default class extends Controller {
         link.download = 'whiteboard.jpg';
         link.href = this.canvas.toDataURL('image/jpeg', 1.0);
         link.click();
+    }
+
+    handleCanvasClick(event) {
+        if (this.currentAction === 'drawRectangle') {
+            this.drawRectangleAt(event);
+        } else if (this.currentAction === 'drawCircle') {
+            this.drawCircleAt(event);
+        } else if (this.currentAction === 'addImage') {
+            this.addImageAt(event);
+        }
+        // Réinitialiser l'action après l'exécution
+        this.currentAction = null;
+    }
+
+    drawRectangleAt(event) {
+        const width = 100; // Largeur fixe ou dynamique
+        const height = 50; // Hauteur fixe ou dynamique
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+        this.ctx.fillStyle = this.currentColor;
+        this.ctx.fillRect(x, y, width, height);
+    }
+
+    drawCircleAt(event) {
+        const radius = 25; // Rayon fixe ou dynamique
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, radius, 0, Math.PI * 2);
+        this.ctx.fillStyle = this.currentColor;
+        this.ctx.fill();
+        this.ctx.closePath();
+    }
+
+    addImageAt(event) {
+        const imgUrl = prompt("Entrez l'URL de l'image:");
+        if (!imgUrl) return;
+
+        const img = new Image();
+        img.crossOrigin = "anonymous"; // Pour éviter les problèmes CORS
+        img.src = imgUrl;
+        img.onload = () => {
+            const x = event.offsetX;
+            const y = event.offsetY;
+            this.ctx.drawImage(img, x, y, 100, 100); // Taille fixe ou dynamique
+        };
+        img.onerror = () => {
+            alert("Impossible de charger l'image. Vérifiez l'URL.");
+        };
     }
 }

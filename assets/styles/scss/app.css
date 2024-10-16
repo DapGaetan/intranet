@@ -1,4 +1,3 @@
-@charset "UTF-8";
 /* Basics */
 *,
 *::before,
@@ -280,8 +279,7 @@ nav {
 }
 
 /* Reusable Component */
-/* Alert */
-/* Style personnalisé pour les erreurs */
+/* Alert error */
 .alert-error {
   margin: 10px;
   background-color: #f8d7da;
@@ -293,7 +291,7 @@ nav {
   font-weight: bold;
 }
 
-/* Style personnalisé pour d'autres types de messages flash */
+/* Alert success */
 .alert-success {
   margin: 10px;
   background-color: #d4edda;
@@ -304,7 +302,6 @@ nav {
   border-radius: 5px;
 }
 
-/* Form */
 /* Table */
 table {
   width: 100%;
@@ -588,6 +585,10 @@ form button[type=submit]:hover {
   border: 2px solid black;
   margin: 10px 0;
   display: block;
+  width: 100%;
+  height: 80vh;
+  resize: both;
+  overflow: auto;
 }
 
 #color, #brushSize {

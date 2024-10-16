@@ -31,7 +31,6 @@
     $event: #cb6be6;
     $project: #8b52ff;
     $directory: #faab00;
-
     
     // VAR-HOVER
     $main-color-hover: #0083e7;
@@ -51,7 +50,6 @@
 
 
 /* Basics */
-
 *,
 *::before,
 *::after {
@@ -59,7 +57,6 @@
     padding: 0;
     margin: 0;
 }
-    
 
 html, body {
     overflow-x: hidden;
@@ -329,8 +326,7 @@ nav {
 }
 
 /* Reusable Component */
-    /* Alert */
-    /* Style personnalisé pour les erreurs */
+    /* Alert error */
     .alert-error {
         margin: 10px;
         background-color: #f8d7da;
@@ -342,7 +338,7 @@ nav {
         font-weight: bold;
     }
 
-    /* Style personnalisé pour d'autres types de messages flash */
+    /* Alert success */
     .alert-success {
         margin: 10px;
         background-color: #d4edda;
@@ -352,10 +348,6 @@ nav {
         margin-bottom: 10px;
         border-radius: 5px;
     }
-
-
-
-    /* Form */
 
     /* Table */
     table {
@@ -631,17 +623,21 @@ nav {
     }
     /* Page */
 
-        // whiteboad
-        
-        #whiteboard {
-            border: 2px solid black;
-            margin: 10px 0;
-            display: block;
-        }
-        
-        #color, #brushSize {
-            margin: 10px;
-        }
+    // whiteboad
+    #whiteboard {
+        border: 2px solid black;
+        margin: 10px 0;
+        display: block;
+        width: 100%;
+        height: 80vh;
+        resize: both;
+        overflow: auto;
+    }
+    
+    #color, #brushSize {
+        margin: 10px;
+    }
+    
 
 
     /* Images */
