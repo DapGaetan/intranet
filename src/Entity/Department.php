@@ -46,12 +46,19 @@ class Department
     #[ORM\OneToMany(targetEntity: UserProfile::class, mappedBy: 'department')]
     private Collection $userProfiles;
 
+    /**
+     * @var Collection<int, CulturalEventTicket>
+     */
+    #[ORM\OneToMany(targetEntity: CulturalEventTicket::class, mappedBy: 'department')]
+    private Collection $culturalEventTickets;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->userProfiles = new ArrayCollection();
         $this->created_at = new \DateTimeImmutable();
         $this->updated_at = new \DateTimeImmutable();
+        $this->culturalEventTickets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -202,5 +209,35 @@ class Department
     public function onPreUpdate(): void
     {
         $this->updated_at = new \DateTimeImmutable();
+    }
+
+    /**
+     * @return Collection<int, CulturalEventTicket>
+     */
+    public function getCulturalEventTickets(): Collection
+    {
+        return $this->culturalEventTickets;
+    }
+
+    public function addCulturalEventTicket(CulturalEventTicket $culturalEventTicket): static
+    {
+        if (!$this->culturalEventTickets->contains($culturalEventTicket)) {
+            $this->culturalEventTickets->add($culturalEventTicket);
+            $culturalEventTicket->setDepartment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCulturalEventTicket(CulturalEventTicket $culturalEventTicket): static
+    {
+        if ($this->culturalEventTickets->removeElement($culturalEventTicket)) {
+            // set the owning side to null (unless already changed)
+            if ($culturalEventTicket->getDepartment() === $this) {
+                $culturalEventTicket->setDepartment(null);
+            }
+        }
+
+        return $this;
     }
 }

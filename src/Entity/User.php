@@ -146,6 +146,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Link::class, mappedBy: 'user')]
     private Collection $links;
 
+    /**
+     * @var Collection<int, CulturalEventTicket>
+     */
+    #[ORM\OneToMany(targetEntity: CulturalEventTicket::class, mappedBy: 'created_by')]
+    private Collection $created_at;
+
     public function __construct()
     {
         $this->tickets = new ArrayCollection();
@@ -163,6 +169,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->vehicleReservations = new ArrayCollection();
         $this->roomReservations = new ArrayCollection();
         $this->links = new ArrayCollection();
+        $this->created_at = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -762,6 +769,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($link->getUser() === $this) {
                 $link->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CulturalEventTicket>
+     */
+    public function getCreatedAt(): Collection
+    {
+        return $this->created_at;
+    }
+
+    public function addCreatedAt(CulturalEventTicket $createdAt): static
+    {
+        if (!$this->created_at->contains($createdAt)) {
+            $this->created_at->add($createdAt);
+            $createdAt->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreatedAt(CulturalEventTicket $createdAt): static
+    {
+        if ($this->created_at->removeElement($createdAt)) {
+            // set the owning side to null (unless already changed)
+            if ($createdAt->getCreatedBy() === $this) {
+                $createdAt->setCreatedBy(null);
             }
         }
 
