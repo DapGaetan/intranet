@@ -1,8 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}<i class="fa-solid fa-icons"></i> Billet d'événement{% endblock %}
+{% block title %}<i class="fa-solid fa-calendar-plus"></i> Ajouté un événement{% endblock %}
 
 {% block body %}
+    <h1>Crée un ticket</h1>
+
+    <a href="{{ path('app_cultural_event_list') }}"><i class="fa-solid fa-arrow-left-long"></i> Retourner sur les événements</a>
+
     {% for label, messages in app.flashes %}
         <div class="alert alert-{{ label }}">
             {% for message in messages %}
@@ -10,7 +14,21 @@
             {% endfor %}
         </div>
     {% endfor %}
-    
 
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-success">Valider le ticket</button>
+    {{ form_end(form) }}
+
+    {% if form.vars.errors|length > 0 %}
+        <div class="alert alert-danger">
+            <h4>Erreurs dans le formulaire :</h4>
+            <ul>
+                {% for error in form.vars.errors %}
+                    <li>{{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}
 

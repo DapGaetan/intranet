@@ -1,16 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}<i class="fa-solid fa-icons"></i> Billet d'événement{% endblock %}
+{% block title %}<i class="fa-solid fa-calendar-check"></i> View Event: {{ event.title }}{% endblock %}
 
 {% block body %}
-    {% for label, messages in app.flashes %}
-        <div class="alert alert-{{ label }}">
-            {% for message in messages %}
-                {{ message }}
-            {% endfor %}
-        </div>
-    {% endfor %}
-    
+    <a href="{{ path('app_cultural_event_list') }}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i> Back to Cultural Events</a>
+    <br>
+    <h1>{{ event.title }}</h1>
+    <p>Date: {{ event.date|date('Y-m-d') }}</p>
+    <p>Description: {{ event.description }}</p>
 
+    <a href="{{ path('app_cultural_event_edit', {id: event.id}) }}" class="button-send">Edit Event</a>
+    <a href="{{ path('app_cultural_event_delete', {id: event.id}) }}" class="button-delete" onclick="return confirm('Are you sure you want to delete {{ event.title }}?')">Delete Event</a>
 {% endblock %}
-

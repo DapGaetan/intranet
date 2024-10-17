@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}<i class="fa-solid fa-icons"></i> Billet d'événement{% endblock %}
+{% block title %}<i class="fa-solid fa-calendar-alt"></i> Billeterie événementiel de la culture{% endblock %}
 
 {% block body %}
+    <h1>Liste des tickets</h1>
+
     {% for label, messages in app.flashes %}
         <div class="alert alert-{{ label }}">
             {% for message in messages %}
@@ -10,7 +12,30 @@
             {% endfor %}
         </div>
     {% endfor %}
-    
 
+    <br>
+    <a href="{{ path('app_cultural_event_new') }}" class="button-send" role="button"><i class="fa-solid fa-plus"></i> Crée un ticket d'événement</a>
+
+    <form id="searchForm" method="get" action="{{ path('app_cultural_event_list') }}">
+        <br>
+        <div style="position: relative; width: 100%;">
+            <input type="text" id="searchInput" name="search" placeholder="Rechercher un événement">
+            <i class="fa-solid fa-search search-icon"></i>
+        </div>
+    </form>
+
+    <div id="culturalEventsGrid" class="cultural-events-container">
+        {% if culturalEvents is not empty %}
+            {% for culturalEvent in culturalEvents %}
+                <a href="{{ path('app_cultural_event_show', {id: culturalEvent.id}) }}">
+                    <div class="event-card" title="{{ culturalEvent.title }}">
+                        <h2>{{ culturalEvent.title }}</h2>
+                        <p>Date de création : {{ culturalEvent.updatedAt|date('Y-m-d H:i:s') }}</p>
+                    </div>
+                </a>
+            {% endfor %}
+        {% else %}
+            <p>Aucun ticket n'a était trouvé</p>
+        {% endif %}
+    </div>
 {% endblock %}
-

@@ -1,8 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}<i class="fa-solid fa-icons"></i> Billet d'événement{% endblock %}
+{% block title %}<i class="fa-solid fa-calendar-edit"></i> Edit Event: {{ event.title }}{% endblock %}
 
 {% block body %}
+    <h1>Edit Cultural Event: {{ event.title }}</h1>
+
     {% for label, messages in app.flashes %}
         <div class="alert alert-{{ label }}">
             {% for message in messages %}
@@ -10,7 +12,11 @@
             {% endfor %}
         </div>
     {% endfor %}
-    
 
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-success">Update Event</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('app_cultural_event_list') }}" class="btn btn-secondary">Back to Cultural Events</a>
 {% endblock %}
-
