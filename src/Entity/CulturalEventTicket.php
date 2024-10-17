@@ -25,7 +25,7 @@ class CulturalEventTicket
     #[ORM\Column(length: 60)]
     private ?string $placing = null;
 
-    #[ORM\Column(length: 14)]
+    #[ORM\Column(length: 35)]
     private ?string $siret = null;
 
     #[ORM\Column(length: 60)]

@@ -21,3 +21,24 @@ uploads/documents/adm-only/*
 
 # Ne pas ignorer le contenu dans adm-only
 !uploads/documents/adm-only/
+
+# Ne pas ignorer le dossier culturalEvent
+!uploads/culturalEvent/
+
+# Ne pas ignorer le dossier background
+!uploads/culturalEvent/background
+
+# Ne pas ignorer le dossier logo
+!uploads/culturalEvent/logo
+
+# Ne pas ignorer le dossier seasons
+!uploads/culturalEvent/seasons
+
+# Ignorer tout le contenu dans background
+uploads/culturalEvent/background/*
+
+# Ignorer tout le contenu dans logo
+uploads/culturalEvent/logo/*
+
+# Ignorer tout le contenu dans seasons
+uploads/culturalEvent/seasons/*
