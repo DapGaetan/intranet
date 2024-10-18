@@ -149,46 +149,53 @@ class CulturalEventController extends AbstractController
     
         return $this->redirectToRoute('app_cultural_event_list');
     }
-
-    // #[Route('/cultural/event/{id}/generate-pdf', name: 'app_cultural_event_generate_pdf', requirements: ['id' => '\d+'])]
-    // public function generatePdf(Request $request, CulturalEventTicket $event): Response
-    // {
-    //     // Formulaire pour sélectionner le nombre de tickets à générer
-    //     $form = $this->createFormBuilder()
-    //         ->add('numberOfTickets', IntegerType::class, [
-    //             'label' => 'Nombre de tickets à générer',
-    //             'attr' => ['min' => 1],
-    //         ])
-    //         ->getForm();
-
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $data = $form->getData();
-    //         $numberOfTickets = $data['numberOfTickets'];
-
-    //         // Créer le PDF
-    //         $pdf = new Dompdf();
-    //         $html = $this->renderView('pages/cultural_event/ticket_pdf.html.twig', [
-    //             'event' => $event,
-    //             'numberOfTickets' => $numberOfTickets,
-    //         ]);
-    //         $pdf->loadHtml($html);
-    //         $pdf->setPaper('A4', 'portrait');
-    //         $pdf->render();
-
-    //         // Envoie le PDF au navigateur
-    //         $pdf->stream('tickets.pdf', ['Attachment' => false]); // Pour afficher dans le navigateur
-    //         // $pdf->stream('tickets.pdf'); // Pour forcer le téléchargement
-
-    //         return new Response();
-    //     }
-
-    //     return $this->render('pages/cultural_event/generatePdfCulturalEvent.html.twig', [
-    //         'form' => $form->createView(),
-    //         'event' => $event,
-    //     ]);
-    // }
+    
+    #[Route('/cultural/event/{id}/generate-pdf', name: 'app_cultural_event_generate_pdf', requirements: ['id' => '\d+'])]
+    public function generatePdf(Request $request, CulturalEventTicket $event): Response
+    {
+        // Création du formulaire pour le nombre de tickets à générer
+        $form = $this->createFormBuilder()
+            ->add('numberOfTickets', IntegerType::class, [
+                'label' => 'Nombre de tickets à générer',
+                'attr' => [
+                    'min' => 1,
+                    'value' => 1 // Valeur par défaut
+                ],
+            ])
+            ->getForm();
+    
+        // Traitement de la soumission du formulaire
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $numberOfTickets = $data['numberOfTickets'];
+    
+            // Création du PDF
+            $pdf = new Dompdf();
+            $html = $this->renderView('pages/cultural_event/ticket_pdf.html.twig', [
+                'event' => $event,
+                'numberOfTickets' => $numberOfTickets,
+            ]);
+            $pdf->loadHtml($html);
+            $pdf->setPaper('A4', 'portrait');
+            $pdf->render();
+    
+            // Envoi du PDF au navigateur
+            return $pdf->stream('tickets.pdf', ['Attachment' => false]);
+        } else {
+            // Si le formulaire n'est pas valide, on affiche un message d'erreur
+            $this->addFlash('error', 'Le formulaire n\'est pas valide. Veuillez corriger les erreurs.');
+            // Affichage des erreurs dans le debug toolbar (pour développement uniquement)
+            dump($form->getErrors(true, false));
+        }
+    
+        // Affichage de la vue avec le formulaire
+        return $this->render('pages/cultural_event/generatePdfCulturalEvent.html.twig', [
+            'form' => $form->createView(),
+            'event' => $event,
+        ]);
+    }
 
     
 }

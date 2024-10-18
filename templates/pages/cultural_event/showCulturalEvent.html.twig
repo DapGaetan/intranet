@@ -7,18 +7,14 @@
     <br>
     <h1>{{ event.title }}</h1>
     <br>
+    <a href="{{ path('app_cultural_event_generate_pdf', {id: event.id}) }}" class="btn btn-primary">Générer PDF</a>
+    <a href="#" class="btn btn-secondary" onclick="window.print();">Imprimer</a>
     <a href="{{ path('app_cultural_event_edit', {id: event.id}) }}" class="button-edit">Modifier le ticket</a>
     <a href="#" class="button-delete" onclick="deleteEvent({{ event.id }}, '{{ event.title }}')">Supprimer le ticket</a>
 
     <form id="delete-event-form-{{ event.id }}" method="post" action="{{ path('app_cultural_event_delete', {id: event.id}) }}" style="display:none;">
         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
     </form>
-
-    {{ form_start(form) }}
-    {{ form_row(form.numberOfTickets) }}
-    <button class="btn btn-primary">Générer PDF</button>
-    {{ form_end(form) }}
-
 
     <br>
 

@@ -8,15 +8,234 @@
     </style>
 </head>
 <body>
-    <h1>{{ event.title }}</h1>
-    <p>Détails de l'événement : {{ event.description }}</p>
-    <p>Nombre de tickets : {{ numberOfTickets }}</p>
-
     {% for i in 1..numberOfTickets %}
-        <div class="ticket">
-            <h2>Ticket {{ i }}</h2>
-            <p>Informations supplémentaires ici...</p>
-        </div>
-    {% endfor %}
+                    <style>
+                        body {
+                            margin: 10%;
+                            padding: 0;
+                        }
+
+                        .ticket {
+                        width: 200mm; /* Largeur A4 */
+                        height: 70mm;
+                        box-sizing: border-box;
+                        background-image: url("{{event.background}}");
+                        background-size: cover;
+                        background-position: center;
+                        background-repeat: no-repeat;
+                    }
+
+                    .content {
+                        display: grid;
+                        grid-template-columns: 175px 102px 477px;
+                        grid-template-rows: 264px;
+                        padding: 0;
+                        align-items: center;
+                        color: white;
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+                    }
+
+                    .left, .center, .right {
+                        text-align: center;
+                    }
+
+                    /* Left */
+                    .left{
+                        margin-top: 63px;
+                    }
+
+                    .left h1 {
+                        font-size: 0.5rem;
+                        font-weight: bold;
+                        margin: 5px 0;
+                    }
+
+                    .left h2 {
+                        font-size: 1.1rem;
+                        margin: 5px 0;
+                    }
+
+                    .left .serial{
+                        font-size: 0.9rem;
+                        font-weight: bold;
+                        margin: 0;
+                    }
+
+                    .left .placement, .ticket-number {
+                        font-size: 0.9rem;
+                        margin: 0;
+                    }
+
+                    .left .ticket-number {
+                        font-size: 0.9rem;
+                        margin: 0;
+                    }
+
+                    .left .ticket-number span{
+                        font-size: 1.4rem;
+                        font-weight: bold;
+                        margin: 0;
+                    }
+
+                    .left p{
+                        font-size: 0.5rem;
+                        margin-top: 15px;
+                    }
+                    /* **Left */
+
+                    /* center */
+                    .center{
+                        transform: rotate(-90deg);
+                        width: 100%;
+                        margin: 15px 60px 0px 0px;
+                    }
+
+                    .center h1 {
+                        font-size: 0.3rem;
+                        font-weight: bold;
+                    }
+
+                    .center h2 {
+                        font-size: 0.9rem;
+                        margin: 5px 0;
+                    }
+
+                    .center .serial{
+                        font-size: 0.7rem;
+                        font-weight: bold;
+                        margin: 0;
+                        white-space: nowrap;
+                    }
+
+                    .center .placement, .ticket-number {
+                        font-size: 0.7rem;
+                        margin: 0;
+                    }
+
+                    .center .ticket-number {
+                        font-size: 0.7rem;
+                        margin: 0;
+                    }
+
+                    .center .ticket-number span{
+                        font-size: 1.2rem;
+                        font-weight: bold;
+                        margin: 0;
+                    }
+
+                    .center p{
+                        font-size: 0.4rem;
+                        margin: 0;
+                        white-space: nowrap;
+                    }
+
+                    .center p:last-child{
+                        margin-top: 4px;
+                        font-size: 0.6rem;
+                        margin: 0px 0px 6px -60px;
+                        text-align: center;
+                        
+                    }
+
+                    .center p:last-child span{
+                        font-size: 0.6rem;
+                        margin: 0px 0px 0px 25px;
+                        text-align: center;
+                        
+                    }
+                    /* **center */
+
+                    /* right */
+                    .right{
+                        margin-top: 120px;
+                        padding-right: 245px;
+                    }
+
+                    .right h1 {
+                        font-size: 0.6rem;
+                        font-weight: bold;
+                        margin: 5px 0;
+                    }
+
+                    .right h2 {
+                        font-size: 1.2rem;
+                        margin: 5px 0;
+                    }
+
+                    .right .serial{
+                        font-size: 1rem;
+                        font-weight: bold;
+                        margin: 0;
+                    }
+
+                    .right .placement, .ticket-number {
+                        font-size: 1rem;
+                        margin: 0;
+                    }
+
+                    .right .ticket-number {
+                        font-size: 1rem;
+                        margin: 0;
+                    }
+
+                    .right .ticket-number span{
+                        font-size: 1.5rem;
+                        font-weight: bold;
+                        margin: 0;
+                    }
+
+                    .right p{
+                        font-size: 0.6rem;
+                        margin-top: 15px;
+                    }
+                    /* **right */
+
+                    @media print {
+                        .ticket {
+                            page-break-inside: avoid;  // Évite que le ticket soit coupé
+                        }
+                    }
+
+                                        
+                    </style>
+                    </head>
+                    <body>
+                    <div class="ticket">
+                        <div class="content">
+                            <!-- Section Gauche -->
+                            <div class="left">
+                                <h1 class="serial">{{event.series}}</h1>
+                                <p class="placement">{{event.placing}}</p>
+                                <p class="ticket-number">N° billet : <br>
+                                    <span>{{ numberOfTickets }}</span></p>
+                                <p>{{event.department.name}} <br>
+                                    {{event.department.postalCode}}</p>
+                                <p>{{event.siret}}</p>
+                                <p>{{event.licence}}<br>
+                            </div>
+
+                            <!-- Section Centre -->
+                            <div class="center">
+                                <h1 class="serial">{{event.series}}</h1>
+                                <p class="placement">{{event.placing}}</p>
+                                <p class="ticket-number">N° billet : <br>
+                                    <span>{{ numberOfTickets }}</span></p>
+                                <p><span>{{event.department.name}}, {{event.department.postalCode}}</span><br>
+                                {{event.licence}}
+                            </div>
+
+                            <!-- Section Droite -->
+                            <div class="right">
+                                <h1 class="serial">{{event.series}}</h1>
+                                <p class="placement">{{event.placing}}</p>
+                                <p class="ticket-number">N° billet : <br>
+                                    <span>{{ numberOfTickets }}</span></p>
+                                <p>{{event.department.name}}, {{event.department.postalCode}}<br>
+                                {{event.licence}}
+                            </div>
+                        </div>
+                    </div>
+        {% endfor %}
 </body>
-</html>
+</html>`

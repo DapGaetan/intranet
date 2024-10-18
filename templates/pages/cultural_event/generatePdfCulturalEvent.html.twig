@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Générer PDF{% endblock %}
+
+{% block body %}
+<h1>Générer des tickets PDF</h1>
+
+{% if form.vars.errors|length > 0 %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for error in form.vars.errors %}
+                <li>{{ error.message }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+{% for error in form.numberOfTickets.vars.errors %}
+    <div class="alert alert-danger">{{ error.message }}</div>
+{% endfor %}
+
+
+
+
+<form method="post" action="/cultural/event/3/generate-pdf">
+    <input type="number" name="numberOfTickets" min="1" value="1">
+    <button type="submit" class="btn btn-primary">Générer PDF</button>
+</form>
+
+
+
+<a href="{{ path('app_cultural_event_show', {id: event.id}) }}" class="btn btn-secondary">Annuler</a>
+{% endblock %}
