@@ -147,9 +147,9 @@ class CulturalEventTicketFormType extends AbstractType
                     ])
                 ],
             ])
-            ->add('created_by', HiddenType::class, [
-                'data' => $options['user'],
-            ])
+            // ->add('created_by', HiddenType::class, [
+            //     'data' => $options['user'],
+            // ])
             ->add('department', EntityType::class, [
                 'class' => Department::class,
                 'choice_label' => 'name',

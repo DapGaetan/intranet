@@ -17,7 +17,7 @@
 
     {{ form_start(form) }}
         {{ form_widget(form) }}
-        <button type="submit" class="btn btn-success">Valider le ticket</button>
+        <button type="submit">Valider le ticket</button>
     {{ form_end(form) }}
 
     {% if form.vars.errors|length > 0 %}

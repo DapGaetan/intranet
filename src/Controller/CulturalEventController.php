@@ -9,6 +9,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Dompdf\Dompdf;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class CulturalEventController extends AbstractController
 {
@@ -88,29 +92,103 @@ class CulturalEventController extends AbstractController
     public function edit(Request $request, CulturalEventTicket $event, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(CulturalEventTicketFormType::class, $event);
-
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
+            // Ne pas modifier created_by, juste mettre à jour l'événement
+            $event->setUpdatedAt(new \DateTimeImmutable()); // Met à jour la date de modification
+    
+            // Pour le champ logo, saison et background, on peut conserver la logique
+            // ici, selon ta gestion des fichiers.
+    
             $entityManager->flush();
-
+    
             return $this->redirectToRoute('app_cultural_event_show', ['id' => $event->getId()]);
         }
-
+    
         return $this->render('pages/cultural_event/editCulturalEvent.html.twig', [
             'form' => $form->createView(),
             'event' => $event,
         ]);
     }
+    
 
     #[Route('/cultural/event/{id}/delete', name: 'app_cultural_event_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, CulturalEventTicket $event, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->request->get('_token'))) {
+            
+            $seasonsDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/culturalEvent/seasons/';
+            $logoDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/culturalEvent/logo/';
+            $backgroundDirectory = $this->getParameter('kernel.project_dir') . '/public/uploads/culturalEvent/background/';
+            
+            if ($event->getLogo()) {
+                $logoPath = $logoDirectory . $event->getLogo();
+                if (file_exists($logoPath)) {
+                    unlink($logoPath);
+                }
+            }
+            
+            if ($event->getSeason()) {
+                $seasonPath = $seasonsDirectory . $event->getSeason();
+                if (file_exists($seasonPath)) {
+                    unlink($seasonPath);
+                }
+            }
+
+            if ($event->getBackground()) {
+                $backgroundPath = $backgroundDirectory . $event->getBackground();
+                if (file_exists($backgroundPath)) {
+                    unlink($backgroundPath);
+                }
+            }
+    
             $entityManager->remove($event);
             $entityManager->flush();
         }
-
+    
         return $this->redirectToRoute('app_cultural_event_list');
     }
+
+    // #[Route('/cultural/event/{id}/generate-pdf', name: 'app_cultural_event_generate_pdf', requirements: ['id' => '\d+'])]
+    // public function generatePdf(Request $request, CulturalEventTicket $event): Response
+    // {
+    //     // Formulaire pour sélectionner le nombre de tickets à générer
+    //     $form = $this->createFormBuilder()
+    //         ->add('numberOfTickets', IntegerType::class, [
+    //             'label' => 'Nombre de tickets à générer',
+    //             'attr' => ['min' => 1],
+    //         ])
+    //         ->getForm();
+
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $data = $form->getData();
+    //         $numberOfTickets = $data['numberOfTickets'];
+
+    //         // Créer le PDF
+    //         $pdf = new Dompdf();
+    //         $html = $this->renderView('pages/cultural_event/ticket_pdf.html.twig', [
+    //             'event' => $event,
+    //             'numberOfTickets' => $numberOfTickets,
+    //         ]);
+    //         $pdf->loadHtml($html);
+    //         $pdf->setPaper('A4', 'portrait');
+    //         $pdf->render();
+
+    //         // Envoie le PDF au navigateur
+    //         $pdf->stream('tickets.pdf', ['Attachment' => false]); // Pour afficher dans le navigateur
+    //         // $pdf->stream('tickets.pdf'); // Pour forcer le téléchargement
+
+    //         return new Response();
+    //     }
+
+    //     return $this->render('pages/cultural_event/generatePdfCulturalEvent.html.twig', [
+    //         'form' => $form->createView(),
+    //         'event' => $event,
+    //     ]);
+    // }
+
+    
 }

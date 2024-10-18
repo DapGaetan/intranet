@@ -3,12 +3,43 @@
 {% block title %}<i class="fa-solid fa-calendar-check"></i> View Event: {{ event.title }}{% endblock %}
 
 {% block body %}
-    <a href="{{ path('app_cultural_event_list') }}" class="btn btn-secondary"><i class="fa-solid fa-arrow-left-long"></i> Back to Cultural Events</a>
+    <a href="{{ path('app_cultural_event_list') }}" ><i class="fa-solid fa-arrow-left-long"></i> Retourner sur les événements</a>
     <br>
     <h1>{{ event.title }}</h1>
-    <p>Date: {{ event.date|date('Y-m-d') }}</p>
-    <p>Description: {{ event.description }}</p>
+    <br>
+    <a href="{{ path('app_cultural_event_edit', {id: event.id}) }}" class="button-edit">Modifier le ticket</a>
+    <a href="#" class="button-delete" onclick="deleteEvent({{ event.id }}, '{{ event.title }}')">Supprimer le ticket</a>
 
-    <a href="{{ path('app_cultural_event_edit', {id: event.id}) }}" class="button-send">Edit Event</a>
-    <a href="{{ path('app_cultural_event_delete', {id: event.id}) }}" class="button-delete" onclick="return confirm('Are you sure you want to delete {{ event.title }}?')">Delete Event</a>
+    <form id="delete-event-form-{{ event.id }}" method="post" action="{{ path('app_cultural_event_delete', {id: event.id}) }}" style="display:none;">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ event.id) }}">
+    </form>
+
+    {{ form_start(form) }}
+    {{ form_row(form.numberOfTickets) }}
+    <button class="btn btn-primary">Générer PDF</button>
+    {{ form_end(form) }}
+
+
+    <br>
+
+    <h6>ID: {{ event.id }}</h6>
+    <h6>Title: {{ event.title }}</h6>
+    <img src="/uploads/culturalEvent/logo/{{ event.logo }}" alt="Logo" height="100px">
+    <img src="/uploads/culturalEvent/seasons/{{ event.season }}" alt="Season" height="100px">
+    <h6>Series: {{ event.series }}</h6>
+    <h6>Placing: {{ event.placing }}</h6>
+    <h6>Siret: {{ event.siret }}</h6>
+    <h6>Licence: {{ event.licence }}</h6>
+    <img src="/uploads/culturalEvent/background/{{ event.background }}" alt="Background" height="100px">
+    <h6>Department: {{ event.department.name }}</h6>
+    <h6>Updated at: {{ event.updatedAt|date('Y-m-d H:i:s') }}</h6>
+
+
+    <script>
+        function deleteEvent(eventId, eventTitle) {
+            if (confirm('Vous-êtes sûr de vouloir supprimer ' + eventTitle + ' ?')) {
+                document.getElementById('delete-event-form-' + eventId).submit();
+            }
+        }
+    </script>
 {% endblock %}

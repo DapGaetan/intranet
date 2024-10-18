@@ -13,10 +13,10 @@ class CulturalEventTicket
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $logo = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $season = null;
 
     #[ORM\Column(length: 70)]
@@ -31,7 +31,7 @@ class CulturalEventTicket
     #[ORM\Column(length: 60)]
     private ?string $licence = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $background = null;
 
     #[ORM\ManyToOne(inversedBy: 'culturalEventTickets')]
