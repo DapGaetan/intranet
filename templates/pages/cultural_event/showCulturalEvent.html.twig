@@ -7,7 +7,23 @@
     <br>
     <h1>{{ event.title }}</h1>
     <br>
-    <a href="{{ path('app_cultural_event_generate_pdf', {id: event.id}) }}" class="btn btn-primary">Générer PDF</a>
+    <a href="#" class="btn btn-primary" onclick="generatePdf({{ event.id }});">Générer PDF</a>
+
+    <script>
+        function generatePdf(eventId) {
+            let startNumber = prompt("Entrez le numéro de début", 1);
+            let endNumber = prompt("Entrez le numéro de fin", 10);
+
+            if (startNumber != null && endNumber != null) {
+                if (parseInt(startNumber) > parseInt(endNumber)) {
+                    alert('Le numéro de début doit être inférieur ou égal au numéro de fin.');
+                } else {
+                    window.location.href = `/cultural/event/${eventId}/generate-pdf/${startNumber}/${endNumber}`;
+                }
+            }
+        }
+    </script>
+
     <a href="#" class="btn btn-secondary" onclick="window.print();">Imprimer</a>
     <a href="{{ path('app_cultural_event_edit', {id: event.id}) }}" class="button-edit">Modifier le ticket</a>
     <a href="#" class="button-delete" onclick="deleteEvent({{ event.id }}, '{{ event.title }}')">Supprimer le ticket</a>

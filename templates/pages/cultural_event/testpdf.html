@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="utf-8">
+            <title>{{ event.title }}</title>
+            <style>
+                body {
+                    margin: 10mm;
+                    padding: 0;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    color: white;
+                }
+    
+                .ticket {
+                    width: 200mm;
+                    height: 70mm;
+                    background-color: #333; /* Remplacer temporairement l'image par une couleur de fond */
+                    background-size: cover;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    box-sizing: border-box;
+                    padding: 10mm;
+                }
+    
+                table {
+                    width: 100%;
+                    height: 100%;
+                    table-layout: fixed;
+                }
+    
+                td {
+                    vertical-align: middle;
+                    text-align: center;
+                    padding: 5mm;
+                }
+    
+                .ticket-number span {
+                    font-size: 1.4rem;
+                    font-weight: bold;
+                }
+            </style>
+        </head>
+        <body>
+            {% for i in startNumber..endNumber %}
+                <div class="ticket">
+                    <table>
+                        <tr>
+                            <td>
+                                <h1>Série A : PLEIN TARIF</h1>
+                                <p>Placement libre</p>
+                                <p>N° billet : <br>
+                                    <span>101</span></p>
+                                <p>140 rue des cheminots vitry-en-artois, <br>62490</p>
+                                <p>N°Siret : 200 044 048 000 11</p> 
+                                <p>Licence 3 : PLATESV-R-2021-012094 <br>SGC-ARRAS</p>
+                            </td>
+                            <td>
+                                <h1>Série A : PLEIN TARIF</h1>
+                                <p>Placement libre</p>
+                                <p>N° billet : <br>
+                                    <span>101</span></p>
+                            </td>
+                            <td>
+                                <h1>Série A : PLEIN TARIF</h1>
+                                <p>Placement libre</p>
+                                <p>N° billet : <br>
+                                    <span>101</span></p>
+                                <p>140 rue des cheminots vitry-en-artois, 62490</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="ticket">
+                    <div class="content">
+                        <!-- Section Gauche -->
+                        <div class="left">
+                            <h1 class="serial">{{event.series}}</h1>
+                            <p class="placement">{{event.placing}}</p>
+                            <p class="ticket-number">N° billet : <br>
+                                <span>{{ i }}</span></p>
+                            <p>{{event.department.name}} <br>
+                                {{event.department.postalCode}}</p>
+                            <p>{{event.siret}}</p>
+                            <p>{{event.licence}}<br>
+                        </div>
+
+                        <!-- Section Centre -->
+                        <div class="center">
+                            <h1 class="serial">{{event.series}}</h1>
+                            <p class="placement">{{event.placing}}</p>
+                            <p class="ticket-number">N° billet : <br>
+                                <span>{{ i }}</span></p>
+                            <p><span>{{event.department.name}}, {{event.department.postalCode}}</span><br>
+                            {{event.licence}}
+                        </div>
+
+                        <!-- Section Droite -->
+                        <div class="right">
+                            <h1 class="serial">{{event.series}}</h1>
+                            <p class="placement">{{event.placing}}</p>
+                            <p class="ticket-number">N° billet : <br>
+                                <span>{{ i }}</span></p>
+                            <p>{{event.department.name}}, {{event.department.postalCode}}<br>
+                            {{event.licence}}
+                        </div>
+                    </div>
+                </div>
+        </body>
+    </html>
