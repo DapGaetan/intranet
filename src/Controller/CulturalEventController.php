@@ -10,9 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Dompdf\Dompdf;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Dompdf\Options;
 
 class CulturalEventController extends AbstractController
 {
@@ -58,24 +56,25 @@ class CulturalEventController extends AbstractController
     
             $logoFile = $form->get('logo')->getData();
             if ($logoFile) {
-                $logoFilename = sprintf('%s-logo.%s', $event->getTitle(), $logoFile->guessExtension());
+                $logoFilename = sprintf('%s-%s-logo.%s', $event->getTitle(), uniqid(), $logoFile->guessExtension());
                 $logoFile->move($logoDirectory, $logoFilename);
                 $event->setLogo($logoFilename);
             }
-    
+            
             $seasonFile = $form->get('season')->getData();
             if ($seasonFile) {
-                $seasonFilename = sprintf('%s-season.%s', $event->getTitle(), $seasonFile->guessExtension());
+                $seasonFilename = sprintf('%s-%s-season.%s', $event->getTitle(), uniqid(), $seasonFile->guessExtension());
                 $seasonFile->move($seasonsDirectory, $seasonFilename);
                 $event->setSeason($seasonFilename);
             }
-    
+            
             $backgroundFile = $form->get('background')->getData();
             if ($backgroundFile) {
-                $backgroundFilename = sprintf('%s-background.%s', $event->getTitle(), $backgroundFile->guessExtension());
+                $backgroundFilename = sprintf('%s-%s-background.%s', $event->getTitle(), uniqid(), $backgroundFile->guessExtension());
                 $backgroundFile->move($backgroundDirectory, $backgroundFilename);
                 $event->setBackground($backgroundFilename);
             }
+            
     
             $entityManager->persist($event);
             $entityManager->flush();
@@ -111,7 +110,6 @@ class CulturalEventController extends AbstractController
             'event' => $event,
         ]);
     }
-    
 
     #[Route('/cultural/event/{id}/delete', name: 'app_cultural_event_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, CulturalEventTicket $event, EntityManagerInterface $entityManager): Response
@@ -157,23 +155,42 @@ class CulturalEventController extends AbstractController
             $this->addFlash('error', 'Le numéro de début doit être inférieur ou égal au numéro de fin.');
             return $this->redirectToRoute('app_cultural_event_show', ['id' => $event->getId()]);
         }
+    
+        // Récupération du chemin absolu de l'image pour Dompdf
+        $backgroundImagePath = $this->getParameter('kernel.project_dir') . '/public/uploads/culturalEvent/background/Test-background.jpg';
+        if (!file_exists($backgroundImagePath)) {
+            throw new \Exception('Le fichier image est introuvable : ' . $backgroundImagePath);
+        }
 
-        $pdf = new Dompdf();
+        $backgroundImageData = file_get_contents($backgroundImagePath);
+        if ($backgroundImageData === false) {
+            throw new \Exception('Impossible de lire le fichier image.');
+        }
+
+        // Encodage correct en Base64
+        $backgroundImageBase64 = 'data:image/jpeg;base64,' . base64_encode($backgroundImageData);
+    
+        // Options Dompdf
+        $options = new \Dompdf\Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        $options->set('debugPng', true);  // Même pour les JPEG, cela peut fournir des informations utiles
+
+    
+        $pdf = new Dompdf($options);
         $html = $this->renderView('pages/cultural_event/ticket_pdf.html.twig', [
             'event' => $event,
             'startNumber' => $startNumber,
             'endNumber' => $endNumber,
+            'backgroundImageBase64' => $backgroundImageBase64,  // Passer l'image en base64
         ]);
         $pdf->loadHtml($html);
         $pdf->setPaper('A4', 'portrait');
         $pdf->render();
-        
+    
         return new Response($pdf->output(), 200, [
             'Content-Type' => 'application/pdf',
             'Content-Disposition' => 'inline; filename="tickets.pdf"'
         ]);
     }
-    
-    
-    
 }

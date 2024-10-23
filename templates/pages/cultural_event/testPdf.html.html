@@ -1,0 +1,601 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ticket</title>
+    <style>
+        body {
+            background-color: red;
+            margin: 0;
+            padding: 0;
+        }
+
+        section{
+            background-color: white;
+            width: 210mm;
+            height: 297mm;
+        }
+
+        .ticket {
+            width: 200mm; /* Largeur A4 */
+            height: 70mm;
+            box-sizing: border-box;
+            background-image: url("file:///C:/Users/gaetan.dapvril/Documents/DEV/intranet/intranet/public/uploads/culturalEvent/background/Test-background.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        table {
+            height: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        /* Left Section */
+        .left{
+            width: 175px;
+            text-align: center;
+        }
+        .left h1 {
+            font-size: 0.5rem;
+            font-weight: bold;
+            margin: 5px 0;
+            padding-top: 63px;
+        }
+
+        .left .serial{
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .left .placement, .ticket-number {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .left .ticket-number {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .left .ticket-number span{
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .left p{
+            font-size: 0.5rem;
+            margin-top: 15px;
+        }
+
+
+
+
+
+
+        /* Center Section */
+        .center {
+            margin: 0;
+            width: 102px;
+            padding: 0%;
+        }
+
+        .center h1 {
+            font-size: 0.3rem;
+            font-weight: bold;
+            transform: rotate(-90deg);
+            white-space: nowrap;
+            padding: 0%;
+        }
+
+        .center .serial{
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin: 0;
+            padding: 0%;
+        }
+
+        .center .placement, .ticket-number {
+            font-size: 0.7rem;
+            margin: 0;
+            padding: 0%;
+        }
+
+        .center .ticket-number {
+            font-size: 0.7rem;
+            margin: 0;
+            padding: 0%;
+        }
+
+        .center .ticket-number span{
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0;
+            padding: 0%;
+        }
+
+        .center p{
+            font-size: 0.4rem;
+            margin: 0;
+            transform: rotate(-90deg);
+            white-space: nowrap;
+            padding: 0%;
+        }
+
+        .center p:last-child{
+            margin-top: 4px;
+            font-size: 0.6rem;
+            text-align: center;
+            padding: 0%;
+            
+        }
+
+        .center p:last-child span{
+            font-size: 0.6rem;
+            text-align: center;
+            padding: 0%;
+            
+        }
+
+
+
+
+
+
+        /* Right Section */
+        .right{
+            width: 477px;
+            text-align: center;
+        }
+        .right .content{
+            padding-right: 265px;
+        }
+
+        .right h1 {
+            font-size: 0.6rem;
+            font-weight: bold;
+            padding-top: 100px;
+        }
+
+        .right .serial{
+            font-size: 1rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .right .placement, .ticket-number {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .right .ticket-number {
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .right .ticket-number span{
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .right p{
+            font-size: 0.6rem;
+            margin-top: 10px;
+        }
+        /* **right */
+
+        @media print {
+            .ticket {
+                page-break-inside: avoid;  // Évite que le ticket soit coupé
+            }
+        }
+    </style>
+</head>
+<body>
+    <section>
+    <div class="ticket">
+        <table>
+            <tr>
+                <td class="left">
+                    <h1 class="serial">Série A : PLEIN TARIF</h1>
+                    <p class="placement">Placement libre</p>
+                    <p class="ticket-number">N° billet : <br><span>101</span></p>
+                    <p>Rue Jean Monnet, <br>62490 Vitry-en-Artois</p>
+                    <p>N° Siret : 200 044 048 000 11</p>
+                    <p>Licence 3 : PLATESV-R-2021-012094 <br>SGC-ARRAS</p>
+                </td>
+                <td class="center">
+                    <h1 class="serial">Série A : PLEIN TARIF</h1>
+                    <p class="placement">Placement libre</p>
+                    <p class="ticket-number">N° billet : <br><span>101</span></p>
+                    <p>Rue Jean Monnet, 62490 Vitry-en-Artois <br>
+                    Licence 3 : PLATESV-R-2021-012094 <br>SGC-ARRAS</p>
+                </td>
+                <td class="right">
+                    <div class="content">
+                        <h1 class="serial">Série A : PLEIN TARIF</h1>
+                        <p class="placement">Placement libre</p>
+                        <p class="ticket-number">N° billet : <br><span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois<br>
+                        Licence 3 : PLATESV-R-2021-012094 SGC-ARRAS</p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+    </section>
+</body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ticket</title>
+    <style>
+        body {
+            background-color: red;
+            margin: 0;
+            padding: 0;
+        }
+
+        section {
+            background-color: white;
+            width: 210mm;
+            height: 297mm;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ticket {
+            width: 200mm;
+            height: 70mm;
+            box-sizing: border-box;
+            background-image: url("file:///C:/Users/gaetan.dapvril/Documents/DEV/intranet/intranet/public/uploads/culturalEvent/background/Test-background.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            height: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        td {
+            vertical-align: top;
+            padding: 0;
+            margin: 0;
+        }
+
+        .left, .center, .right {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .left {
+            width: 25%;
+            font-size: 0.7rem;
+            padding-top: 75px;
+        }
+
+        .center {
+            padding-top: 20px;
+            width: 35%;
+            font-size: 0.5rem;
+            text-align: center;
+            transform: rotate(-90deg);
+        }
+
+        .right {
+            width: 55%;
+            font-size: 0.8rem;
+            /* padding-right: 200px; */
+        }
+
+        h1 {
+            margin: 0;
+            padding: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        p {
+            margin: 0;
+            padding: 2px 0;
+        }
+
+        .ticket-number span {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Avoid page breaks inside tickets */
+        @media print {
+            .ticket {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="ticket">
+            <table>
+                <tr>
+
+                    <td class="left">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet : <span>101</span></p>
+                        <p>Rue Jean Monnet, <br>62490 Vitry-en-Artois</p>
+                        <p>N° Siret : 200 044 048 000 11</p>
+                        <p>Licence 3 : PLATESV-R-2021-012094 <br>SGC-ARRAS</p>
+                    </td>
+
+                    <td class="center">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet :<br><span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois <br>
+                        Licence 3 : PLATESV-R-2021-012094 - SGC -ARRAS</p>
+                    </td>
+
+                    <td class="right">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet : <span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois</p>
+                        <p>Licence 3 : PLATESV-R-2021-012094 <br>SGC-ARRAS</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ticket</title>
+    <style>
+        body {
+            background-color: red;
+            margin: 0;
+            padding: 0;
+        }
+
+        section {
+            background-color: white;
+            width: 210mm;
+            height: 297mm;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ticket {
+            width: 200mm;
+            height: 70mm;
+            box-sizing: border-box;
+            background-image: url("file:///C:/Users/gaetan.dapvril/Documents/DEV/intranet/intranet/public/uploads/culturalEvent/background/Test-background.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            height: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        td {
+            vertical-align: top;
+            padding: 0;
+            margin: 0;
+        }
+
+        .left, .center, .right {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .left {
+            width: 25%;
+            font-size: 0.7rem;
+            padding-top: 75px;
+        }
+
+        .center {
+            padding-top: 20px;
+            width: 35%;
+            font-size: 0.5rem;
+            text-align: center;
+            transform: rotate(-90deg);
+        }
+
+        .right {
+            width: 55%;
+            font-size: 0.8rem;
+            position: relative; /* Utilisation de position relative */
+            left: -187px; /* Ajustement horizontal */
+            top: 110px; /* Ajustement vertical */
+        }
+
+        h1 {
+            margin: 0;
+            padding: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        p {
+            margin: 0;
+            padding: 2px 0;
+        }
+
+        .ticket-number span {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Avoid page breaks inside tickets */
+        @media print {
+            .ticket {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <div class="ticket">
+            <table>
+                <tr>
+                    <!-- Left Section -->
+                    <td class="left">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet : <span>101</span></p>
+                        <p>Rue Jean Monnet, <br>62490 Vitry-en-Artois</p>
+                        <p>N° Siret : 200 044 048 000 11</p>
+                        <p>Licence 3 : PLATESV-R-2021-012094 <br>SGC-ARRAS</p>
+                    </td>
+
+                    <!-- Center Section -->
+                    <td class="center">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet :<br><span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois <br>
+                        Licence 3 : PLATESV-R-2021-012094 - SGC -ARRAS</p>
+                    </td>
+
+                    <!-- Right Section -->
+                    <td class="right">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet : <span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois<br>Licence 3 : PLATESV-R-2021-012094 -<br>SGC-ARRAS</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="ticket">
+            <table>
+                <tr>
+                    <!-- Left Section -->
+                    <td class="left">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet : <span>101</span></p>
+                        <p>Rue Jean Monnet, <br>62490 Vitry-en-Artois</p>
+                        <p>N° Siret : 200 044 048 000 11</p>
+                        <p>Licence 3 : PLATESV-R-2021-012094 <br>SGC-ARRAS</p>
+                    </td>
+
+                    <!-- Center Section -->
+                    <td class="center">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet :<br><span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois <br>
+                        Licence 3 : PLATESV-R-2021-012094 - SGC -ARRAS</p>
+                    </td>
+
+                    <!-- Right Section -->
+                    <td class="right">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet : <span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois<br>Licence 3 : PLATESV-R-2021-012094 -<br>SGC-ARRAS</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="ticket">
+            <table>
+                <tr>
+                    <!-- Left Section -->
+                    <td class="left">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet : <span>101</span></p>
+                        <p>Rue Jean Monnet, <br>62490 Vitry-en-Artois</p>
+                        <p>N° Siret : 200 044 048 000 11</p>
+                        <p>Licence 3 : PLATESV-R-2021-012094 <br>SGC-ARRAS</p>
+                    </td>
+
+                    <!-- Center Section -->
+                    <td class="center">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet :<br><span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois <br>
+                        Licence 3 : PLATESV-R-2021-012094 - SGC -ARRAS</p>
+                    </td>
+
+                    <!-- Right Section -->
+                    <td class="right">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet : <span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois<br>Licence 3 : PLATESV-R-2021-012094 -<br>SGC-ARRAS</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="ticket">
+            <table>
+                <tr>
+                    <!-- Left Section -->
+                    <td class="left">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet : <span>101</span></p>
+                        <p>Rue Jean Monnet, <br>62490 Vitry-en-Artois</p>
+                        <p>N° Siret : 200 044 048 000 11</p>
+                        <p>Licence 3 : PLATESV-R-2021-012094 <br>SGC-ARRAS</p>
+                    </td>
+
+                    <!-- Center Section -->
+                    <td class="center">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet :<br><span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois <br>
+                        Licence 3 : PLATESV-R-2021-012094 - SGC -ARRAS</p>
+                    </td>
+
+                    <!-- Right Section -->
+                    <td class="right">
+                        <h1>Série A : PLEIN TARIF</h1>
+                        <p>Placement libre</p>
+                        <p>N° billet : <span>101</span></p>
+                        <p>Rue Jean Monnet, 62490 Vitry-en-Artois<br>Licence 3 : PLATESV-R-2021-012094 -<br>SGC-ARRAS</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </section>
+</body>
+</html>
+

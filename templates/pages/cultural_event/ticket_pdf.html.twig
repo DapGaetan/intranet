@@ -1,307 +1,125 @@
 <!DOCTYPE html>
 <html>
-    <head>
+<head>
     <meta charset="utf-8">
     <title>{{ event.title }}</title>
-        <style>
-            body {
-                margin: 10%;
-                padding: 0;
-            }
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
 
-            .ticket {
-            width: 200mm; /* Largeur A4 */
+        .ticket {
+            width: 200mm;
             height: 70mm;
             box-sizing: border-box;
-            background-image: url("{{ absolute_url(asset('uploads/culturalEvent/background/' ~ event.background)) }}");
+            background-image: url("{{ backgroundImageBase64 }}"); /* Utilisation de l'image base64 */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-        }
-
-        .content {
-            display: grid;
-            grid-template-columns: 175px 102px 477px;
-            grid-template-rows: 264px;
-            padding: 0;
-            align-items: center;
             color: white;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        table {
+            width: 100%;
+            height: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        td {
+            vertical-align: top;
+            padding: 0;
+            margin: 0;
         }
 
         .left, .center, .right {
+            padding: 10px;
             text-align: center;
         }
 
-        /* Left */
-        .left{
-            margin-top: 63px;
+        .left {
+            width: 25%;
+            font-size: 0.7rem;
+            padding-top: 75px;
         }
 
-        .left h1 {
+        .center {
+            padding-top: 20px;
+            width: 35%;
             font-size: 0.5rem;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-
-        .left h2 {
-            font-size: 1.1rem;
-            margin: 5px 0;
-        }
-
-        .left .serial{
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .left .placement, .ticket-number {
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        .left .ticket-number {
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        .left .ticket-number span{
-            font-size: 1.4rem;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .left p{
-            font-size: 0.5rem;
-            margin-top: 15px;
-        }
-        /* **Left */
-
-        /* center */
-        .center{
+            text-align: center;
             transform: rotate(-90deg);
-            width: 100%;
-            margin: 15px 60px 0px 0px;
         }
 
-        .center h1 {
-            font-size: 0.3rem;
-            font-weight: bold;
+        .right {
+            width: 55%;
+            font-size: 0.8rem;
+            position: relative;
+            left: -187px;
+            top: 110px;
         }
 
-        .center h2 {
+        h1 {
+            margin: 0;
+            padding: 5px 0;
             font-size: 0.9rem;
-            margin: 5px 0;
         }
 
-        .center .serial{
-            font-size: 0.7rem;
-            font-weight: bold;
+        p {
             margin: 0;
-            white-space: nowrap;
+            padding: 2px 0;
         }
 
-        .center .placement, .ticket-number {
-            font-size: 0.7rem;
-            margin: 0;
-        }
-
-        .center .ticket-number {
-            font-size: 0.7rem;
-            margin: 0;
-        }
-
-        .center .ticket-number span{
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .center p{
-            font-size: 0.4rem;
-            margin: 0;
-            white-space: nowrap;
-        }
-
-        .center p:last-child{
-            margin-top: 4px;
-            font-size: 0.6rem;
-            margin: 0px 0px 6px -60px;
-            text-align: center;
-            
-        }
-
-        .center p:last-child span{
-            font-size: 0.6rem;
-            margin: 0px 0px 0px 25px;
-            text-align: center;
-            
-        }
-        /* **center */
-
-        /* right */
-        .right{
-            margin-top: 120px;
-            padding-right: 245px;
-        }
-
-        .right h1 {
-            font-size: 0.6rem;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-
-        .right h2 {
-            font-size: 1.2rem;
-            margin: 5px 0;
-        }
-
-        .right .serial{
-            font-size: 1rem;
-            font-weight: bold;
-            margin: 0;
-        }
-
-        .right .placement, .ticket-number {
-            font-size: 1rem;
-            margin: 0;
-        }
-
-        .right .ticket-number {
-            font-size: 1rem;
-            margin: 0;
-        }
-
-        .right .ticket-number span{
+        .ticket-number span {
             font-size: 1.5rem;
             font-weight: bold;
-            margin: 0;
         }
 
-        .right p{
-            font-size: 0.6rem;
-            margin-top: 15px;
-        }
-        /* **right */
-
+        /* Éviter les sauts de page à l'intérieur des tickets lors de l'impression */
         @media print {
             .ticket {
-                page-break-inside: avoid;  // Évite que le ticket soit coupé
+                page-break-inside: avoid;
             }
-        }          
-        </style>
-    </head>
-    <body>
-        {% for i in startNumber..endNumber %}
-                        <div class="ticket">
-                            <div class="content">
-                                <!-- Section Gauche -->
-                                <div class="left">
-                                    <h1 class="serial">{{event.series}}</h1>
-                                    <p class="placement">{{event.placing}}</p>
-                                    <p class="ticket-number">N° billet : <br>
-                                        <span>{{ i }}</span></p>
-                                    <p>{{event.department.name}} <br>
-                                        {{event.department.postalCode}}</p>
-                                    <p>{{event.siret}}</p>
-                                    <p>{{event.licence}}<br>
-                                </div>
+        }
+    </style>
+</head>
+<body>
+    {% for i in startNumber..endNumber %}
+        <div class="ticket">
+            <table>
+                <tr>
+                    <!-- Section Gauche -->
+                    <td class="left">
+                        <img src="{{ backgroundImageBase64 }}" alt="Background Image" />
 
-                                <!-- Section Centre -->
-                                <div class="center">
-                                    <h1 class="serial">{{event.series}}</h1>
-                                    <p class="placement">{{event.placing}}</p>
-                                    <p class="ticket-number">N° billet : <br>
-                                        <span>{{ i }}</span></p>
-                                    <p><span>{{event.department.name}}, {{event.department.postalCode}}</span><br>
-                                    {{event.licence}}
-                                </div>
+                        <h1>{{ event.series }}</h1>
+                        <p>{{ event.placing }}</p>
+                        <p>N° billet : <span>{{ i }}</span></p>
+                        <p>{{ event.department.name }}<br>{{ event.department.postalCode }}</p>
+                        <p>{{ event.siret }}<br>{{ event.licence }}</p>
+                    </td>
 
-                                <!-- Section Droite -->
-                                <div class="right">
-                                    <h1 class="serial">{{event.series}}</h1>
-                                    <p class="placement">{{event.placing}}</p>
-                                    <p class="ticket-number">N° billet : <br>
-                                        <span>{{ i }}</span></p>
-                                    <p>{{event.department.name}}, {{event.department.postalCode}}<br>
-                                    {{event.licence}}
-                                </div>
-                            </div>
-                        </div>
-            {% endfor %}
-    </body>
+                    <!-- Section Centre -->
+                    <td class="center">
+                        <h1>{{ event.series }}</h1>
+                        <p>{{ event.placing }}</p>
+                        <p>N° billet : <span>{{ i }}</span></p>
+                        <p>{{ event.department.name }}<br>{{ event.department.postalCode }}</p>
+                    </td>
+
+                    <!-- Section Droite -->
+                    <td class="right">
+                        <h1>{{ event.series }}</h1>
+                        <p>{{ event.placing }}</p>
+                        <p>N° billet : <span>{{ i }}</span></p>
+                        <p>{{ event.department.name }}<br>{{ event.department.postalCode }}</p>
+                        <p>{{ event.siret }}<br>{{ event.licence }}</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    {% endfor %}
+</body>
 </html>
-
-
-{# <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>{{ event.title }}</title>
-        <style>
-            body {
-                margin: 10mm;
-                padding: 0;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                color: white;
-            }
-
-            .ticket {
-                width: 200mm;
-                height: 70mm;
-                background-color: #333; /* Remplacer temporairement l'image par une couleur de fond */
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
-                box-sizing: border-box;
-                padding: 10mm;
-            }
-
-            table {
-                width: 100%;
-                height: 100%;
-                table-layout: fixed;
-            }
-
-            td {
-                vertical-align: middle;
-                text-align: center;
-                padding: 5mm;
-            }
-
-            .ticket-number span {
-                font-size: 1.4rem;
-                font-weight: bold;
-            }
-        </style>
-    </head>
-    <body>
-        {% for i in startNumber..endNumber %}
-            <div class="ticket">
-                <table>
-                    <tr>
-                        <td>
-                            <h1>{{ event.series }}</h1>
-                            <p>{{ event.placing }}</p>
-                            <p>N° billet : <span>{{ i }}</span></p>
-                            <p>{{ event.department.name }}<br>{{ event.department.postalCode }}</p>
-                            <p>{{ event.siret }}<br>{{ event.licence }}</p>
-                        </td>
-                        <td>
-                            <h1>{{ event.series }}</h1>
-                            <p>{{ event.placing }}</p>
-                            <p>N° billet : <span>{{ i }}</span></p>
-                        </td>
-                        <td>
-                            <h1>{{ event.series }}</h1>
-                            <p>{{ event.placing }}</p>
-                            <p>N° billet : <span>{{ i }}</span></p>
-                            <p>{{ event.department.name }}<br>{{ event.department.postalCode }}</p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        {% endfor %}
-    </body>
-</html> #}
