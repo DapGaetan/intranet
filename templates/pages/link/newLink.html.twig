@@ -2,6 +2,8 @@
 
 {% block title %} Lien{% endblock %}
 
+{% block body %}
+
     {% for label, messages in app.flashes %}
         <div class="alert alert-{{ label }}">
             {% for message in messages %}
@@ -10,7 +12,7 @@
         </div>
     {% endfor %}
 
-{% block body %}
+    
     <h1>Ajouter un lien :</h1>
     {{ form_start(form) }}
     {{ form_row(form.name) }}
