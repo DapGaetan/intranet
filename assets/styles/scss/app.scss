@@ -633,9 +633,19 @@ nav {
         resize: both;
         overflow: auto;
     }
+
+    .whiteBoard {
+        position: relative;
+    }
     
     #color, #brushSize {
         margin: 10px;
+    }
+
+    canvas {
+        width: 100%;
+        height: 100%;
+        display: block; /* Évite les espaces sous le canvas */
     }
     
 

@@ -28,20 +28,16 @@ export default class extends Controller {
     }
 
     setupCanvas() {
-        // Définir le fond du canvas en blanc
         this.ctx.fillStyle = "white";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     resizeCanvas() {
-        // Sauvegarder le contenu actuel du canvas
         const dataUrl = this.canvas.toDataURL();
 
-        // Ajuster la taille du canvas
         this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientHeight;
 
-        // Redessiner le contenu sauvegardé
         const img = new Image();
         img.src = dataUrl;
         img.onload = () => {
@@ -50,13 +46,11 @@ export default class extends Controller {
     }
 
     setupEvents() {
-        // Événements de souris pour dessiner
         this.canvas.addEventListener('mousedown', this.startDrawing.bind(this));
         this.canvas.addEventListener('mousemove', this.draw.bind(this));
         this.canvas.addEventListener('mouseup', this.stopDrawing.bind(this));
         this.canvas.addEventListener('mouseout', this.stopDrawing.bind(this));
 
-        // Événements pour les inputs de couleur et de taille du pinceau
         this.colorInput.addEventListener('input', (event) => {
             this.currentColor = event.target.value;
         });
@@ -67,12 +61,11 @@ export default class extends Controller {
     }
 
     setupSpecialActions() {
-        // Gestion des clics pour les actions spéciales
         this.canvas.addEventListener('click', this.handleCanvasClick.bind(this));
     }
 
     startDrawing(event) {
-        if (this.currentAction) return; // Ne dessine pas si une action spéciale est sélectionnée
+        if (this.currentAction) return;
 
         this.isDrawing = true;
         this.ctx.beginPath();
@@ -117,7 +110,6 @@ export default class extends Controller {
 
     setAction(action) {
         this.currentAction = action;
-        // Optionnel: Indiquer visuellement l'action sélectionnée
         console.log(`Action sélectionnée: ${action}`);
     }
 
@@ -136,22 +128,27 @@ export default class extends Controller {
         } else if (this.currentAction === 'addImage') {
             this.addImageAt(event);
         }
-        // Réinitialiser l'action après l'exécution
-        this.currentAction = null;
-    }
 
-    drawRectangleAt(event) {
-        const width = 100; // Largeur fixe ou dynamique
-        const height = 50; // Hauteur fixe ou dynamique
-        const x = event.offsetX;
-        const y = event.offsetY;
-
-        this.ctx.fillStyle = this.currentColor;
-        this.ctx.fillRect(x, y, width, height);
     }
 
     drawCircleAt(event) {
-        const radius = 25; // Rayon fixe ou dynamique
+        const radius = 25;
+        const x = event.offsetX;
+        const y = event.offsetY;
+    
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, radius, 0, Math.PI * 2);
+        this.ctx.fillStyle = this.currentColor;
+        this.ctx.fill();
+        this.ctx.closePath();
+    
+        this.currentAction = null;
+    }
+    
+    
+
+    drawCircleAt(event) {
+        const radius = 25;
         const x = event.offsetX;
         const y = event.offsetY;
 
@@ -165,17 +162,19 @@ export default class extends Controller {
     addImageAt(event) {
         const imgUrl = prompt("Entrez l'URL de l'image:");
         if (!imgUrl) return;
-
+    
         const img = new Image();
-        img.crossOrigin = "anonymous"; // Pour éviter les problèmes CORS
+        img.crossOrigin = "anonymous";
         img.src = imgUrl;
         img.onload = () => {
-            const x = event.offsetX;
-            const y = event.offsetY;
-            this.ctx.drawImage(img, x, y, 100, 100); // Taille fixe ou dynamique
+            const x = event.offsetX - 50;
+            const y = event.offsetY - 50;
+            this.ctx.drawImage(img, x, y, 100, 100);
+            this.currentAction = null;
         };
         img.onerror = () => {
             alert("Impossible de charger l'image. Vérifiez l'URL.");
         };
     }
+    
 }
