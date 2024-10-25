@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CulturalEventTicket;
 use App\Form\CulturalEventTicketFormType;
+use App\Repository\CulturalEventTicketRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Psr\Log\LoggerInterface;
 
 class CulturalEventController extends AbstractController
 {
@@ -149,48 +151,52 @@ class CulturalEventController extends AbstractController
     }
     
     #[Route('/cultural/event/{id}/generate-pdf/{startNumber}/{endNumber}', name: 'app_cultural_event_generate_pdf', requirements: ['id' => '\d+', 'startNumber' => '\d+', 'endNumber' => '\d+'])]
-    public function generatePdf(int $id, int $startNumber, int $endNumber, CulturalEventTicket $event): Response
+    public function generatePdf(int $id, int $startNumber, int $endNumber, CulturalEventTicketRepository $eventRepo, LoggerInterface $logger): Response
     {
-        if ($startNumber > $endNumber) {
-            $this->addFlash('error', 'Le numéro de début doit être inférieur ou égal au numéro de fin.');
-            return $this->redirectToRoute('app_cultural_event_show', ['id' => $event->getId()]);
+        // Récupérer l'événement culturel à partir de l'ID
+        $event = $eventRepo->find($id);
+    
+        if (!$event) {
+            throw $this->createNotFoundException('Événement non trouvé');
         }
     
-        // Récupération du chemin absolu de l'image pour Dompdf
-        $backgroundImagePath = $this->getParameter('kernel.project_dir') . '/public/uploads/culturalEvent/background/Test-background.jpg';
-        if (!file_exists($backgroundImagePath)) {
-            throw new \Exception('Le fichier image est introuvable : ' . $backgroundImagePath);
-        }
-
-        $backgroundImageData = file_get_contents($backgroundImagePath);
-        if ($backgroundImageData === false) {
-            throw new \Exception('Impossible de lire le fichier image.');
-        }
-
-        // Encodage correct en Base64
-        $backgroundImageBase64 = 'data:image/jpeg;base64,' . base64_encode($backgroundImageData);
+        // Récupérer le chemin de l'image
+        $backgroundPath = '/uploads/culturalEvent/background/' . $event->getBackground();
     
-        // Options Dompdf
-        $options = new \Dompdf\Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isRemoteEnabled', true);
-        $options->set('debugPng', true);  // Même pour les JPEG, cela peut fournir des informations utiles
-
+        // Générer la liste des numéros de tickets
+        $ticketNumbers = range($startNumber, $endNumber);
     
-        $pdf = new Dompdf($options);
+        // Créer le contenu HTML du PDF
         $html = $this->renderView('pages/cultural_event/ticket_pdf.html.twig', [
             'event' => $event,
             'startNumber' => $startNumber,
             'endNumber' => $endNumber,
-            'backgroundImageBase64' => $backgroundImageBase64,  // Passer l'image en base64
+            'backgroundPath' => $backgroundPath,
+            'ticketNumbers' => $ticketNumbers, // Ajout de ticketNumbers ici
         ]);
-        $pdf->loadHtml($html);
-        $pdf->setPaper('A4', 'portrait');
-        $pdf->render();
     
-        return new Response($pdf->output(), 200, [
+        // Configurer Dompdf
+        $options = new Options();
+        $options->set('defaultFont', 'Arial');
+        $options->set('isHtml5ParserEnabled', true);
+        $dompdf = new Dompdf($options);
+    
+        // Charger et rendre le HTML en PDF
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+    
+        // Récupérer le contenu du PDF
+        $pdfContent = $dompdf->output();
+    
+        // Créer la réponse HTTP avec le PDF
+        return new Response($pdfContent, 200, [
             'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="tickets.pdf"'
+            'Content-Disposition' => 'attachment; filename="event_tickets.pdf"'
         ]);
     }
+    
+    
+    
+    
 }

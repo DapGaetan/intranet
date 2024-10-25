@@ -3,113 +3,113 @@
 <head>
     <meta charset="utf-8">
     <title>{{ event.title }}</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Spécifier la police ici pour tout le document */
+    }
 
+    .ticket {
+        width: 200mm; /* Largeur de la carte de billet */
+        height: 70mm; /* Hauteur de la carte de billet */
+        box-sizing: border-box; /* Inclure la bordure et le padding dans les dimensions */
+        background-image: url('{{ backgroundPath }}');
+        background-size: cover; /* Couvrir toute la zone de la carte */
+        background-position: center; /* Centrer l'image */
+        background-repeat: no-repeat; /* Pas de répétition de l'image */
+        color: white; /* Couleur du texte */
+        page-break-inside: avoid; /* Éviter les sauts de page à l'intérieur des tickets */
+        position: relative; /* Pour positionner les éléments à l'intérieur si nécessaire */
+    }
+
+    .ticket:nth-child(4n) {
+        page-break-after: always; /* Saut de page après chaque 4ème ticket */
+    }
+
+    table {
+        width: 100%; /* Prendre toute la largeur de la carte */
+        height: 100%; /* Prendre toute la hauteur de la carte */
+        table-layout: fixed; /* Fixer la mise en page des colonnes */
+        border-collapse: collapse; /* Fusionner les bordures des cellules */
+    }
+
+    td {
+        vertical-align: top; /* Aligner le contenu en haut des cellules */
+        padding: 0; /* Pas de padding pour les cellules */
+    }
+
+    .left, .center, .right {
+        padding: 10px; /* Padding interne pour les colonnes */
+        text-align: center; /* Centrer le texte dans les colonnes */
+    }
+
+    .left {
+        width: 25%; /* Largeur de la colonne gauche */
+        font-size: 0.7rem; /* Taille de police pour le texte */
+        padding-top: 75px; /* Espacement au-dessus du contenu */
+    }
+
+    .center {
+        padding-top: 20px; /* Espacement au-dessus du contenu */
+        width: 35%; /* Largeur de la colonne centrale */
+        font-size: 0.5rem; /* Taille de police pour le texte */
+        transform: rotate(-90deg); /* Rotation du texte */
+        transform-origin: left top; /* Point d'origine pour la rotation */
+        height: 100%; /* Assurer que la colonne centrale prend toute la hauteur */
+    }
+
+    .right {
+        width: 55%; /* Largeur de la colonne droite */
+        font-size: 0.8rem; /* Taille de police pour le texte */
+        position: relative; /* Positionner par rapport à son conteneur */
+        left: -187px; /* Ajustement de la position */
+        top: 110px; /* Ajustement de la position */
+    }
+
+    h1 {
+        margin: 0; /* Pas de marge */
+        padding: 5px 0; /* Espacement vertical */
+        font-size: 0.9rem; /* Taille de police pour les titres */
+    }
+
+    p {
+        margin: 0; /* Pas de marge */
+        padding: 2px 0; /* Espacement vertical */
+    }
+
+    .ticket-number span {
+        font-size: 1.5rem; /* Taille de police pour le numéro de billet */
+        font-weight: bold; /* Gras pour le numéro de billet */
+    }
+
+    /* Éviter les sauts de page à l'intérieur des tickets lors de l'impression */
+    @media print {
         .ticket {
-            width: 200mm;
-            height: 70mm;
-            box-sizing: border-box;
-            background-image: url("{{ backgroundImageBase64 }}"); /* Utilisation de l'image base64 */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            page-break-inside: avoid; /* Éviter les sauts de page à l'intérieur des tickets */
         }
-
-        table {
-            width: 100%;
-            height: 100%;
-            table-layout: fixed;
-            border-collapse: collapse;
-        }
-
-        td {
-            vertical-align: top;
-            padding: 0;
-            margin: 0;
-        }
-
-        .left, .center, .right {
-            padding: 10px;
-            text-align: center;
-        }
-
-        .left {
-            width: 25%;
-            font-size: 0.7rem;
-            padding-top: 75px;
-        }
-
-        .center {
-            padding-top: 20px;
-            width: 35%;
-            font-size: 0.5rem;
-            text-align: center;
-            transform: rotate(-90deg);
-        }
-
-        .right {
-            width: 55%;
-            font-size: 0.8rem;
-            position: relative;
-            left: -187px;
-            top: 110px;
-        }
-
-        h1 {
-            margin: 0;
-            padding: 5px 0;
-            font-size: 0.9rem;
-        }
-
-        p {
-            margin: 0;
-            padding: 2px 0;
-        }
-
-        .ticket-number span {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        /* Éviter les sauts de page à l'intérieur des tickets lors de l'impression */
-        @media print {
-            .ticket {
-                page-break-inside: avoid;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
-    {% for i in startNumber..endNumber %}
+{% if ticketNumbers is not empty %}
+    {% for i in ticketNumbers %}
         <div class="ticket">
             <table>
                 <tr>
-                    <!-- Section Gauche -->
                     <td class="left">
-                        <img src="{{ backgroundImageBase64 }}" alt="Background Image" />
-
                         <h1>{{ event.series }}</h1>
                         <p>{{ event.placing }}</p>
                         <p>N° billet : <span>{{ i }}</span></p>
                         <p>{{ event.department.name }}<br>{{ event.department.postalCode }}</p>
                         <p>{{ event.siret }}<br>{{ event.licence }}</p>
                     </td>
-
-                    <!-- Section Centre -->
                     <td class="center">
                         <h1>{{ event.series }}</h1>
                         <p>{{ event.placing }}</p>
                         <p>N° billet : <span>{{ i }}</span></p>
                         <p>{{ event.department.name }}<br>{{ event.department.postalCode }}</p>
                     </td>
-
-                    <!-- Section Droite -->
                     <td class="right">
                         <h1>{{ event.series }}</h1>
                         <p>{{ event.placing }}</p>
@@ -121,5 +121,8 @@
             </table>
         </div>
     {% endfor %}
+{% else %}
+    <p>La plage de tickets n'est pas correcte.</p>
+{% endif %}
 </body>
 </html>

@@ -15,16 +15,20 @@
             let endNumber = prompt("Entrez le numéro de fin", 10);
 
             if (startNumber != null && endNumber != null) {
-                if (parseInt(startNumber) > parseInt(endNumber)) {
-                    alert('Le numéro de début doit être inférieur ou égal au numéro de fin.');
+                startNumber = parseInt(startNumber);
+                endNumber = parseInt(endNumber);
+
+                // Vérification si startNumber est bien inférieur ou égal à endNumber
+                if (isNaN(startNumber) || isNaN(endNumber) || startNumber > endNumber) {
+                    alert('Le numéro de début doit être un nombre entier et inférieur ou égal au numéro de fin.');
                 } else {
+                    // Rediriger vers la route pour générer le PDF
                     window.location.href = `/cultural/event/${eventId}/generate-pdf/${startNumber}/${endNumber}`;
                 }
             }
         }
     </script>
 
-    <a href="#" class="btn btn-secondary" onclick="window.print();">Imprimer</a>
     <a href="{{ path('app_cultural_event_edit', {id: event.id}) }}" class="button-edit">Modifier le ticket</a>
     <a href="#" class="button-delete" onclick="deleteEvent({{ event.id }}, '{{ event.title }}')">Supprimer le ticket</a>
 

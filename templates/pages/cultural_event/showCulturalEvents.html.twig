@@ -1,8 +1,11 @@
 {% extends 'base.html.twig' %}
 
+
+
 {% block title %}<i class="fa-solid fa-calendar-alt"></i> Billeterie événementiel de la culture{% endblock %}
 
 {% block body %}
+
     <h1>Liste des tickets</h1>
 
     {% for label, messages in app.flashes %}
@@ -24,18 +27,50 @@
         </div>
     </form>
 
-    <div id="culturalEventsGrid" class="cultural-events-container">
-        {% if culturalEvents is not empty %}
-            {% for culturalEvent in culturalEvents %}
-                <a href="{{ path('app_cultural_event_show', {id: culturalEvent.id}) }}">
-                    <div class="event-card" title="{{ culturalEvent.title }}">
-                        <h2>{{ culturalEvent.title }}</h2>
-                        <p>Date de création : {{ culturalEvent.updatedAt|date('Y-m-d H:i:s') }}</p>
+<div id="culturalEventsGrid" class="cultural-events-container">
+    {% if culturalEvents is not empty %}
+        {% for culturalEvent in culturalEvents %}
+            <a href="{{ path('app_cultural_event_show', {id: culturalEvent.id}) }}">
+                <div class="ticket" style="width: 200mm; height: 70mm; box-sizing: border-box; background-image: url('./uploads/culturalEvent/background/{{ culturalEvent.background }}'); background-size: cover; background-position: center; background-repeat: no-repeat; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                    <div class="content">
+                        <!-- Section Gauche -->
+                        <div class="left">
+                            <h1 class="serial">{{ culturalEvent.series }}</h1>
+                            <p class="placement">{{ culturalEvent.placing }}</p>
+                            <p class="ticket-number">N° billet : <br>
+                                <span>1</span></p>
+                            <p>{{ culturalEvent.department.address }}<br>{{ culturalEvent.department.postalCode }} {{ culturalEvent.department.city }}</p>
+                            <p>{{ culturalEvent.siret }}</p>
+                            <p>{{ culturalEvent.licence }}</p>
+                        </div>
+
+                        <!-- Section Centre -->
+                        <div class="center">
+                            <h1 class="serial">{{ culturalEvent.series }}</h1>
+                            <p class="placement">{{ culturalEvent.placing }}</p>
+                            <p class="ticket-number">N° billet : <br>
+                                <span>1</span></p>
+                            <p>{{ culturalEvent.department.address }}, {{ culturalEvent.department.postalCode }} {{ culturalEvent.department.city }}<br>
+                            {{ culturalEvent.licence }}</p>
+                        </div>
+
+                        <!-- Section Droite -->
+                        <div class="right">
+                            <h1 class="serial">{{ culturalEvent.series }}</h1>
+                            <p class="placement">{{ culturalEvent.placing }}</p>
+                            <p class="ticket-number">N° billet : <br>
+                                <span>1</span></p>
+                            <p>{{ culturalEvent.department.address }}, {{ culturalEvent.department.postalCode }} {{ culturalEvent.department.city }}<br>
+                            {{ culturalEvent.licence }}</p>
+                        </div>
                     </div>
-                </a>
-            {% endfor %}
-        {% else %}
-            <p>Aucun ticket n'a était trouvé</p>
-        {% endif %}
-    </div>
+                </div>
+            </a>
+        {% endfor %}
+    {% else %}
+        <p>Aucun ticket n'a été trouvé</p>
+    {% endif %}
+</div>
+
+
 {% endblock %}
