@@ -3,8 +3,97 @@
 {% block title %}<i class="fa-solid fa-house"></i> Accueil{% endblock %}
 
 {% block body %}
-    <h5><strong>Bonjour,</strong> {{ app.user.firstname | capitalize }} {{ app.user.lastname | capitalize }}</h5>
-    
+<h5><strong>
+    {% if "now"|date("H") < 12 %}
+        Bonjour,
+    {% elseif "now"|date("H") < 18 %}
+        Bon après-midi,
+    {% else %}
+        Bonsoir,
+    {% endif %}
+</strong> {{ app.user.firstname | capitalize }} {{ app.user.lastname | capitalize }}</h5>
+
+{% set messages = [
+    "Bienvenue sur l'intranet. Nous espérons que vous passerez une excellente journée.",
+    "C'est toujours un plaisir de vous voir ici !",
+    "Découvrez nos dernières actualités dans les sections dédiées.",
+    "Nous sommes là pour vous accompagner dans votre travail.",
+    "Avez-vous consulté les nouvelles annonces aujourd'hui ?",
+    "Besoin d'aide ? Consultez le chatbot ou contactez-nous.",
+    "Explorez nos outils pour simplifier votre quotidien professionnel.",
+    "N'oubliez pas de consulter vos tâches prioritaires dans votre tableau de bord.",
+    "Votre contribution fait toute la différence. Merci d'être avec nous.",
+    "L'espace collaboratif est à votre disposition pour vos projets.",
+    "N’hésitez pas à partager vos idées ou suggestions via le formulaire dédié."
+] %}
+
+{% set shuffledMessages = messages|shuffle %}
+<p class="welcome-message">{{ shuffledMessages[0] }}</p>
+
+
+<section>
+        <p class="clock">
+            <i class="fa-solid fa-clock"></i>
+            {{ "now"|date("H:i") }}
+        </p>
+
+        <p class="current-day">
+            <i class="fa-solid fa-calendar-day"></i>
+            {% set dayOfWeek = "now"|date("l") %}
+            {% if dayOfWeek == "Monday" %}Lundi
+            {% elseif dayOfWeek == "Tuesday" %}Mardi
+            {% elseif dayOfWeek == "Wednesday" %}Mercredi
+            {% elseif dayOfWeek == "Thursday" %}Jeudi
+            {% elseif dayOfWeek == "Friday" %}Vendredi
+            {% elseif dayOfWeek == "Saturday" %}Samedi
+            {% elseif dayOfWeek == "Sunday" %}Dimanche
+            {% endif %}
+        </p>
+
+        <p class="current-date">
+            <i class="fa-solid fa-calendar-alt"></i>
+            {% set month = "now"|date("m") %}
+            {% set day = "now"|date("d") %}
+            {% set year = "now"|date("Y") %}
+            {% set months = {
+                '01': 'Janvier',
+                '02': 'Février',
+                '03': 'Mars',
+                '04': 'Avril',
+                '05': 'Mai',
+                '06': 'Juin',
+                '07': 'Juillet',
+                '08': 'Août',
+                '09': 'Septembre',
+                '10': 'Octobre',
+                '11': 'Novembre',
+                '12': 'Décembre'
+            } %}
+            {{ day }} {{ months[month] }} {{ year }}
+        </p>
+
+
+        <p class="current-season">
+            {% set month = "now"|date("m") %}
+            {% if month in ['12', '01', '02'] %}
+                <i class="fa-solid fa-snowflake"></i> Hiver
+            {% elseif month in ['03', '04', '05'] %}
+                <i class="fa-solid fa-seedling"></i> Printemps
+            {% elseif month in ['06', '07', '08'] %}
+                <i class="fa-solid fa-sun"></i> Été
+            {% else %}
+                <i class="fa-solid fa-leaf"></i> Automne
+            {% endif %}
+        </p>
+
+</section>
+
+
+
+
+
+
+
     {% for label, messages in app.flashes %}
         <div class="alert alert-{{ label }}">
             {% for message in messages %}
@@ -14,32 +103,8 @@
     {% endfor %}
     
     <div class="home" data-controller="home">
-        <div class="feature-grid">
-            <div class="feature-item">
-                <div class="feature-title">Annuaire des services <i class="fa-solid fa-angle-down arrow"></i></div>
-                <div class="feature-content">
-                    <div class="content-box"></div>
-                </div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-title">Mes projets <i class="fa-solid fa-angle-down arrow"></i></div>
-                <div class="feature-content">
-                    <div class="content-box"></div>
-                </div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-title">Mes réservations <i class="fa-solid fa-angle-down arrow"></i></div>
-                <div class="feature-content">
-                    <div class="content-box"></div>
-                </div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-title">Nos événements <i class="fa-solid fa-angle-down arrow"></i></div>
-                <div class="feature-content">
-                    <div class="content-box"></div>
-                </div>
-            </div>
-        </div>
+
+    </div>
 
         {# {% if ldap_result is defined %}
             <div>

@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Basics */
 *,
 *::before,
@@ -591,8 +592,18 @@ form button[type=submit]:hover {
   overflow: auto;
 }
 
+.whiteBoard {
+  position: relative;
+}
+
 #color, #brushSize {
   margin: 10px;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block; /* Évite les espaces sous le canvas */
 }
 
 /* Images */
@@ -709,99 +720,6 @@ h5 {
   font-size: 1.25rem;
   color: #333;
   margin-bottom: 20px;
-}
-
-.home {
-  margin-top: 20px;
-}
-.home .feature-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  margin-top: 40px;
-}
-@media (max-width: 768px) {
-  .home .feature-grid {
-    grid-template-columns: 1fr;
-  }
-}
-.home .feature-grid .feature-item {
-  background-color: #fafafa;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  overflow: hidden;
-  position: relative;
-}
-.home .feature-grid .feature-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-}
-.home .feature-grid .feature-item:before {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 6px;
-  border-radius: 0 0 12px 12px;
-  transition: background-color 0.3s ease;
-}
-.home .feature-grid .feature-item:nth-child(1):before {
-  background-color: #ffa600;
-}
-.home .feature-grid .feature-item:nth-child(2):before {
-  background-color: #7428a7;
-}
-.home .feature-grid .feature-item:nth-child(3):before {
-  background-color: #fffb07;
-}
-.home .feature-grid .feature-item:nth-child(4):before {
-  background-color: #6f35dc;
-}
-.home .feature-grid .feature-item .feature-title {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #333;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-.home .feature-grid .feature-item .arrow {
-  font-size: 1.2rem;
-  margin-left: 10px;
-  transition: transform 0.3s ease;
-}
-.home .feature-grid .feature-item .feature-content {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease, opacity 0.5s ease;
-}
-.home .feature-grid .feature-item.active {
-  grid-row: span 2;
-}
-.home .feature-grid .feature-item.active .feature-content {
-  max-height: 500px;
-  opacity: 1;
-}
-.home .feature-grid .feature-item.active .arrow {
-  transform: rotate(180deg);
-}
-.home .feature-grid .feature-item.active .content-box {
-  background-color: #f4f4f4;
-  height: 300px;
-  margin-top: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow-y: auto;
 }
 
 .home h5 {
